@@ -1,3 +1,4 @@
-.pio
-.idea/
-.vscode/
+**/.pio
+**/.idea/
+**/.vscode/
+**/node_modules
