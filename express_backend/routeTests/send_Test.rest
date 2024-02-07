@@ -1,0 +1,4 @@
+## GET all EXAMS
+GET  http://localhost:5000/api/send?text=API%20Capibarioso
+Authorization: capybara
+#############
