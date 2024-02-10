@@ -1,12 +1,15 @@
 table {
     width: 100%;
-    border-collapse: collapse; /*Crea Linee tabella */
-    margin-top: 20px; /*Distacco della tabella */
+    border-collapse: collapse;
+    /*Crea Linee tabella */
+    margin-top: 20px;
+    /*Distacco della tabella */
 }
 
 th,
 td {
-    border: 1px solid #000000;/* Colore Linee tabella */
+    border: 1px solid #000000;
+    /* Colore Linee tabella */
     padding: 10px;
     text-align: left;
 }
@@ -17,5 +20,13 @@ th {
 
 select {
     padding: 7px;
-    margin-bottom: 75px; /*Serve per evitare che la tendina del tag <option> copra la tabella*/
+    margin-bottom: 75px;
+    /*Serve per evitare che la tendina del tag <option> copra la tabella*/
+}
+
+#statusFilter {
+    width: auto;
+    /* Imposta la larghezza a "auto" o ad un valore specifico */
+    max-width: 400px;
+    /* Imposta una larghezza massima a tuo piacimento */
 }

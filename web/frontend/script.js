@@ -44,5 +44,17 @@ function filterTable() {
     populateTable(filteredData);
 }
 
-// Inizializzo la tabella all'inizio altrimenti non si vede appena apro la pagina
-populateTable(mockData);
+// Creazione di un'istanza di Vue.js
+var app = new Vue({
+    el: '#app',
+    data: {
+        selectedStatus: 'all'
+    },
+    methods: {
+        filterTable: filterTable
+    },
+    mounted: function () {
+        // Popolazione iniziale della tabella
+        populateTable(mockData);
+    }
+});
