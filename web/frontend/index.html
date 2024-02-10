@@ -1,1 +1,45 @@
 <h1>NO CLIENT HAS BEEN FOUND INSIDE THE SERVER'S FOLDER!</h1>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activities Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+
+<body>
+
+    <h2>Activities Dashboard</h2>
+
+    <label for="statusFilter">Filter by Status:</label>
+    <select id="statusFilter" onchange="filterTable()">
+        <!-- Setto il valore di statusFilter  e filterTable() definita in script.js-->
+        <option value="all">All</option>
+        <option value="in progress">In Progress</option>
+        <option value="to be completed">To be Completed</option>
+        <option value="scheduled">Scheduled</option>
+        <option value="completed">Completed</option>
+    </select>
+
+    <table>
+        <thead> <!--Intestazione della tabella, puoi eliminarla ma a me piace è cute -->
+            <!-- Creo la Tabella carina carina -->
+            <tr>
+                <th>ID</th>
+                <th>Description</th>
+                <th>Duration</th>
+                <th>Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="activities">
+            <!-- Popoliamo la tabella con i dati di JavaScript -->
+        </tbody>
+    </table>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
