@@ -87,7 +87,10 @@ CREATE TABLE IF NOT EXISTS RemoteTrackings (
     FOREIGN KEY (activity_id) REFERENCES Activities(id)
 );
 
-CREATE VIEW ActiveWorkers AS
-SELECT 
+CREATE OR REPLACE VIEW ActiveWorkers AS
+SELECT DISTINCT  W.id as "worker_id", Ac.id as "activity_id", A.start_time as "started_on", RT.device_id as "device_id", RT.anchor_id as "last_location_anchor"
 FROM Workers W, Activities Ac, Assignments A, RemoteTrackings RT
-WHERE ;
+WHERE Ac.status = "in progress" and A.worker_id = W.id and A.activity_id = Ac.id and RT.worker_id = W.id and RT.activity_id = Ac.id ORDER BY timestamp DESC;
+
+CREATE OR REPLACE VIEW ActiveDevices AS
+SELECT DISTINCT RT.device_id as "device_id" FROM ActiveWorkers;
