@@ -26,7 +26,25 @@ select {
 
 #statusFilter {
     width: auto;
-    /* Imposta la larghezza a "auto" o ad un valore specifico */
+
     max-width: 400px;
-    /* Imposta una larghezza massima a tuo piacimento */
+}
+
+/* Animazione del bottone lampeggiante */
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.blinking-button {
+    animation: blink 1s infinite;
 }
