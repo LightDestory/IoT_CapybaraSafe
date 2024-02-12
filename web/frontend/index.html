@@ -1,4 +1,3 @@
-<h1>NO CLIENT HAS BEEN FOUND INSIDE THE SERVER'S FOLDER!</h1>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,21 +27,32 @@
         </div>
 
         <table class="table mt-3">
-            <thead> <!--Intestazione della tabella, puoi eliminarla ma a me piace è cute -->
-                <!-- Creo la Tabella carina carina -->
+            <thead>
                 <tr>
                     <th>ID</th>
                     <th>Description</th>
                     <th>Duration</th>
                     <th>Date</th>
                     <th>Status</th>
+                    <th>Action</th> <!-- Aggiunta colonna per l'azione di dettaglio -->
                 </tr>
             </thead>
             <tbody id="activities">
                 <!-- Popoliamo la tabella con i dati di JavaScript -->
+                <tr v-for="activity in filteredActivities" :key="activity.id">
+                    <td>{{ activity.id }}</td>
+                    <td>{{ activity.text_description }}</td>
+                    <td>{{ activity.duration_minute }}</td>
+                    <td>{{ activity.scheduled_date }}</td>
+                    <td>{{ activity.status }}</td>
+                    <td>
+                        <button class="btn btn-primary" @click="viewDetails(activity.id)">View Details</button>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
+
     <!-- Vue.js -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
     <!-- Bootstrap JS -->
