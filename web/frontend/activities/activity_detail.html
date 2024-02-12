@@ -13,9 +13,21 @@
 
     <div class="container mt-5">
         <h1>Activity Detail</h1>
+        <!-- Aggiunta del menu a tendina per lo stato -->
+        <div class="mb-3">
+            <label for="statusDropdown" class="form-label">Select Status:</label>
+            <select id="statusDropdown" class="form-select" v-model="selectedStatus">
+                <option value="in progress">In Progress</option>
+                <option value="to be completed">To be Completed</option>
+                <option value="scheduled">Scheduled</option>
+                <option value="completed">Completed</option>
+            </select>
+        </div>
+
         <div id="activity-details">
             <!-- Activity details will be dynamically populated here -->
         </div>
+
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>

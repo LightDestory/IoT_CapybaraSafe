@@ -13,8 +13,6 @@ document.addEventListener('DOMContentLoaded', function () {
         status: "in progress"
         // Altri dettagli dell'attività possono essere aggiunti qui
     };
-
-    // Fetch activity details from the server (puoi usare AJAX, fetch o altri metodi)
     // In questo caso, useremo i mock data al posto di una richiesta al server
     const activityDetails = mockActivityDetails;
 
@@ -24,7 +22,26 @@ document.addEventListener('DOMContentLoaded', function () {
         <h2>${activityDetails.text_description}</h2>
         <p><strong>Duration:</strong> ${activityDetails.duration_minute} minutes</p>
         <p><strong>Scheduled Date:</strong> ${activityDetails.scheduled_date}</p>
-        <p><strong>Status:</strong> ${activityDetails.status}</p>
-        <!-- Altri dettagli dell'attività possono essere aggiunti qui -->
+       <p><strong>Status:</strong> 
+            <select id="statusDropdown">
+                <option value="in progress">In Progress</option>
+                <option value="to be completed">To be Completed</option>
+                <option value="scheduled">Scheduled</option>
+                <option value="completed">Completed</option>
+            </select>
+        </p>
+        <button class="btn btn-primary" id="updateButton">Aggiorna</button>       
     `;
+    // Imposta il valore iniziale del menu a tendina con lo stato corrente dell'attività
+    document.getElementById('statusDropdown').value = activityDetails.status;
+
+    // Aggiungi un listener per il pulsante "Aggiorna"
+    document.getElementById('updateButton').addEventListener('click', function () {
+        // Recupera il nuovo stato selezionato dal menu a tendina
+        const selectedStatus = document.getElementById('statusDropdown').value;
+
+        // Aggiorna lo stato dell'attività 
+        console.log("Nuovo stato selezionato:", selectedStatus);
+        window.location.href = '../activities/index.html';
+    });
 });
