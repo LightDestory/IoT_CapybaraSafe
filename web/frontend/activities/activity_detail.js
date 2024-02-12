@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // In questo caso, useremo i mock data al posto di una richiesta al server
     const activityDetails = mockActivityDetails;
 
-    // Popola la pagina di dettaglio con i dettagli dell'attività
+
     const activityDetailsContainer = document.getElementById('activity-details');
     activityDetailsContainer.innerHTML = `
         <h2>${activityDetails.text_description}</h2>
