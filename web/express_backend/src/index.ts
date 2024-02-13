@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import express, { Application } from 'express';
 import cors from 'cors';
 import bodyParser from "body-parser";
@@ -7,6 +8,7 @@ import { registerRoutes } from "./routes/routeManager";
 import dotenv from 'dotenv';
 import * as path from 'path';
 import { MQTT_Service } from './mqtt_service/mqtt_service';
+import { DatabaseHandler } from './db/database_handler';
 
 // Retrieving ENV configuration, if possible
 const configuration: dotenv.DotenvConfigOutput = dotenv.config();
@@ -34,9 +36,20 @@ function bootstrap() {
     res.sendFile(path.resolve(__dirname, 'static', 'index.html'));
   });
   // Running http server
-  app.listen(port, () => {
+  app.listen(port, async () => {
     console.log(`HTTP Server listening to ${port}!`);
-    let mqtt_service = MQTT_Service.getInstance();
+    // Checking MQTT Service status
+    let mqtt_connected: boolean = await MQTT_Service.getInstance().ok();
+    if (!mqtt_connected) {
+      console.log("MQTT Service is not available, shutting down...");
+      process.exit(-1);
+    }
+    // Checking Database status
+    let database_connected: boolean = await DatabaseHandler.getInstance().ok();
+    if (!database_connected) {
+      console.log("Database is not available, shutting down...");
+      process.exit(-1);
+    }
   }).on("error", () => {
     console.log("Unable to start http server!");
     process.exit(-1);

@@ -42,6 +42,10 @@ export class MQTT_Service {
         this.client.publish(topic, message);
     }
 
+    public async ok(): Promise<boolean> {
+        return await this.client.connected;
+    }
+
     public static getInstance(): MQTT_Service {
         if (MQTT_Service.instance != undefined) {
             return MQTT_Service.instance;

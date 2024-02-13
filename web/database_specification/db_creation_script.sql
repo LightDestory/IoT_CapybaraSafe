@@ -17,19 +17,19 @@ CREATE TABLE IF NOT EXISTS Workers (
 CREATE TABLE IF NOT EXISTS Activities (
     id INT AUTO_INCREMENT NOT NULL,
     text_description VARCHAR(255) NOT NULL,
-    duration_minute INT CHECK (
-        duration > 0
-        AND duration <= 120
-    ) NOT NULL,
-    scheduled_date DATETIME NOT NULL,
-    status VARCHAR(50) CHECK (
+    duration_minute INT NOT NULL CHECK (
+        duration_minute > 0
+        AND duration_minute <= 120
+    ),
+    scheduled_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(50) NOT NULL CHECK (
         status IN (
             'in progress',
             'to be completed',
             'scheduled',
             'completed'
         )
-    ) NOT NULL,
+    ),
     PRIMARY KEY (id)
 );
 
@@ -38,7 +38,6 @@ CREATE TABLE IF NOT EXISTS Assignments (
     id INT AUTO_INCREMENT NOT NULL,
     worker_id INT NOT NULL,
     activity_id INT NOT NULL,
-    start_time DATETIME DEFAULT NULL,
     FOREIGN KEY (worker_id) REFERENCES Workers(id),
     FOREIGN KEY (activity_id) REFERENCES Activities(id),
     PRIMARY KEY (id)
@@ -68,6 +67,7 @@ CREATE TABLE IF NOT EXISTS Alerts (
     text_description VARCHAR(255),
     activity_id INT,
     is_broadcast BOOLEAN DEFAULT 0,
+    send_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (activity_id) REFERENCES Activities(id),
     PRIMARY KEY(id)
 );
@@ -84,13 +84,18 @@ CREATE TABLE IF NOT EXISTS RemoteTrackings (
     FOREIGN KEY (anchor_id) REFERENCES Anchors(id),
     FOREIGN KEY (worker_id) REFERENCES Workers(id),
     FOREIGN KEY (device_id) REFERENCES TrackingDevices(id),
-    FOREIGN KEY (activity_id) REFERENCES Activities(id)
+    FOREIGN KEY (activity_id) REFERENCES Activities(id),
+    PRIMARY KEY(id)
 );
 
 CREATE OR REPLACE VIEW ActiveWorkers AS
-SELECT DISTINCT  W.id as "worker_id", Ac.id as "activity_id", A.start_time as "started_on", RT.device_id as "device_id", RT.anchor_id as "last_location_anchor"
+SELECT DISTINCT  W.id as "worker_id", Ac.id as "activity_id", Ac.scheduled_date as "started_on", RT.device_id as "device_id", RT.anchor_id as "last_location_anchor"
 FROM Workers W, Activities Ac, Assignments A, RemoteTrackings RT
 WHERE Ac.status = "in progress" and A.worker_id = W.id and A.activity_id = Ac.id and RT.worker_id = W.id and RT.activity_id = Ac.id ORDER BY timestamp DESC;
 
 CREATE OR REPLACE VIEW ActiveDevices AS
-SELECT DISTINCT RT.device_id as "device_id" FROM ActiveWorkers;
+SELECT DISTINCT device_id FROM ActiveWorkers;
+
+CREATE OR REPLACE VIEW AvailableDevices AS
+SELECT * FROM TrackingDevices as TD
+WHERE TD.id NOT IN (SELECT AD.device_id FROM ActiveDevices as AD);
