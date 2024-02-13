@@ -6,13 +6,11 @@ var mockData = [
     { "ID": 4, "description": "Task 4", "duration": 90, "date": "2024-02-13", "status": "completed" }
 ];
 
-
-//  metodo insertRow e insertCell per creare dinamicamente righe e celle della tabella.
+// Metodo insertRow e insertCell per creare dinamicamente righe e celle della tabella.
 function populateTable(data) {
     var tableBody = document.getElementById("activities");
 
-    tableBody.innerHTML = ""; //altrimenti la pagina non si "ripulisce", ma aggiunge solo righe ai filtri 
-    //nella mia testa ha senso questa frase
+    tableBody.innerHTML = "";
 
     // Populate table with mock data
     data.forEach(function (activity) {
@@ -22,7 +20,23 @@ function populateTable(data) {
         row.insertCell(2).textContent = activity.duration;
         row.insertCell(3).textContent = activity.date;
         row.insertCell(4).textContent = activity.status;
+
+        // Aggiungi un pulsante "View Details" con un evento click associato
+        var detailsButton = document.createElement("button");
+        detailsButton.textContent = "View Details";
+        detailsButton.classList.add("btn", "btn-primary");
+        detailsButton.addEventListener("click", function () {
+            viewDetails(activity.ID);
+        });
+
+        // Inserisci il pulsante nella colonna "Action"
+        row.insertCell(5).appendChild(detailsButton);
     });
+}
+
+function viewDetails(activityId) {
+    // Reindirizza l'utente alla pagina di dettaglio dell'attività
+    window.location.href = `activity_detail.html?activityId=${activityId}`;
 }
 
 function filterTable() {
@@ -32,14 +46,10 @@ function filterTable() {
     if (statusFilter === "all") {
         filteredData = mockData;
     } else {
-        filteredData = [];
-        for (var i = 0; i < mockData.length; i++) {
-            if (mockData[i].status === statusFilter) {
-                filteredData.push(mockData[i]);
-            }
-        }
+        filteredData = mockData.filter(function (activity) {
+            return activity.status === statusFilter;
+        });
     }
-
 
     populateTable(filteredData);
 }
