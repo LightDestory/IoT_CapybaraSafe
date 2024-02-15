@@ -36,29 +36,21 @@ void BLE_COM::GATT_Client_Device_Connection()
         state = GLOBALS::FAILED_INIT;
         return;
     }
-    if (selected_device == -1)
+
+    if (!client->isConnected())
     {
-        uint8_t quantity = (uint8_t)found_devices.size();
-        DISPLAY_ESP::requestBLEDeviceFromMenu("Select Device", &found_devices, &quantity,
-                                              &selection_device_cursor, &selected_device);
-    }
-    else
-    {
-        if (!client->isConnected())
+        SERIAL_LOGGER::log("Connecting to device..." + found_devices.at(selected_device).name);
+        DISPLAY_ESP::drawCenteredImageTitleSubtitle(DISPLAY_IMAGES::bluetooth, "Connecting",
+                                                    "Status");
+        if (!client->connect(&found_devices.at(selected_device).descriptor))
         {
-            SERIAL_LOGGER::log("Connecting to device..." + found_devices.at(selected_device).name);
-            DISPLAY_ESP::drawCenteredImageTitleSubtitle(DISPLAY_IMAGES::bluetooth, "Connecting",
-                                                        "Status");
-            if (!client->connect(&found_devices.at(selected_device).descriptor))
-            {
-                SERIAL_LOGGER::log("Failed to connect to device");
-                DISPLAY_ESP::drawCenteredImageTitleSubtitle(DISPLAY_IMAGES::error, "Error",
-                                                            "Failed to connect to device");
-                state = GLOBALS::STATIC;
-                return;
-            }
-            SERIAL_LOGGER::log("Connected to device..." + found_devices.at(selected_device).name);
+            SERIAL_LOGGER::log("Failed to connect to device");
+            DISPLAY_ESP::drawCenteredImageTitleSubtitle(DISPLAY_IMAGES::error, "Error",
+                                                        "Failed to connect to device");
+            state = GLOBALS::STATIC;
+            return;
         }
+        SERIAL_LOGGER::log("Connected to device..." + found_devices.at(selected_device).name);
     }
 }
 
@@ -132,7 +124,7 @@ void BLE_COM::displayMacAddr()
     DISPLAY_ESP::drawCenteredImageTitleSubtitle(DISPLAY_IMAGES::bluetooth, "Your Mac Addr", local_addr);
 }
 
-//avvio dello stack ble
+// avvio dello stack ble
 void BLE_COM::init()
 {
     // Enable Bluetooth
