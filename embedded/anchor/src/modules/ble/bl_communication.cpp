@@ -4,6 +4,7 @@
 #include "esp_bt_main.h"
 #include "esp_bt_device.h"
 #include <BLEDevice.h>
+#include "modules/utils/globals.h"
 
 GLOBALS::SUB_ROUTINE_STATE BLE_COM::state = GLOBALS::UN_SETUP;
 std::vector<DATA_STRUCTURES::ble_device_descriptor> BLE_COM::found_devices = {};
@@ -11,9 +12,7 @@ char BLE_COM::local_addr[18] = "";
 bool BLE_COM::scan_device_executed = false;
 BLEClient *BLE_COM::client = nullptr;
 BLEScan *BLE_COM::scanner = nullptr;
-DATA_STRUCTURES::workload BLE_COM::sub_menus[BLE_COM::IMPLEMENTED_SUBS] = {
-    {"GATT DeviceName", BLE_COM::GATT_Client_DeviceName},
-    {"Display BL Mac Addr", BLE_COM::displayMacAddr}};
+
 
 BLE_COM::BLE_scanCallback *callback = new BLE_COM::BLE_scanCallback();
 
@@ -39,24 +38,21 @@ void BLE_COM::GATT_Client_Device_Connection()
 
     if (!client->isConnected())
     {
+        // ERRORE MANCANZA LOGICA DI SELEZIONE DISPOTIVO
+        // ESEGUIRE UNA RICERCA BY NAME DEL DISPOSITIVO PERCHE' I DISPOSITIVI PERSONALI SARANNO RICONOSCIUTI COME PD_XXXX dove XXXX è il numero di serie
         SERIAL_LOGGER::log("Connecting to device..." + found_devices.at(selected_device).name);
         DISPLAY_ESP::drawCenteredImageTitleSubtitle(DISPLAY_IMAGES::bluetooth, "Connecting",
                                                     "Status");
-        if (!client->connect(&found_devices.at(selected_device).descriptor))
+        if (!client->connect(&found_devices.at(selected_device).descriptor)) // <--- non conosce il dispositvo
         {
             SERIAL_LOGGER::log("Failed to connect to device");
             DISPLAY_ESP::drawCenteredImageTitleSubtitle(DISPLAY_IMAGES::error, "Error",
                                                         "Failed to connect to device");
-            state = GLOBALS::STATIC;
+            state = GLOBALS::STATIC; // PUO FALLIRE CON UNO MA POTREBBE ANDARE A BUON FINE CON UN ALTRO
             return;
         }
         SERIAL_LOGGER::log("Connected to device..." + found_devices.at(selected_device).name);
     }
-}
-
-void BLE_COM::GATT_Client_DeviceName()
-{
-    GATT_Client("Device Name", BLEUUID("1800"), BLEUUID("2A00"));
 }
 
 void BLE_COM::GATT_Client(String title, BLEUUID ServiceUUID, BLEUUID CharacteristicUUID)
@@ -86,7 +82,7 @@ void BLE_COM::GATT_Client(String title, BLEUUID ServiceUUID, BLEUUID Characteris
                     String value = feature->readValue().c_str();
                     SERIAL_LOGGER::log("Value: " + value);
                     // Attendere prima di eseguire il prossimo polling
-                    delay(pollingInterval);
+                    delay(GLOBALS::ble_pooling_interval);
                 }
             }
         }
@@ -145,13 +141,13 @@ void BLE_COM::looper()
         init();
     if (state == GLOBALS::FAILED_INIT or state == GLOBALS::STATIC)
         return;
-    if (BLE_COM::selected_workload == -1)
-    {
-        DISPLAY_ESP::requestSubroutineFromMenu("BLE Menu", sub_menus, &IMPLEMENTED_SUBS, &selection_workload_cursor,
-                                               &selected_workload);
-    }
-    else
-    {
-        sub_menus[BLE_COM::selected_workload].callback();
-    }
+    // NON C'è FUNZIONE DI LOOP
+
+    // Il modulo BLE si deve occupare di interrogare a intervalli regolare i dispositivi nei dintorni. Il loop dovrebbe essere qui:
+    /*
+    1- Conessionne ai dipsositiv PD_XXXX
+    2- Lettura dei dati
+    3- Disconessione
+    4- Forwarding dei dati nel modulo di Meshing /// <--- Questo è un altro modulo
+    1*/
 }

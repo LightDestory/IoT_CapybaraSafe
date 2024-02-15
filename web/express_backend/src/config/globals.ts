@@ -1,5 +1,5 @@
 // EXPRESS RELATED STUFF
-const DEFAULT_HTTP_PORT: string = "5000";
+const DEFAULT_HTTP_PORT: string = "3000";
 const DEFAULT_SECRET_KEY: string = "capybara";
 
 // MQTT RELATED STUFF

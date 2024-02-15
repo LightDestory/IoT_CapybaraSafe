@@ -10,7 +10,6 @@ void entry_point()
     SERIAL_LOGGER::log("Running entry point...");
     BLE_COM::init();
     BLE_COM::GATT_Client_Device_Connection();
-    BLE_COM::GATT_Client_DeviceName();
     BLE_COM::GATT_Client_Discovery();
 }
 

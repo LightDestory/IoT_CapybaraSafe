@@ -110,7 +110,7 @@ namespace BLE_COM
             String tmp = advertisedDevice.getAddress().toString().c_str();
             tmp.toUpperCase();
             log_message += tmp;
-            if (advertisedDevice.haveName())
+            if (advertisedDevice.haveName() && advertisedDevice.getName().c_str() != pd_\d+)
             {
                 log_message += "\nName: ";
                 tmp = advertisedDevice.getName().c_str();

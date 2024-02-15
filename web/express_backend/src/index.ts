@@ -42,7 +42,6 @@ function bootstrap() {
     let mqtt_connected: boolean = await MQTT_Service.getInstance().ok();
     if (!mqtt_connected) {
       console.log("MQTT Service is not available, shutting down...");
-      process.exit(-1);
     }
     // Checking Database status
     let database_connected: boolean = await DatabaseHandler.getInstance().ok();

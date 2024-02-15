@@ -1,5 +1,6 @@
-import { connect, MqttClient } from "mqtt"
+import { connect, connectAsync, MqttClient } from "mqtt"
 import { DEFAULT_MQTT_PROTOCOL, DEFAULT_MQTT_HOST, DEFAULT_MQTT_PORT } from "../config/globals";
+import { once } from "events";
 
 type ConnectionInfo = {
     connectionUrl: string
@@ -20,13 +21,9 @@ export class MQTT_Service {
             connectTimeout: 4000,
             username: conn_info.username,
             password: conn_info.password,
-            reconnectPeriod: 1000,
-        }).on("error", (error) => {
-            console.log("Unable to connect to MQTT Broker:", error.name);
-            process.exit(-1);
-        })
+            manualConnect: true
+        });
         this.registerBaseEvents();
-        this.client.subscribe("testing/gateway");
     }
 
     private registerBaseEvents(): void {
@@ -43,7 +40,11 @@ export class MQTT_Service {
     }
 
     public async ok(): Promise<boolean> {
-        return await this.client.connected;
+        if (!this.client.connected) {
+            this.client.connect();
+            await once(this.client, "connect").catch(() => {});
+        }
+        return this.client.connected;
     }
 
     public static getInstance(): MQTT_Service {

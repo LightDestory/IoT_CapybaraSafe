@@ -1,8 +1,8 @@
 -- Database Creation
-CREATE DATABASE IF NOT EXISTS iot_project;
+CREATE DATABASE IF NOT EXISTS iotproject;
 
 -- Database Usage
-USE iot_project;
+USE iotproject;
 
 -- Workers Table Creation
 CREATE TABLE IF NOT EXISTS Workers (
@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS RemoteTrackings (
 );
 
 CREATE OR REPLACE VIEW ActiveWorkers AS
-SELECT DISTINCT  W.id as "worker_id", Ac.id as "activity_id", Ac.scheduled_date as "started_on", RT.device_id as "device_id", RT.anchor_id as "last_location_anchor"
+SELECT DISTINCT  W.first_name as "worker_first_name", W.last_name as "worker_last_name", W.id as "worker_id", Ac.id as "activity_id", Ac.scheduled_date as "started_on", RT.device_id as "device_id", RT.anchor_id as "last_location_anchor"
 FROM Workers W, Activities Ac, Assignments A, RemoteTrackings RT
 WHERE Ac.status = "in progress" and A.worker_id = W.id and A.activity_id = Ac.id and RT.worker_id = W.id and RT.activity_id = Ac.id ORDER BY timestamp DESC;
 
