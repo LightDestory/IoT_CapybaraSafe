@@ -59,56 +59,39 @@ void BLE_COM::GATT_Client_DeviceName()
     GATT_Client("Device Name", BLEUUID("1800"), BLEUUID("2A00"));
 }
 
-void BLE_COM::GATT_Client_Discovery()
-{
-    GATT_Client_Device_Connection();
-    if (client->isConnected())
-    {
-        auto services = client->getServices();
-        for (auto &service : *services)
-        {
-            BLERemoteService *remote = service.second;
-            for (auto &characteristic : *remote->getCharacteristics())
-            {
-                Serial.println(characteristic.first.c_str());
-            }
-        }
-        state = GLOBALS::STATIC;
-        client->disconnect();
-        scanner->stop();
-        scanner->clearResults();
-        return;
-    }
-}
-
 void BLE_COM::GATT_Client(String title, BLEUUID ServiceUUID, BLEUUID CharacteristicUUID)
 {
     GATT_Client_Device_Connection();
     if (client->isConnected())
     {
+
         BLERemoteService *service = client->getService(ServiceUUID);
+
         if (service == nullptr)
         {
-            DISPLAY_ESP::drawCenteredImageTitleSubtitle(DISPLAY_IMAGES::error, "Error",
-                                                        "Failed to find Service");
+            DISPLAY_ESP::drawCenteredImageTitleSubtitle(DISPLAY_IMAGES::error, "Error", "Failed to find Service");
         }
         else
         {
-            SERIAL_LOGGER::log("Found Service!");
             BLERemoteCharacteristic *feature = service->getCharacteristic(CharacteristicUUID);
+
             if (feature == nullptr)
             {
-                DISPLAY_ESP::drawCenteredImageTitleSubtitle(DISPLAY_IMAGES::error, "Error",
-                                                            "Failed to find Feature");
+                DISPLAY_ESP::drawCenteredImageTitleSubtitle(DISPLAY_IMAGES::error, "Error", "Failed to find Feature");
             }
             else
             {
-                String value = feature->readValue().c_str();
-                SERIAL_LOGGER::log("Value: " + value);
-                DISPLAY_ESP::drawCenteredImageTitleSubtitle(DISPLAY_IMAGES::bluetooth, title,
-                                                            value);
+                while (true)
+                {
+                    String value = feature->readValue().c_str();
+                    SERIAL_LOGGER::log("Value: " + value);
+                    // Attendere prima di eseguire il prossimo polling
+                    delay(pollingInterval);
+                }
             }
         }
+
+        SERIAL_LOGGER::log("Found Service!");
         state = GLOBALS::STATIC;
         client->disconnect();
         scanner->stop();
