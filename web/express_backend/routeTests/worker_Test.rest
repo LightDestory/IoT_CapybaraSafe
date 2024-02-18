@@ -1,0 +1,4 @@
+## GET all workers
+GET  http://localhost:3000/api/worker/all
+Authorization: capybara
+#############

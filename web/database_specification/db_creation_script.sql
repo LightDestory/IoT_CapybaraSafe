@@ -46,10 +46,10 @@ CREATE TABLE IF NOT EXISTS Assignments (
 -- TrackingDevices Table Creation
 CREATE TABLE IF NOT EXISTS TrackingDevices (
     id INT AUTO_INCREMENT NOT NULL,
-    mac_address VARCHAR(17),
+    mac_address VARCHAR(17) NOT NULL,
     -- Assumes that the MAC address is represented in standard format (e.g., "00:1A:2B:3C:4D:5E")
-    last_maintenance DATE,
-    firmware_version VARCHAR(50),
+    last_maintenance DATE NOT NULL,
+    firmware_version VARCHAR(50) NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -57,16 +57,16 @@ CREATE TABLE IF NOT EXISTS TrackingDevices (
 CREATE TABLE IF NOT EXISTS Anchors (
     id INT AUTO_INCREMENT NOT NULL,
     mac_address VARCHAR(17) NOT NULL,
-    status VARCHAR(255) DEFAULT "working",
+    status VARCHAR(255) NOT NULL DEFAULT "working",
     PRIMARY KEY (id)
 );
 
 -- Alerts Table Creation
 CREATE TABLE IF NOT EXISTS Alerts (
     id INT AUTO_INCREMENT NOT NULL,
-    text_description VARCHAR(255),
+    text_description VARCHAR(255) NOT NULL,
     activity_id INT,
-    is_broadcast BOOLEAN DEFAULT 0,
+    is_broadcast BOOLEAN NOT NULL DEFAULT 0,
     send_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (activity_id) REFERENCES Activities(id),
     PRIMARY KEY(id)

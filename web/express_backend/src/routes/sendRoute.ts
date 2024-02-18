@@ -1,4 +1,4 @@
-import express, {Request, Response, Router} from 'express';
+import express, { Request, Response, Router } from 'express';
 import { MQTT_Service } from '../mqtt_service/mqtt_service';
 
 export const sendRoute: Router = express.Router();
@@ -9,7 +9,7 @@ export const sendRoute: Router = express.Router();
  * endpoint => .../send?text=message
  */
 sendRoute.get('/', (req: Request, res: Response) => {
-    let text: string = req.query.text as string;
+    const text: string = req.query.text as string;
     if (!text) {
         res.sendStatus(400);
         return;
