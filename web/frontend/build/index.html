@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Login</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicons/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicons/favicon-16x16.png" media="(prefers-color-scheme: dark)">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicons/favicon-32x32.png" media="(prefers-color-scheme: dark)">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/img/favicons/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="assets/img/favicons/android-chrome-512x512.png">
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i&amp;display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+</head>
+
+<body class="bg-gradient-primary" style="background: var(--bs-secondary-bg);">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-9 col-lg-12 col-xl-10">
+                <div class="card shadow-lg o-hidden border-0 my-5">
+                    <div class="card-body p-0" style="text-shadow: 3px 3px 5px;">
+                        <div class="row">
+                            <div class="col-lg-6 d-none d-lg-flex">
+                                <div class="flex-grow-1 bg-login-image" style="background: url(&quot;assets/img/login/login_capybara.jpg&quot;) left / cover no-repeat;"></div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h4 class="mb-4">Administration Panel</h4>
+                                    </div>
+                                    <p style="font-style: italic;text-align: center;">Provide the Authorization Token to access the administrative pages.</p>
+                                    <form id="login_form" class="user" onsubmit="event.preventDefault(); tryLogin();">
+                                        <div class="mb-3"><input class="form-control form-control-user" type="text" id="endpoint" placeholder="Endpoint: localhost" name="endpoint" style="margin-top: 50px;box-shadow: 3px 3px 9px 0px;text-align: center;font-weight: bold;" required="" minlength="" title="The Token must be atleast 5 characters long" autofocus=""></div>
+                                        <div class="mb-3"><input class="form-control form-control-user" type="password" data-bs-toggle="tooltip" data-bss-tooltip="" data-bs-placement="bottom" id="token" placeholder="Token" name="token" style="margin-top: 50px;box-shadow: 3px 3px 9px 0px;text-align: center;font-weight: bold;" autofocus="" required="" minlength="5" title="The Token must be atleast 5 characters long"></div><button class="btn btn-primary d-block btn-user w-50" id="login_button" type="submit" style="margin-top: 70px;box-shadow: 3px 3px 10px var(--bs-btn-bg);margin-right: auto;margin-left: auto;margin-bottom: 15px;" name="login">Login</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/login.js"></script>
+</body>
+
+</html>
