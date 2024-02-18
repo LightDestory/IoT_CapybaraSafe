@@ -1,4 +1,3 @@
-import { literal } from "sequelize";
 import Activity from "./Activity";
 import {
   Model,
@@ -11,7 +10,8 @@ import {
   Default,
   IsDate,
   ForeignKey,
-  BelongsTo
+  BelongsTo,
+  Sequelize
 } from "sequelize-typescript";
 
 @Table({ timestamps: false })
@@ -41,7 +41,7 @@ export default class Alert extends Model {
 
   @AllowNull(false)
   @IsDate
-  @Default(literal("CURRENT_TIMESTAMP"))
+  @Default(Sequelize.literal('CURRENT_TIMESTAMP'))
   @Column(DataType.DATE)
   send_date!: Date;
 }

@@ -1,4 +1,3 @@
-import { literal } from "sequelize";
 import {
   Model,
   Table,
@@ -12,7 +11,8 @@ import {
   Default,
   IsIn,
   IsDate,
-  HasMany
+  HasMany,
+  Sequelize
 } from "sequelize-typescript";
 import Alert from "./Alert";
 import Assignment from "./Assignment";
@@ -38,7 +38,7 @@ export default class Activity extends Model {
 
   @AllowNull(false)
   @IsDate
-  @Default(literal("CURRENT_TIMESTAMP"))
+  @Default(Sequelize.literal("CURRENT_TIMESTAMP"))
   @Column(DataType.DATE)
   scheduled_date!: Date;
 

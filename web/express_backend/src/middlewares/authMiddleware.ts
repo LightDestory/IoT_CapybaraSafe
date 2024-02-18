@@ -10,7 +10,7 @@ export function authCheck(req: Request, res: Response, next: NextFunction) {
   const local_key =
     process.env.SECRET_KEY || CONFIG_DEFAULTS.DEFAULT_SECRET_KEY;
   if (!auth || auth != local_key) {
-    res.status(401).json({ status: "error", message: "Unauthorized" });
+    res.status(401).json({ status: "error", data: "Unauthorized Access" });
     return;
   }
   next();

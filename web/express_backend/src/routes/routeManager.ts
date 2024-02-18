@@ -1,6 +1,7 @@
 import { sendRoute } from "./sendRoute";
 import { pingRoute } from "./pingRoute";
 import { workerRoute } from "./workerRoute";
+import { alertRoute } from "./alertRoute";
 import { Application } from "express";
 
 /*
@@ -11,6 +12,7 @@ import { Application } from "express";
 // Register routes on the express application
 export function registerRoutes(app: Application) {
   app.use("/api/ping", pingRoute);
+  app.use("/api/alert", alertRoute);
   app.use("/api/send", sendRoute);
   app.use("/api/worker", workerRoute);
 }
