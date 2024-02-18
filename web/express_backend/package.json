@@ -9,8 +9,8 @@
     "dev": "nodemon ./src/index.ts",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
-    "prettier:format": "prettier --config .prettierrc ./src/**/*.ts --write",
-    "prettier:check": "prettier --config .prettierrc ./src/**/*.ts --check"
+    "prettier:format": "prettier  ./src/**/*.ts --write",
+    "prettier:check": "prettier  ./src/**/*.ts --check"
   },
   "keywords": [],
   "author": "",

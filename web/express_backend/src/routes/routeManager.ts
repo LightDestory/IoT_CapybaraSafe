@@ -10,7 +10,7 @@ import { Application } from "express";
 
 // Register routes on the express application
 export function registerRoutes(app: Application) {
-    app.use('/api/ping', pingRoute);
-    app.use('/api/send', sendRoute);
-    app.use('/api/worker', workerRoute)
+  app.use("/api/ping", pingRoute);
+  app.use("/api/send", sendRoute);
+  app.use("/api/worker", workerRoute);
 }
