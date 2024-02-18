@@ -21,7 +21,7 @@ export class MQTT_Service {
       username: conn_info.username,
       password: conn_info.password,
       reconnectPeriod: 1000,
-      manualConnect: true,
+      manualConnect: true
     });
     this.registerBaseEvents();
   }
@@ -30,18 +30,18 @@ export class MQTT_Service {
     this.client.on("connect", () => {
       console.log(
         chalk.green("Connected to the broker with client id:"),
-        chalk.yellow(this.client.options.clientId),
+        chalk.yellow(this.client.options.clientId)
       );
       this.client.publish(
         MQTT_Topics.CONNECTION_TEST,
-        `Hello from ${this.client.options.clientId}`,
+        `Hello from ${this.client.options.clientId}`
       );
     });
     this.client.on(
       "message",
       (topic: string, payload: Buffer, _: IPublishPacket) => {
         this.messageDispatcher(topic, payload);
-      },
+      }
     );
     this.client.on("error", (error) => {
       console.error(chalk.red("MQTT-Communication error:"), error);

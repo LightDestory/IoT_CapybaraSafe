@@ -14,5 +14,5 @@ export enum CONFIG_DEFAULTS {
   DEFAULT_DB_DRIVER = "mariadb",
   DEFAULT_DB_USER = "root",
   DEFAULT_DB_PASS = "SecurePassword",
-  DEFAULT_DB_NAME = "DatabaseName",
+  DEFAULT_DB_NAME = "DatabaseName"
 }

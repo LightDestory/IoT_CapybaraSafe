@@ -6,7 +6,7 @@ import {
   PrimaryKey,
   AllowNull,
   DataType,
-  HasMany,
+  HasMany
 } from "sequelize-typescript";
 import Assignment from "./Assignment";
 import RemoteTracking from "./RemoteTracking";

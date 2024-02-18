@@ -7,7 +7,7 @@ import {
   AllowNull,
   DataType,
   IsDate,
-  HasMany,
+  HasMany
 } from "sequelize-typescript";
 import RemoteTracking from "./RemoteTracking";
 @Table({ timestamps: false })

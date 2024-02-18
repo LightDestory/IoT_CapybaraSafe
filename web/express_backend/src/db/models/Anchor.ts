@@ -7,7 +7,7 @@ import {
   AllowNull,
   DataType,
   HasMany,
-  Default,
+  Default
 } from "sequelize-typescript";
 import RemoteTracking from "./RemoteTracking";
 

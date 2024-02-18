@@ -9,7 +9,7 @@ import {
   DataType,
   IsDate,
   ForeignKey,
-  BelongsTo,
+  BelongsTo
 } from "sequelize-typescript";
 import Anchor from "./Anchor";
 import Worker from "./Worker";

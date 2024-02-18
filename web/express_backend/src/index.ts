@@ -23,8 +23,8 @@ function init() {
   if (configuration.error) {
     console.warn(
       chalk.yellow(
-        `Unable to load .env file.\r\n${configuration.error}\r\nUsing default values...`,
-      ),
+        `Unable to load .env file.\r\n${configuration.error}\r\nUsing default values...`
+      )
     );
   }
   console.log(chalk.green("Loaded configuration!"));
@@ -34,7 +34,7 @@ function init() {
   app.use(
     express.json(),
     express.text(),
-    bodyParser.urlencoded({ extended: false }),
+    bodyParser.urlencoded({ extended: false })
   );
   // Injecting custom Auth middleware
   app.use(authCheck);
@@ -72,10 +72,10 @@ async function bootstrap() {
     .listen(port, () => {
       console.log(
         chalk.yellow("HTTP APIs will use the following security key:"),
-        chalk.red(process.env.SECRET_KEY || CONFIG_DEFAULTS.DEFAULT_SECRET_KEY),
+        chalk.red(process.env.SECRET_KEY || CONFIG_DEFAULTS.DEFAULT_SECRET_KEY)
       );
       console.log(
-        chalk.green("HTTP Server listening to port", chalk.yellow(port)),
+        chalk.green("HTTP Server listening to port", chalk.yellow(port))
       );
     })
     .on("error", () => {

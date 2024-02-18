@@ -11,7 +11,7 @@ import {
   Default,
   IsDate,
   ForeignKey,
-  BelongsTo,
+  BelongsTo
 } from "sequelize-typescript";
 
 @Table({ timestamps: false })

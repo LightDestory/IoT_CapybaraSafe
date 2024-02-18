@@ -7,7 +7,7 @@ import {
   AllowNull,
   DataType,
   ForeignKey,
-  BelongsTo,
+  BelongsTo
 } from "sequelize-typescript";
 import Worker from "./Worker";
 import Activity from "./Activity";

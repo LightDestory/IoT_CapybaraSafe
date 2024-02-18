@@ -12,7 +12,7 @@ import {
   Default,
   IsIn,
   IsDate,
-  HasMany,
+  HasMany
 } from "sequelize-typescript";
 import Alert from "./Alert";
 import Assignment from "./Assignment";

@@ -26,7 +26,7 @@ export class DatabaseHandler {
       port: parseInt(conn_info.db_port),
       dialect: conn_info.db_driver,
       logging: false,
-      models: [__dirname + "/models"],
+      models: [__dirname + "/models"]
     });
   }
 
@@ -35,8 +35,8 @@ export class DatabaseHandler {
       await this.connection.authenticate();
       console.log(
         chalk.green(
-          "Connection to the database has been established successfully.",
-        ),
+          "Connection to the database has been established successfully."
+        )
       );
       console.log(chalk.blue("Synchronizing models..."));
       await this.connection.sync({ alter: false, force: false });
