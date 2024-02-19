@@ -3,19 +3,36 @@ import { Dialect, ConnectionRefusedError } from "sequelize";
 import { CONFIG_DEFAULTS } from "../config/config_defaults";
 import chalk from "chalk";
 
-type ConnectionInfo = {
+/**
+ * ConnectionInfo type
+ * @property {string} db_host - The database host
+ * @property {string} db_port - The database port
+ * @property {Dialect} db_driver - The database driver
+ * @property {string} db_user - The database user
+ * @property {string} db_password - The database password
+ * @property {string} db_name - The database name
+ */
+interface ConnectionInfo {
   db_host: string;
   db_port: string;
   db_driver: Dialect;
   db_user: string;
   db_password: string;
   db_name: string;
-};
+}
 
+/**
+ * @description This class is a singleton that handles the connection to the database
+ */
 export class DatabaseHandler {
+  // Singleton instance
   private static instance: DatabaseHandler | undefined;
-  private connection: Sequelize;
+  // Sequelize connection
+  private readonly connection: Sequelize;
 
+  /**
+   * @description This constructor is private to avoid multiple instances of the class
+   */
   private constructor() {
     const conn_info: ConnectionInfo = DatabaseHandler.getConnectionInfo();
     this.connection = new Sequelize({
@@ -30,6 +47,10 @@ export class DatabaseHandler {
     });
   }
 
+  /**
+   * @description This method checks if the connection to the database is ok and synchronizes the models
+   * @returns {Promise<boolean>} - A promise that resolves to true if the connection is ok, false otherwise
+   */
   public async ok(): Promise<boolean> {
     try {
       await this.connection.authenticate();
@@ -55,10 +76,18 @@ export class DatabaseHandler {
     }
   }
 
+  /**
+   * @description This method returns the connection to the database as a Sequelize object
+   * @returns {Sequelize} - The connection to the database
+   */
   public getConnection(): Sequelize {
     return this.connection;
   }
 
+  /**
+   * @description This method returns the singleton instance of the class, creates it if it doesn't exist
+   * @returns {DatabaseHandler} - The singleton instance of the class
+   */
   public static getInstance(): DatabaseHandler {
     if (DatabaseHandler.instance != undefined) {
       return DatabaseHandler.instance;
@@ -67,6 +96,10 @@ export class DatabaseHandler {
     return DatabaseHandler.instance;
   }
 
+  /**
+   * @description This method retrieves the connection info from the environment variables or the default values
+   * @returns {ConnectionInfo} - The connection info
+   */
   private static getConnectionInfo(): ConnectionInfo {
     const db_host: string =
       process.env.DB_HOST || CONFIG_DEFAULTS.DEFAULT_DB_HOST;

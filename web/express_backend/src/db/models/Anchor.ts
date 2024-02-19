@@ -11,6 +11,11 @@ import {
 } from "sequelize-typescript";
 import RemoteTracking from "./RemoteTracking";
 
+/**
+ * Anchor model
+ * @class Anchor
+ * @extends Model
+ */
 @Table({ timestamps: false })
 export default class Anchor extends Model {
   @PrimaryKey

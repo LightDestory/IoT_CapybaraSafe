@@ -1,0 +1,43 @@
+############# GET all Activities
+GET  http://localhost:3000/api/activity/all?status=in progress
+Authorization: capybara
+#############
+
+############# GET specific Activity with ID
+GET  http://localhost:3000/api/activity/1
+Authorization: capybara
+#############
+
+############# GET a invalid Activity with ID
+GET  http://localhost:3000/api/activity/-1
+Authorization: capybara
+#############
+
+############# POST (create) a Activity Alert
+POST  http://localhost:3000/api/activity/
+content-type: application/json
+Authorization: capybara
+
+{
+  "text_description": "Test Activity",
+  "duration_minute": 60,
+  "scheduled_date": "2024-01-30T18:30:00.000Z",
+  "status": "completed"
+}
+############# Update an Activity with specific ID
+
+POST  http://localhost:3000/api/activity/6
+content-type: application/json
+Authorization: capybara
+
+{
+  "text_description": "Test Creation Updated",
+  "duration_minute": 120,
+  "status": "in progress"
+}
+#############
+
+############# Delete an Activity with specific ID
+DELETE  http://localhost:3000/api/activity/2
+Authorization: capybara
+#############

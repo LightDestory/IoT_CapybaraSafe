@@ -12,12 +12,26 @@ import {
   IsIn,
   IsDate,
   HasMany,
-  Sequelize
+  Sequelize,
+  BelongsToMany
 } from "sequelize-typescript";
 import Alert from "./Alert";
 import Assignment from "./Assignment";
+import Worker from "./Worker";
 import RemoteTracking from "./RemoteTracking";
 
+export const ACTIVITY_STATUSES: string[] = [
+  "in progress",
+  "to be completed",
+  "scheduled",
+  "completed"
+];
+
+/**
+ * Activity model
+ * @class Activity
+ * @extends Model
+ */
 @Table({ timestamps: false })
 export default class Activity extends Model {
   @PrimaryKey
@@ -50,8 +64,8 @@ export default class Activity extends Model {
   @HasMany(() => Alert, "activity_id")
   alerts!: Alert[];
 
-  @HasMany(() => Assignment, "activity_id")
-  assignments!: Assignment[];
+  @BelongsToMany(() => Worker, () => Assignment, "activity_id")
+  workers!: Worker[];
 
   @HasMany(() => RemoteTracking, "activity_id")
   remote_trackings!: RemoteTracking[];

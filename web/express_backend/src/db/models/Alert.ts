@@ -14,6 +14,11 @@ import {
   Sequelize
 } from "sequelize-typescript";
 
+/**
+ * Alert model
+ * @class Alert
+ * @extends Model
+ */
 @Table({ timestamps: false })
 export default class Alert extends Model {
   @PrimaryKey
@@ -41,7 +46,7 @@ export default class Alert extends Model {
 
   @AllowNull(false)
   @IsDate
-  @Default(Sequelize.literal('CURRENT_TIMESTAMP'))
+  @Default(Sequelize.literal("CURRENT_TIMESTAMP"))
   @Column(DataType.DATE)
   send_date!: Date;
 }

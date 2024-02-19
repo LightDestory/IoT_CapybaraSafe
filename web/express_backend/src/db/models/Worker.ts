@@ -6,11 +6,18 @@ import {
   PrimaryKey,
   AllowNull,
   DataType,
-  HasMany
+  HasMany,
+  BelongsToMany
 } from "sequelize-typescript";
 import Assignment from "./Assignment";
 import RemoteTracking from "./RemoteTracking";
+import Activity from "./Activity";
 
+/**
+ * Worker model
+ * @class Worker
+ * @extends Model
+ */
 @Table({ timestamps: false })
 export default class Worker extends Model {
   @PrimaryKey
@@ -31,8 +38,8 @@ export default class Worker extends Model {
   @Column(DataType.STRING(50))
   profession!: string;
 
-  @HasMany(() => Assignment, "worker_id")
-  assignments!: Assignment[];
+  @BelongsToMany(() => Activity, () => Assignment, "worker_id")
+  activities!: Activity[];
 
   @HasMany(() => RemoteTracking, "worker_id")
   remote_trackings!: RemoteTracking[];

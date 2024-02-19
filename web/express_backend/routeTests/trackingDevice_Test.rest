@@ -1,0 +1,40 @@
+############# GET all TrackingDevices
+GET  http://localhost:3000/api/tracking_device/all
+Authorization: capybara
+#############
+
+############# GET specific TrackingDevice with ID
+GET  http://localhost:3000/api/tracking_device/1
+Authorization: capybara
+#############
+
+############# GET a invalid TrackingDevice with ID
+GET  http://localhost:3000/api/tracking_device/-1
+Authorization: capybara
+#############
+
+############# POST (create) a new TrackingDevice
+POST  http://localhost:3000/api/tracking_device/
+content-type: application/json
+Authorization: capybara
+
+{
+  "mac_address": "49:31:31:27:23:64",
+  "last_maintenance": "2023-10-13T00:00:00.000Z",
+  "firmware_version": "v2.0"
+}
+############# Update a TrackingDevice with specific ID
+
+POST  http://localhost:3000/api/tracking_device/41
+content-type: application/json
+Authorization: capybara
+
+{
+  "firmware_version": "v2.5"
+}
+#############
+
+############# Delete an TrackingDevice with specific ID
+DELETE  http://localhost:3000/api/tracking_device/27
+Authorization: capybara
+#############

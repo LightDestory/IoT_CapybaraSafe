@@ -12,6 +12,11 @@ import {
 import Worker from "./Worker";
 import Activity from "./Activity";
 
+/**
+ * Assignment model
+ * @class Assignment
+ * @extends Model
+ */
 @Table({ timestamps: false })
 export default class Assignment extends Model {
   @PrimaryKey

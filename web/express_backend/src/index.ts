@@ -16,10 +16,10 @@ const configuration: dotenv.DotenvConfigOutput = dotenv.config();
 // Init express application
 const app: Application = express();
 
+/**
+ * Load the configuration and initialize the HTTP server routes
+ */
 function init() {
-  /*
-   * This function is used to initialize all the servcies with all the required funcionalities
-   */
   if (configuration.error) {
     console.warn(
       chalk.yellow(
@@ -47,10 +47,17 @@ function init() {
   });
 }
 
+/**
+ * Starts all the services.
+ * The main services are:
+ * - MQTT Service: used to connect to the MQTT broker and listen to the topics
+ * - Database Service: used to connect to the database and perform CRUD operations
+ * - HTTP Server: used to expose the APIs to the clients
+ *
+ * @async
+ * @returns {Promise<void>} - A promise that resolves when all the services are up and running
+ */
 async function bootstrap() {
-  /*
-   * This function is used to check the services connection status and start the http server
-   */
   // Checking MQTT Service status
   console.log(chalk.blue("Checking MQTT Service status..."));
   const mqtt_connected: boolean = await MQTT_Service.getInstance().ok();

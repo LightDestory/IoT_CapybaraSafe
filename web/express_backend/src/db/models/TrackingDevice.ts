@@ -10,6 +10,12 @@ import {
   HasMany
 } from "sequelize-typescript";
 import RemoteTracking from "./RemoteTracking";
+
+/**
+ * TrackingDevice model
+ * @class TrackingDevice
+ * @extends Model
+ */
 @Table({ timestamps: false })
 export default class TrackingDevice extends Model {
   @PrimaryKey

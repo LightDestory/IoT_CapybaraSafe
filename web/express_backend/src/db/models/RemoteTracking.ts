@@ -16,6 +16,11 @@ import Worker from "./Worker";
 import TrackingDevice from "./TrackingDevice";
 import Activity from "./Activity";
 
+/**
+ * RemoteTracking model
+ * @class RemoteTracking
+ * @extends Model
+ */
 @Table({ timestamps: false })
 export default class RemoteTracking extends Model {
   @PrimaryKey
