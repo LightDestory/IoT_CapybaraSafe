@@ -1,6 +1,8 @@
 import express, { Request, Response, Router } from "express";
 import Activity from "../db/models/Activity";
 import Worker from "../db/models/Worker";
+import RemoteTracking from "../db/models/RemoteTracking";
+import TrackingDevice from "../db/models/TrackingDevice";
 
 export const workerRoute: Router = express.Router();
 /**
@@ -8,7 +10,13 @@ export const workerRoute: Router = express.Router();
  */
 workerRoute.get("/all", async (_: Request, res: Response) => {
   const workers: Worker[] = await Worker.findAll({
-    include: [Activity]
+    include: [
+      Activity,
+      {
+        model: RemoteTracking,
+        include: [TrackingDevice]
+      }
+    ]
   });
   res.status(200).json({ status: "success", data: workers });
 });
@@ -18,7 +26,13 @@ workerRoute.get("/all", async (_: Request, res: Response) => {
  */
 workerRoute.get("/:id", async (req: Request, res: Response) => {
   const worker: Worker | null = await Worker.findByPk(req.params.id, {
-    include: [Activity]
+    include: [
+      Activity,
+      {
+        model: RemoteTracking,
+        include: [TrackingDevice]
+      }
+    ]
   });
   if (worker) {
     res.status(200).json({ status: "success", data: worker });

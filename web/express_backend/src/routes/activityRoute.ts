@@ -2,6 +2,8 @@ import express, { Request, Response, Router } from "express";
 import Alert from "../db/models/Alert";
 import Activity, { ACTIVITY_STATUSES } from "../db/models/Activity";
 import Worker from "../db/models/Worker";
+import RemoteTracking from "../db/models/RemoteTracking";
+import TrackingDevice from "../db/models/TrackingDevice";
 
 export const activityRoute: Router = express.Router();
 /**
@@ -18,7 +20,11 @@ activityRoute.get("/all", async (req: Request, res: Response) => {
     return;
   }
   const activities: Activity[] = await Activity.findAll({
-    include: [Alert, Worker],
+    include: [
+      Alert,
+      Worker,
+      { model: RemoteTracking, include: [TrackingDevice] }
+    ],
     where: filter ? { status: filter } : {}
   });
   res.status(200).json({ status: "success", data: activities });
@@ -29,7 +35,11 @@ activityRoute.get("/all", async (req: Request, res: Response) => {
  */
 activityRoute.get("/:id", async (req: Request, res: Response) => {
   const activity: Activity | null = await Activity.findByPk(req.params.id, {
-    include: [Alert, Worker]
+    include: [
+      Alert,
+      Worker,
+      { model: RemoteTracking, include: [TrackingDevice] }
+    ]
   });
   if (activity) {
     res.status(200).json({ status: "success", data: activity });

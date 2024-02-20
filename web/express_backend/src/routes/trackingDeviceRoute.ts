@@ -1,12 +1,20 @@
 import express, { Request, Response, Router } from "express";
 import TrackingDevice from "../db/models/TrackingDevice";
+import RemoteTracking from "../db/models/RemoteTracking";
+import Worker from "../db/models/Worker";
+import Activity from "../db/models/Activity";
 export const trackingDeviceRoute: Router = express.Router();
 
 /**
  * This route is used to retrieve all the trackingDevices from the database
  */
 trackingDeviceRoute.get("/all", async (_: Request, res: Response) => {
-  const trackingDevices: TrackingDevice[] = await TrackingDevice.findAll();
+  const trackingDevices: TrackingDevice[] = await TrackingDevice.findAll({
+    include: {
+      model: RemoteTracking,
+      include: [Activity, Worker]
+    }
+  });
   res.status(200).json({ status: "success", data: trackingDevices });
 });
 
@@ -15,7 +23,13 @@ trackingDeviceRoute.get("/all", async (_: Request, res: Response) => {
  */
 trackingDeviceRoute.get("/:id", async (req: Request, res: Response) => {
   const trackingDevice: TrackingDevice | null = await TrackingDevice.findByPk(
-    req.params.id
+    req.params.id,
+    {
+      include: {
+        model: RemoteTracking,
+        include: [Activity, Worker]
+      }
+    }
   );
   if (trackingDevice) {
     res.status(200).json({ status: "success", data: trackingDevice });
