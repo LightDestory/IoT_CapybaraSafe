@@ -2,7 +2,6 @@ import {
   Model,
   Table,
   Column,
-  AutoIncrement,
   PrimaryKey,
   Default,
   AllowNull,
@@ -23,12 +22,6 @@ import Activity from "./Activity";
  */
 @Table({ timestamps: false })
 export default class RemoteTracking extends Model {
-  @PrimaryKey
-  @AutoIncrement
-  @AllowNull(false)
-  @Column(DataType.INTEGER)
-  id!: number;
-
   @AllowNull(false)
   @IsDate
   @Column(DataType.DATE)
@@ -43,6 +36,11 @@ export default class RemoteTracking extends Model {
   anchor!: Anchor;
 
   @AllowNull(false)
+  @Column(DataType.INTEGER)
+  anchor_signal_strength!: number;
+
+  @PrimaryKey
+  @AllowNull(false)
   @ForeignKey(() => Worker)
   @Column(DataType.INTEGER)
   worker_id!: number;
@@ -50,6 +48,7 @@ export default class RemoteTracking extends Model {
   @BelongsTo(() => Worker, "worker_id")
   worker!: Worker;
 
+  @PrimaryKey
   @AllowNull(false)
   @ForeignKey(() => TrackingDevice)
   @Column(DataType.INTEGER)
@@ -58,6 +57,7 @@ export default class RemoteTracking extends Model {
   @BelongsTo(() => TrackingDevice, "device_id")
   device!: TrackingDevice;
 
+  @PrimaryKey
   @AllowNull(false)
   @ForeignKey(() => Activity)
   @Column(DataType.INTEGER)
@@ -70,4 +70,16 @@ export default class RemoteTracking extends Model {
   @Default(false)
   @Column(DataType.BOOLEAN)
   emergency!: boolean;
+
+  @AllowNull(false)
+  @Column(DataType.INTEGER)
+  heart_rate!: number;
+
+  @AllowNull(false)
+  @Column(DataType.INTEGER)
+  saturation!: number;
+
+  @AllowNull(false)
+  @Column(DataType.INTEGER)
+  temperature!: number;
 }

@@ -20,11 +20,6 @@ import Activity from "./Activity";
 @Table({ timestamps: false })
 export default class Assignment extends Model {
   @PrimaryKey
-  @AutoIncrement
-  @AllowNull(false)
-  @Column(DataType.INTEGER)
-  id!: number;
-
   @AllowNull(false)
   @ForeignKey(() => Worker)
   @Column(DataType.INTEGER)
@@ -33,6 +28,7 @@ export default class Assignment extends Model {
   @BelongsTo(() => Worker, "worker_id")
   worker!: Worker;
 
+  @PrimaryKey
   @AllowNull(false)
   @ForeignKey(() => Activity)
   @Column(DataType.INTEGER)
