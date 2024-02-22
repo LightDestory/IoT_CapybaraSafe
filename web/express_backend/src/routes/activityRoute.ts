@@ -34,7 +34,7 @@ activityRoute.get("/all", async (req: Request, res: Response) => {
 /**
  * This route is used to retrieve a specific activity from the database
  */
-activityRoute.get("/:id", async (req: Request, res: Response) => {
+activityRoute.get("^:id([0-9]+)", async (req: Request, res: Response) => {
   const activity: Activity | null = await Activity.findByPk(req.params.id, {
     include: [
       Alert,
@@ -45,6 +45,31 @@ activityRoute.get("/:id", async (req: Request, res: Response) => {
   if (activity) {
     res.status(200).json({ status: "success", data: activity });
     return;
+  }
+  res.status(404).send({ status: "error", data: "Activity not found" });
+});
+
+/**
+ * This route is used to start the activity
+ */
+activityRoute.get("/start", async (req: Request, res: Response) => {
+  const query: string | undefined = req.query.data as string | undefined;
+  if (!query) {
+    res.status(400).json({ status: "error", data: "Invalid request" });
+    return;
+  }
+  const ids: string[] = query.split("-");
+  const activity: Activity | null = await Activity.findByPk(ids[0]);
+  if (activity) {
+    activity.set({ status: "in progress" });
+    try {
+      const newActivity: Activity = await activity.save();
+      res.status(200).json({ status: "success", data: newActivity });
+      return;
+    } catch (error) {
+      res.status(400).json({ status: "error", data: "Invalid request" });
+      return;
+    }
   }
   res.status(404).send({ status: "error", data: "Activity not found" });
 });
@@ -117,5 +142,5 @@ activityRoute.post("/:id", async (req: Request, res: Response) => {
       return;
     }
   }
-  res.status(404).send({ status: "error", data: "Alert not found" });
+  res.status(404).send({ status: "error", data: "Activity not found" });
 });

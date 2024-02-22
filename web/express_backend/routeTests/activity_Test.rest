@@ -38,6 +38,11 @@ Authorization: capybara
 #############
 
 ############# Delete an Activity with specific ID
-DELETE  http://localhost:3000/api/activity/2
+DELETE  http://localhost:3000/api/activity/6
+Authorization: capybara
+#############
+
+#############
+GET  http://localhost:3000/api/activity/start
 Authorization: capybara
 #############
