@@ -1,0 +1,42 @@
+############# GET all Alerts
+GET  http://localhost:3000/api/alert/all
+Authorization: capybara
+#############
+
+############# GET specific Alert with ID
+GET  http://localhost:3000/api/alert/1
+Authorization: capybara
+#############
+
+############# GET a invalid Alert with ID
+GET  http://localhost:3000/api/alert/-1
+Authorization: capybara
+#############
+
+############# POST (create) a new Alert
+POST  http://localhost:3000/api/alert/
+content-type: application/json
+Authorization: capybara
+
+{
+    "text_description": "Test Creation",
+    "is_broadcast": true,
+    "activity_id": null
+}
+############# Update an Alert with specific ID
+
+POST  http://localhost:3000/api/alert/17
+content-type: application/json
+Authorization: capybara
+
+{
+  "text_description": "Test Creation Updated",
+  "is_broadcast": false,
+  "activity_id": 2
+}
+#############
+
+############# Delete an Alert with specific ID
+DELETE  http://localhost:3000/api/alert/16
+Authorization: capybara
+#############

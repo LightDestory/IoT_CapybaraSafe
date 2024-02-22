@@ -1,0 +1,40 @@
+############# GET all Workers
+GET  http://localhost:3000/api/worker/all
+Authorization: capybara
+#############
+
+############# GET specific Worker with ID
+GET  http://localhost:3000/api/worker/1
+Authorization: capybara
+#############
+
+############# GET a invalid Worker with ID
+GET  http://localhost:3000/api/worker/-1
+Authorization: capybara
+#############
+
+############# POST (create) a new Worker
+POST  http://localhost:3000/api/worker/
+content-type: application/json
+Authorization: capybara
+
+{
+  "first_name": "Miriana",
+  "last_name": "Russo",
+  "profession": "Manager"
+}
+############# Update a Worker with specific ID
+
+POST  http://localhost:3000/api/worker/27
+content-type: application/json
+Authorization: capybara
+
+{
+  "profession": "Dittatrice"
+}
+#############
+
+############# Delete an Worker with specific ID
+DELETE  http://localhost:3000/api/worker/27
+Authorization: capybara
+#############

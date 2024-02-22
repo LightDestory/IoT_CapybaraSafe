@@ -1,0 +1,39 @@
+############# GET all Anchors
+GET  http://localhost:3000/api/anchor/all
+Authorization: capybara
+#############
+
+############# GET specific Anchor with ID
+GET  http://localhost:3000/api/anchor/1
+Authorization: capybara
+#############
+
+############# GET a invalid Anchor ID
+GET  http://localhost:3000/api/anchor/-1
+Authorization: capybara
+#############
+
+############# POST (create) a new Anchor
+POST  http://localhost:3000/api/anchor/
+content-type: application/json
+Authorization: capybara
+
+{
+    "mac_address": "FF:FF:FF:FF:FF:FF",
+    "status": "working"
+}
+############# Update an Anchor with specific ID
+
+POST  http://localhost:3000/api/anchor/21
+content-type: application/json
+Authorization: capybara
+
+{
+  "status": "anomaly"
+}
+#############
+
+############# Delete an Anchor  with specific ID
+DELETE  http://localhost:3000/api/anchor/21
+Authorization: capybara
+#############

@@ -6,20 +6,18 @@ import {
   PrimaryKey,
   AllowNull,
   DataType,
-  HasMany,
-  BelongsToMany
+  IsDate,
+  HasMany
 } from "sequelize-typescript";
-import Assignment from "./Assignment";
 import RemoteTracking from "./RemoteTracking";
-import Activity from "./Activity";
 
 /**
- * Worker model
- * @class Worker
+ * TrackingDevice model
+ * @class TrackingDevice
  * @extends Model
  */
 @Table({ timestamps: false })
-export default class Worker extends Model {
+export default class TrackingDevice extends Model {
   @PrimaryKey
   @AutoIncrement
   @AllowNull(false)
@@ -27,20 +25,18 @@ export default class Worker extends Model {
   id!: number;
 
   @AllowNull(false)
-  @Column(DataType.STRING(50))
-  first_name!: string;
+  @Column(DataType.STRING(17))
+  mac_address!: string;
+
+  @AllowNull(false)
+  @IsDate
+  @Column(DataType.DATE)
+  last_maintenance!: Date;
 
   @AllowNull(false)
   @Column(DataType.STRING(50))
-  last_name!: string;
+  firmware_version!: string;
 
-  @AllowNull(false)
-  @Column(DataType.STRING(50))
-  profession!: string;
-
-  @BelongsToMany(() => Activity, () => Assignment, "worker_id")
-  activities!: Activity[];
-
-  @HasMany(() => RemoteTracking, "worker_id")
+  @HasMany(() => RemoteTracking, "device_id")
   remote_trackings!: RemoteTracking[];
 }

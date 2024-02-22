@@ -1,67 +1,126 @@
-import { connect, connectAsync, MqttClient } from "mqtt"
-import { DEFAULT_MQTT_PROTOCOL, DEFAULT_MQTT_HOST, DEFAULT_MQTT_PORT } from "../config/globals";
-import { once } from "events";
+import { connect, IPublishPacket, MqttClient } from "mqtt";
+import { CONFIG_DEFAULTS } from "../config/config_defaults";
+import { MQTT_Topics } from "./mqtt_com_topics";
+import chalk from "chalk";
 
-type ConnectionInfo = {
-    connectionUrl: string
-    username: string | undefined
-    password: string | undefined
+/**
+ * @description Contains the connection information for the MQTT broker.
+ * @property {string} connectionUrl - The URL of the MQTT broker.
+ * @property {string | undefined} username - The username for the connection to the MQTT broker.
+ * @property {string | undefined} password - The password for the connection to the MQTT broker.
+ */
+interface ConnectionInfo {
+  connectionUrl: string;
+  username: string | undefined;
+  password: string | undefined;
 }
 
+/**
+ * @description This class is a singleton that handles the communication with the MQTT broker
+ */
 export class MQTT_Service {
+  private static instance: MQTT_Service | undefined;
+  private client: MqttClient;
 
-    private static instance: MQTT_Service | undefined;
-    private client: MqttClient;
+  /**
+   * @description This constructor is private to avoid multiple instances of the class. It initializes the MQTT client.
+   */
+  private constructor() {
+    const conn_info: ConnectionInfo = MQTT_Service.getConnectionInfo();
+    this.client = connect(conn_info.connectionUrl, {
+      clean: true,
+      connectTimeout: 4000,
+      username: conn_info.username,
+      password: conn_info.password,
+      reconnectPeriod: 1000,
+      manualConnect: true
+    });
+    this.registerBaseEvents();
+  }
 
-    private constructor() {
-        let conn_info: ConnectionInfo = MQTT_Service.getConnectionInfo();
-        this.client = connect(
-            conn_info.connectionUrl, {
-            clean: true,
-            connectTimeout: 4000,
-            username: conn_info.username,
-            password: conn_info.password,
-            manualConnect: true
-        });
-        this.registerBaseEvents();
+  /**
+   * @description This method registers the base events for the MQTT client.
+   * The events are:
+   * - connect: triggered when the client connects to the broker
+   * - message: triggered when the client receives a message from a topic
+   * - error: triggered when the client encounters an error
+   */
+  private registerBaseEvents(): void {
+    this.client.on("connect", () => {
+      console.log(
+        chalk.green("Connected to the broker with client id:"),
+        chalk.yellow(this.client.options.clientId)
+      );
+      this.client.publish(
+        MQTT_Topics.CONNECTION_TEST,
+        `Hello from ${this.client.options.clientId}`
+      );
+    });
+    this.client.on(
+      "message",
+      (topic: string, payload: Buffer, _: IPublishPacket) => {
+        this.messageDispatcher(topic, payload);
+      }
+    );
+    this.client.on("error", (error) => {
+      console.error(chalk.red("MQTT-Communication error:"), error);
+    });
+  }
+
+  /**
+   * @description This method publishes a message to a topic
+   * @param {string} topic - The topic to publish the message to
+   * @param {string} message - The message to publish
+   */
+  public publishMessage(topic: string, message: string) {
+    this.client.publish(topic, message);
+  }
+
+  /**
+   * @description This method checks if the connection to the MQTT broker is ok
+   * @returns {Promise<boolean>} - A promise that resolves to true if the connection is ok, false otherwise
+   */
+  public async ok(): Promise<boolean> {
+    this.client.connect();
+    console.log(chalk.yellow("Waiting 5s to check MQTT Service status..."));
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+    return this.client.connected;
+  }
+
+  /**
+   * @description This method dispatches the messages received from the topics to the appropriate handlers
+   * @param topic The topic the message was received from
+   * @param message The message received
+   */
+  private messageDispatcher(topic: string, message: Buffer) {
+    console.log(`Recived from ${topic} the message ${message.toString()}`);
+  }
+
+  /**
+   * @description This method returns the singleton instance of the class, creates it if it doesn't exist
+   */
+  public static getInstance(): MQTT_Service {
+    if (MQTT_Service.instance != undefined) {
+      return MQTT_Service.instance;
     }
+    MQTT_Service.instance = new MQTT_Service();
+    return MQTT_Service.instance;
+  }
 
-    private registerBaseEvents(): void {
-        this.client.on("connect", () => {
-            console.log("Connected to the broker with client id:", this.client.options.clientId);
-        });
-        this.client.on("message", (topic: string, payload: Buffer, _) => {
-            console.log(`Recived from ${topic} the message ${payload.toString()}`);
-        })
-    }
-
-    public publishMessage(topic: string, message: string) {
-        this.client.publish(topic, message);
-    }
-
-    public async ok(): Promise<boolean> {
-        if (!this.client.connected) {
-            this.client.connect();
-            await once(this.client, "connect").catch(() => {});
-        }
-        return this.client.connected;
-    }
-
-    public static getInstance(): MQTT_Service {
-        if (MQTT_Service.instance != undefined) {
-            return MQTT_Service.instance;
-        }
-        MQTT_Service.instance = new MQTT_Service();
-        return MQTT_Service.instance;
-    }
-
-    private static getConnectionInfo(): ConnectionInfo {
-        let protocol: string = process.env.MQTT_PROTOCOL || DEFAULT_MQTT_PROTOCOL;
-        let host: string = process.env.MQTT_HOST || DEFAULT_MQTT_HOST;
-        let port: string = process.env.MQTT_PORT || DEFAULT_MQTT_PORT;
-        let connectionUrl: string = `${protocol}://${host}:${port}`
-        let username: string | undefined = process.env.MQTT_USERNAME;
-        let password: string | undefined = process.env.MQTT_PASSWORD;
-        return { connectionUrl, username, password };
-    }
+  /**
+   * @description This method retrieves the connection info from the environment variables or the default values
+   * @returns {ConnectionInfo} - The connection info
+   */
+  private static getConnectionInfo(): ConnectionInfo {
+    const protocol: string =
+      process.env.MQTT_PROTOCOL || CONFIG_DEFAULTS.DEFAULT_MQTT_PROTOCOL;
+    const host: string =
+      process.env.MQTT_HOST || CONFIG_DEFAULTS.DEFAULT_MQTT_HOST;
+    const port: string =
+      process.env.MQTT_PORT || CONFIG_DEFAULTS.DEFAULT_MQTT_PORT;
+    const connectionUrl: string = `${protocol}://${host}:${port}`;
+    const username: string | undefined = process.env.MQTT_USERNAME;
+    const password: string | undefined = process.env.MQTT_PASSWORD;
+    return { connectionUrl, username, password };
+  }
 }
