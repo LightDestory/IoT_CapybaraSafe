@@ -191,10 +191,40 @@ async function assign() {
     assignButton.classList.remove("disabled");
 }
 
+async function start() {
+    const activitySel = document.getElementById("startActivitySelector");
+    const workerSel = document.getElementById("workerStartSelector");
+    const startButton = document.getElementById("startBtn");
+    startButton.setAttribute("disabled", true);
+    startButton.classList.add("disabled");
+    let toast_text = "";
+    if (activitySel.value == "no_activity" || workerSel.value == "no_worker") {
+        toast_text = "Some resources are missing...";
+    } else {
+        const response = await APICaller(`/api/activity/start?data=${activitySel.value}-${workerSel.value}`, "GET");
+        if (response.status === "success") {
+            getWorkers();
+            toast_text = "The activity has been started successfully";
+        }
+        else {
+            toast_text = response.data;
+        }
+    }
+    Toastify({
+        text: toast_text,
+        duration: 3000,
+        gravity: "top",
+        position: "center",
+    }).showToast();
+    startButton.removeAttribute("disabled");
+    startButton.classList.remove("disabled");
+}
+
 async function getWorkers() {
     const response = await APICaller("/api/worker/all", "GET");
     workers = response.data;
     updateWorkersTable();
+    updateWorkerStartActivity();
 }
 
 async function getAssignData() {
@@ -225,7 +255,35 @@ async function getAssignData() {
             workerSel.innerHTML += `<option value="${worker.id}">${worker.first_name} ${worker.last_name} (${worker.profession})</option>`;
         });
     }
+}
 
+function updateWorkerStartActivity() {
+    const activitySel = document.getElementById("startActivitySelector");
+    const workerSel = document.getElementById("workerStartSelector");
+    workerSel.innerHTML = `<option value="no_worker">No worker</option>`;
+    const isWorkerArray = Array.isArray(workers);
+    if (!isWorkerArray || (isWorkerArray && workers.length === 0) || (typeof workers === 'string')) {
+        return;
+    }
+    workerSel.innerHTML = "";
+    workers.forEach((worker) => {
+        workerSel.innerHTML += `<option value="${worker.id}">${worker.first_name} ${worker.last_name} (${worker.profession})</option>`;
+    });
+    updateActivityStartActivity();
+}
+
+function updateActivityStartActivity() {
+    const activitySel = document.getElementById("startActivitySelector");
+    const selected_worker = workers.find(worker => worker.id == document.getElementById("workerStartSelector").value);
+    const compatible_activities = selected_worker.activities.filter(activity => activity.status === "scheduled" || activity.status === "to be completed");
+    activitySel.innerHTML = `<option value="no_activity">No activity possible</option>`;
+    if (compatible_activities.length === 0) {
+        return;
+    }
+    activitySel.innerHTML = "";
+    compatible_activities.forEach((activity) => {
+        activitySel.innerHTML += `<option value="${activity.id}">${activity.text_description}</option>`;
+    });
 }
 
 getWorkers();

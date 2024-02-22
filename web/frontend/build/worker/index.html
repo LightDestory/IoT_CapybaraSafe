@@ -30,7 +30,7 @@
                 <ul class="navbar-nav text-light" id="accordionSidebar">
                     <li class="nav-item"><a class="nav-link" id="dashboardNavLink" href="/dashboard/index.html"><i class="fas fa-heartbeat"></i><span>Real-time Tracking</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="/activity/index.html"><i class="fas fa-clipboard-list"></i><span>Activities</span></a></li>
-                    <li class="nav-item"><a class="nav-link active" href="/worker/index.html"><i class="fas fa-user-alt"></i><span>Workers</span></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/worker/index.html"><i class="fas fa-hard-hat"></i><span>Workers</span></a></li>
                     <li class="nav-item"><a class="nav-link" id="alertNavLink" href="/alert/index.html"><i class="fas fa-exclamation-triangle"></i><span>Alert System</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="/trackingdevice/index.html"><i class="fas fa-compass"></i><span>Tracking Devices</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="/anchor/index.html"><i class="fas fa-anchor"></i><span>Anchor Devices</span></a></li>
@@ -117,8 +117,34 @@
                             </div>
                         </div>
                         <div class="accordion-item">
-                            <h2 class="accordion-header" role="tab"><button class="accordion-button text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#accordion .item-3" aria-expanded="true" aria-controls="accordion .item-3">Team</button></h2>
+                            <h2 class="accordion-header" role="tab"><button class="accordion-button text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#accordion .item-3" aria-expanded="true" aria-controls="accordion .item-3">Start Activity (Pairing Device)</button></h2>
                             <div class="accordion-collapse collapse show item-3" role="tabpanel">
+                                <div class="accordion-body">
+                                    <div class="card">
+                                        <div class="card-body container">
+                                            <div class="row">
+                                                <div class="col col-12 text-nowrap col-lg-6">
+                                                    <div aria-controls="dataTable"><label class="form-label w-100 text-center" for="dataTable_type_input">Worker:<select id="workerStartSelector" class="form-select w-100" style="margin-left: 5px;" onchange="updateActivityStartActivity()" name="">
+                                                                <option value="no_worker" selected="">No Worker</option>
+                                                            </select></label></div>
+                                                </div>
+                                                <div class="col col-12 text-nowrap col-lg-6">
+                                                    <div aria-controls="dataTable"><label class="form-label w-100 text-center" for="dataTable_type_input">Activity:<select id="startActivitySelector" class="form-select w-100" style="margin-left: 5px;" onchange="" name="">
+                                                                <option value="no_activity" selected="">No Activity Possible</option>
+                                                            </select></label></div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col text-center"><button class="btn btn-danger w-50" id="startBtn" type="button" style="margin-right: auto;margin-left: auto;" onclick="start()">Start</button></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" role="tab"><button class="accordion-button text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#accordion .item-4" aria-expanded="true" aria-controls="accordion .item-4">Team</button></h2>
+                            <div class="accordion-collapse collapse show item-4" role="tabpanel">
                                 <div class="accordion-body">
                                     <div class="card">
                                         <div class="card-body">
@@ -169,8 +195,8 @@
                             </div>
                         </div>
                         <div class="accordion-item">
-                            <h2 class="accordion-header" role="tab"><button class="accordion-button text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#accordion .item-4" aria-expanded="true" aria-controls="accordion .item-4">Worker Details</button></h2>
-                            <div class="accordion-collapse collapse show item-4" role="tabpanel">
+                            <h2 class="accordion-header" role="tab"><button class="accordion-button text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#accordion .item-5" aria-expanded="true" aria-controls="accordion .item-5">Worker Details</button></h2>
+                            <div class="accordion-collapse collapse show item-5" role="tabpanel">
                                 <div class="accordion-body">
                                     <div id="details_container" class="card">
                                         <p class="mb-0 text-center">No Alert Selected</p>

@@ -30,7 +30,7 @@
                 <ul class="navbar-nav text-light" id="accordionSidebar">
                     <li class="nav-item"><a class="nav-link active" id="dashboardNavLink" href="/dashboard/index.html"><i class="fas fa-heartbeat"></i><span>Real-time Tracking</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="/activity/index.html"><i class="fas fa-clipboard-list"></i><span>Activities</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="/worker/index.html"><i class="fas fa-user-alt"></i><span>Workers</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="/worker/index.html"><i class="fas fa-hard-hat"></i><span>Workers</span></a></li>
                     <li class="nav-item"><a class="nav-link" id="alertNavLink" href="/alert/index.html"><i class="fas fa-exclamation-triangle"></i><span>Alert System</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="/trackingdevice/index.html"><i class="fas fa-compass"></i><span>Tracking Devices</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="/anchor/index.html"><i class="fas fa-anchor"></i><span>Anchor Devices</span></a></li>
@@ -64,7 +64,28 @@
                 </nav>
                 <div class="container-fluid">
                     <div class="d-sm-flex justify-content-between align-items-center mb-4">
-                        <h3 class="text-dark mb-0">Real-time Tracking</h3>
+                        <h3 class="text-dark mb-0">Real-time Tracking of Workers</h3>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col col-12 text-nowrap">
+                                    <div id="dataTable_type" class="dataTables_type text-center" aria-controls="dataTable"><label class="form-label" for="dataTable_type_input">Filter<select id="dataTable_type_input" class="form-select d-inline-block" style="margin-left: 10px; width:150px;" onchange="onFilterChange(event)" name="filter">
+                                                <option value="all" selected="">All</option>
+                                                <option value="normal">Normal</option>
+                                                <option value="emergency">Emergency</option>
+                                            </select>&nbsp;</label></div>
+                                </div>
+                                <div class="col col-12 text-nowrap my-3">
+                                    <div class="text-center text-wrap" aria-controls="dataTable"><i class="fas fa-circle text-danger"></i><span style="margin-left: 5px;">Emergency</span><i class="fas fa-circle text-info" style="margin-left: 20px;"></i><span style="margin-left: 5px;">Working fine</span></div>
+                                </div>
+                            </div>
+                            <div class="row gx-2 gy-2 row-cols-1 row-cols-sm-1 row-cols-md-1 row-cols-lg-2 row-cols-xl-2 row-cols-xxl-3" id="device_row_container">
+                                <div class="col">
+                                    <p>No working Worker found</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -81,6 +102,7 @@
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.3/moment.min.js"></script>
     <script src="../assets/js/utils.js"></script>
     <script src="../assets/js/theme.js"></script>
+    <script src="../assets/js/dashboard.js"></script>
 </body>
 
 </html>
