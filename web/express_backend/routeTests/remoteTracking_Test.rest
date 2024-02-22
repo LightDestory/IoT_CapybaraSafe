@@ -1,0 +1,33 @@
+############# GET all RemoteTrackings
+GET  http://localhost:3000/api/remote_tracking/all
+Authorization: capybara
+#############
+
+############# GET specific RemoteTracking with ID
+GET  http://localhost:3000/api/remote_tracking/1-1-1
+Authorization: capybara
+#############
+
+############# GET a invalid RemoteTracking with ID
+GET  http://localhost:3000/api/remote_tracking/-1
+Authorization: capybara
+#############
+
+############# POST (create/update) a RemoteTracking
+POST  http://localhost:3000/api/remote_tracking/
+content-type: application/json
+Authorization: capybara
+
+{
+  "timestamp": "1990-08-21T21:39:49.000Z",
+  "communication_progressive": 1,
+  "anchor_id": 2,
+  "anchor_signal_strength": -60,
+  "worker_id": 1,
+  "device_id": 1,
+  "activity_id": 1,
+  "emergency": false,
+  "heart_rate": 78,
+  "saturation": 2,
+  "temperature": 36
+}

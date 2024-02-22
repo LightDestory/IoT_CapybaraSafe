@@ -1,5 +1,7 @@
 import express, { Request, Response, Router } from "express";
 import RemoteTracking from "../db/models/RemoteTracking";
+import Activity from "../db/models/Activity";
+import Worker from "../db/models/Worker";
 export const remoteTrackingRoute: Router = express.Router();
 
 /**
@@ -7,18 +9,24 @@ export const remoteTrackingRoute: Router = express.Router();
  */
 remoteTrackingRoute.get("/all", async (_: Request, res: Response) => {
   const remoteTrackings: RemoteTracking[] = await RemoteTracking.findAll({
-    order: [["timestamp", "DESC"]]
+    order: [["timestamp", "DESC"]],
+    include: [Activity, Worker]
   });
   res.status(200).json({ status: "success", data: remoteTrackings });
 });
-
 /**
  * This route is used to retrieve a specific remoteTracking from the database
  */
-remoteTrackingRoute.get("/:id", async (req: Request, res: Response) => {
-  const remoteTracking: RemoteTracking | null = await RemoteTracking.findByPk(
-    req.params.id
-  );
+remoteTrackingRoute.get("/:identity", async (req: Request, res: Response) => {
+  const identity: string[] = req.params.identity.split("-");
+  const remoteTracking: RemoteTracking | null = await RemoteTracking.findOne({
+    where: {
+      worker_id: identity[0],
+      activity_id: identity[1],
+      device_id: identity[2]
+    },
+    include: [Activity, Worker]
+  });
   if (remoteTracking) {
     res.status(200).json({ status: "success", data: remoteTracking });
     return;
@@ -38,17 +46,25 @@ remoteTrackingRoute.delete("/all", async (_: Request, res: Response) => {
 /**
  * This route is used to delete a specific remoteTracking from the database
  */
-remoteTrackingRoute.delete("/:id", async (req: Request, res: Response) => {
-  const remoteTracking: RemoteTracking | null = await RemoteTracking.findByPk(
-    req.params.id
-  );
-  if (remoteTracking) {
-    await remoteTracking.destroy();
-    res.status(200).json({ status: "success", data: "Successfully deleted" });
-    return;
+remoteTrackingRoute.delete(
+  "/:identity",
+  async (req: Request, res: Response) => {
+    const identity: string[] = req.params.identity.split("-");
+    const remoteTracking: RemoteTracking | null = await RemoteTracking.findOne({
+      where: {
+        worker_id: identity[0],
+        activity_id: identity[1],
+        device_id: identity[2]
+      }
+    });
+    if (remoteTracking) {
+      await remoteTracking.destroy();
+      res.status(200).json({ status: "success", data: "Successfully deleted" });
+      return;
+    }
+    res.status(404).send({ status: "error", data: "RemoteTracking not found" });
   }
-  res.status(404).send({ status: "error", data: "RemoteTracking not found" });
-});
+);
 
 /**
  * This route is used to create or update a remoteTracking in the database.
