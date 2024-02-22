@@ -28,6 +28,11 @@ export default class RemoteTracking extends Model {
   timestamp!: Date;
 
   @AllowNull(false)
+  @Default(1)
+  @Column(DataType.INTEGER)
+  communication_progressive!: number;
+
+  @AllowNull(false)
   @ForeignKey(() => Anchor)
   @Column(DataType.INTEGER)
   anchor_id!: number;

@@ -81,6 +81,7 @@ CREATE TABLE IF NOT EXISTS Alerts
 CREATE TABLE IF NOT EXISTS RemoteTrackings
 (
     timestamp   datetime NOT NULL,
+    communication_progressive INT NOT NULL DEFAULT 1,
     anchor_id   INT      NOT NULL,
     anchor_signal_strength INT NOT NULL,
     worker_id   INT      NOT NULL,
@@ -96,31 +97,3 @@ CREATE TABLE IF NOT EXISTS RemoteTrackings
     FOREIGN KEY (activity_id) REFERENCES Activities (id),
     PRIMARY KEY (worker_id, device_id, activity_id)
 );
-
--- CREATE OR REPLACE VIEW ActiveWorkers AS
--- SELECT DISTINCT W.first_name      as "worker_first_name",
---                 W.last_name       as "worker_last_name",
---                 W.id              as "worker_id",
---                 Ac.id             as "activity_id",
---                 Ac.scheduled_date as "started_on",
---                 RT.device_id      as "device_id",
---                 RT.anchor_id      as "last_location_anchor"
--- FROM Workers W,
---      Activities Ac,
---      Assignments A,
---      RemoteTrackings RT
--- WHERE Ac.status = "in progress"
---   and A.worker_id = W.id
---   and A.activity_id = Ac.id
---   and RT.worker_id = W.id
---   and RT.activity_id = Ac.id
--- ORDER BY timestamp DESC;
---
--- CREATE OR REPLACE VIEW ActiveDevices AS
--- SELECT DISTINCT device_id
--- FROM ActiveWorkers;
---
--- CREATE OR REPLACE VIEW AvailableDevices AS
--- SELECT *
--- FROM TrackingDevices as TD
--- WHERE TD.id NOT IN (SELECT AD.device_id FROM ActiveDevices as AD);
