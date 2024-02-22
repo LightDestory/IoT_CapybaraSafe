@@ -74,3 +74,26 @@
   }
 
 })(); // End of use strict
+
+async function getAnchorStatus() {
+  const badge = document.getElementById("anchorBadge");
+  const text = document.getElementById("generalAnchorInfo");
+  const response = await APICaller("/api/anchor/all", "GET");
+  if (response.status === "error") {
+    badge.classList.remove("bg-success");
+    badge.classList.add("bg-danger");
+    text.innerHTML = "Error retrieving anchor status";
+    badge.innerHTML = "Error";
+  } else {
+    const anchors = response.data;
+    const anchorIll = anchors.filter(anchor => anchor.status !== "working").map(anchor => anchor.id);
+    badge.innerHTML = anchors.length;
+    if (anchorIll.length !== 0) {
+      badge.classList.remove("bg-success");
+      badge.classList.add("bg-warning");
+      text.innerHTML = "Anchor(s) " + anchorIll.join(", ") + " is/are not working properly";
+    }
+  }
+}
+
+getAnchorStatus();

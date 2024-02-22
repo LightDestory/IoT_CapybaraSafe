@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Alert System</title>
+    <title>Activities</title>
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/img/favicons/favicon-16x16.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/img/favicons/favicon-16x16.png" media="(prefers-color-scheme: dark)">
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicons/favicon-32x32.png">
@@ -29,9 +29,9 @@
                 <hr class="sidebar-divider my-0">
                 <ul class="navbar-nav text-light" id="accordionSidebar">
                     <li class="nav-item"><a class="nav-link" id="dashboardNavLink" href="/dashboard/index.html"><i class="fas fa-heartbeat"></i><span>Real-time Tracking</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="/activity/index.html"><i class="fas fa-clipboard-list"></i><span>Activities</span></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/activity/index.html"><i class="fas fa-clipboard-list"></i><span>Activities</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="/worker/index.html"><i class="fas fa-user-alt"></i><span>Workers</span></a></li>
-                    <li class="nav-item"><a class="nav-link active" id="alertNavLink" href="/alert/index.html"><i class="fas fa-exclamation-triangle"></i><span>Alert System</span></a></li>
+                    <li class="nav-item"><a class="nav-link" id="alertNavLink" href="/alert/index.html"><i class="fas fa-exclamation-triangle"></i><span>Alert System</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="/trackingdevice/index.html"><i class="fas fa-compass"></i><span>Tracking Devices</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="/anchor/index.html"><i class="fas fa-anchor"></i><span>Anchor Devices</span></a></li>
                 </ul>
@@ -64,31 +64,28 @@
                 </nav>
                 <div class="container-fluid">
                     <div class="d-sm-flex justify-content-between align-items-center mb-4">
-                        <h3 class="text-dark mb-0">Alert System</h3>
+                        <h3 class="text-dark mb-0">Activities</h3>
                     </div>
                     <div class="accordion shadow" role="tablist" id="accordion">
                         <div class="accordion-item">
-                            <h2 class="accordion-header" role="tab"><button class="accordion-button text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#accordion .item-1" aria-expanded="true" aria-controls="accordion .item-1">Send Alert</button></h2>
+                            <h2 class="accordion-header" role="tab"><button class="accordion-button text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#accordion .item-1" aria-expanded="true" aria-controls="accordion .item-1">Schedule a new Activity</button></h2>
                             <div class="accordion-collapse collapse show item-1" role="tabpanel">
                                 <div class="accordion-body">
                                     <div class="card">
                                         <div class="card-body container">
                                             <div class="row">
                                                 <div class="col col-12 text-nowrap col-lg-6">
-                                                    <div aria-controls="dataTable"><label class="form-label w-100 text-center" for="dataTable_type_input">On-going Activity:<select id="activitySelector" class="form-select w-100" style="margin-left: 5px;" onchange="" name="">
-                                                                <option value="no_activity" selected="">No Activity</option>
-                                                            </select></label></div>
+                                                    <div class="text-wrap text-center" aria-controls="dataTable"><label class="form-label w-100 text-center" for="dataTable_type_input">Supposed Activity Duration:</label><input type="number" id="durationSelector" class="w-100 form-control" style="margin-left: 5px;" onchange="" name="" value="50" min="1" max="120" step="5"></div>
                                                 </div>
                                                 <div class="col form-switch">
-                                                    <div class="form-check" style="margin-top: 20px;"><input class="form-check-input" type="checkbox" id="boradcastselector" role="switch" style="float: left !important" onchange="updateBroadcastAlert(event)"><label class="form-check-label" for="boradcastselector">Send as a broadcast</label></div>
-                                                    <p id="broadcast_info" class="text-danger" style="opacity: 0;">Activity Selector will be ignored.</p>
+                                                    <div class="text-wrap text-center" aria-controls="dataTable"><label class="form-label w-100 text-center" for="dataTable_type_input">Schedule Date:</label></div><input id="dateSelector" class="form-control w-100" type="datetime-local">
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col"><label class="form-label">Message:</label><textarea class="form-control-lg w-100" id="alertmessage" placeholder="Your Alert message goes here" rows="1" cols="1"></textarea></div>
+                                                <div class="col"><label class="form-label">Description:</label><textarea class="form-control-lg w-100" id="activityDescription" placeholder="Describe the activity here" rows="1" cols="1"></textarea></div>
                                             </div>
                                             <div class="row">
-                                                <div class="col text-center"><button class="btn btn-danger disabled w-50" id="sendAlertbtn" type="button" style="margin-right: auto;margin-left: auto;" disabled="" onclick="sendAlert()">Send Alert</button></div>
+                                                <div class="col text-center"><button class="btn btn-danger w-50" id="createActivitybtn" type="button" style="margin-right: auto;margin-left: auto;" onclick="createActivity()">Schedule Activity</button></div>
                                             </div>
                                         </div>
                                     </div>
@@ -96,43 +93,51 @@
                             </div>
                         </div>
                         <div class="accordion-item">
-                            <h2 class="accordion-header" role="tab"><button class="accordion-button text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#accordion .item-2" aria-expanded="true" aria-controls="accordion .item-2">History</button></h2>
+                            <h2 class="accordion-header" role="tab"><button class="accordion-button text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#accordion .item-2" aria-expanded="true" aria-controls="accordion .item-2">Schedule</button></h2>
                             <div class="accordion-collapse collapse show item-2" role="tabpanel">
                                 <div class="accordion-body">
                                     <div class="card">
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col col-12 text-nowrap col-lg-6">
-                                                    <div id="dataTable_type" class="dataTables_type" aria-controls="dataTable"><label class="form-label" for="dataTable_type_input">Type of Alert<select id="dataTable_type_input" class="form-select d-inline-block" style="margin-left: 20px;" onchange="onAlertFilterChange(event)" name="filter">
+                                                    <div id="dataTable_type" class="dataTables_type" aria-controls="dataTable"><label class="form-label" for="dataTable_type_input">Type of Activity<select id="dataTable_type_input" class="form-select d-inline-block" style="margin-left: 20px;width: 75%;" onchange="onActivityFilterChange(event)" name="filter">
                                                                 <option value="all" selected="">All</option>
-                                                                <option value="no_broadcast">No Broadcast</option>
-                                                                <option value="broadcast">Broadcast</option>
+                                                                <option value="in_progress">In Progress</option>
+                                                                <option value="to_be_completed">To Be Completed</option>
+                                                                <option value="scheduled">Scheduled</option>
+                                                                <option value="completed">Completed</option>
                                                             </select>&nbsp;</label></div>
                                                 </div>
                                                 <div class="col col-12 col-lg-6">
-                                                    <div class="text-md-end dataTables_filter" id="dataTable_filter"><label class="form-label w-100"><input type="search" id="dataTable_filter_input" class="form-control form-control-user" aria-controls="dataTable" placeholder="Search" onsearch="onAlertSearchChange(event)"></label></div>
+                                                    <div class="text-md-end dataTables_filter" id="dataTable_filter"><label class="form-label w-100"><input type="search" id="dataTable_filter_input" class="form-control form-control-user" aria-controls="dataTable" placeholder="Search" onsearch="onActivitySearchChange(event)"></label></div>
                                                 </div>
                                             </div>
                                             <div class="table-responsive mt-2" role="grid" aria-describedby="dataTable_info">
                                                 <table class="table table-hover my-0" id="dataTable">
                                                     <thead>
                                                         <tr>
-                                                            <th>Message</th>
-                                                            <th>Sent Date</th>
-                                                            <th>Broadcast</th>
+                                                            <th>Title</th>
+                                                            <th>Duration</th>
+                                                            <th>Schedule Date</th>
+                                                            <th>Status</th>
+                                                            <th>Alerts</th>
+                                                            <th>Workers</th>
                                                             <th>Action</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="dataTable_data_container">
                                                         <tr>
-                                                            <td class="text-center" colspan="4">No results found</td>
+                                                            <td class="text-center" colspan="7">No results found</td>
                                                         </tr>
                                                     </tbody>
                                                     <tfoot>
                                                         <tr>
-                                                            <th>Message</th>
-                                                            <th>Sent Date</th>
-                                                            <th>Broadcast</th>
+                                                            <th>Title</th>
+                                                            <th>Duration</th>
+                                                            <th>Schedule Date</th>
+                                                            <th>Status</th>
+                                                            <th>Alerts</th>
+                                                            <th>Workers</th>
                                                             <th>Action</th>
                                                         </tr>
                                                     </tfoot>
@@ -144,11 +149,11 @@
                             </div>
                         </div>
                         <div class="accordion-item">
-                            <h2 class="accordion-header" role="tab"><button class="accordion-button text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#accordion .item-3" aria-expanded="true" aria-controls="accordion .item-3">Alert Details</button></h2>
+                            <h2 class="accordion-header" role="tab"><button class="accordion-button text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#accordion .item-3" aria-expanded="true" aria-controls="accordion .item-3">Activity Details</button></h2>
                             <div class="accordion-collapse collapse show item-3" role="tabpanel">
                                 <div class="accordion-body">
                                     <div id="details_container" class="card">
-                                        <p class="mb-0 text-center">No Alert Selected</p>
+                                        <p class="mb-0 text-center">No Activity Selected</p>
                                     </div>
                                 </div>
                             </div>
@@ -169,7 +174,7 @@
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.3/moment.min.js"></script>
     <script src="../assets/js/utils.js"></script>
     <script src="../assets/js/theme.js"></script>
-    <script src="../assets/js/alert.js"></script>
+    <script src="../assets/js/activity.js"></script>
 </body>
 
 </html>

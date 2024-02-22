@@ -89,7 +89,7 @@ async function APICaller(route, method, params = {}) {
     let response = await fetch(sanitizeURL(route, method, params),
         {
             method: method,
-            headers: { 'Authorization': getCookie("token") },
+            headers: { 'Authorization': getCookie("token"), 'Content-Type': 'application/json'},
             body: method !== 'GET' ? JSON.stringify(params) : null
         })
         .then(response => response.json())
@@ -113,6 +113,10 @@ async function logout() {
     eraseCookie("token");
     await new Promise((resolve) => setTimeout(resolve, 1500));
     window.location.href = "/index.html";
+}
+
+function convertUnixToHuman(unixString) {
+    return moment(unixString).format("HH:mm DD/MM/YYYY");
 }
 
 // Auto starts
