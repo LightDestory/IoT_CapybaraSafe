@@ -8,7 +8,10 @@ export const alertRoute: Router = express.Router();
  * This route is used to retrieve all the alerts from the database
  */
 alertRoute.get("/all", async (_: Request, res: Response) => {
-  const alerts: Alert[] = await Alert.findAll({ include: [Activity] });
+  const alerts: Alert[] = await Alert.findAll({
+    include: [Activity],
+    order: [["send_date", "DESC"]]
+  });
   res.status(200).json({ status: "success", data: alerts });
 });
 

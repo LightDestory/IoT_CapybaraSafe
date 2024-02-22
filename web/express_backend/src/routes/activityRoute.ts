@@ -25,7 +25,8 @@ activityRoute.get("/all", async (req: Request, res: Response) => {
       Worker,
       { model: RemoteTracking, include: [TrackingDevice] }
     ],
-    where: filter ? { status: filter } : {}
+    where: filter ? { status: filter } : {},
+    order: [["scheduled_date", "DESC"]]
   });
   res.status(200).json({ status: "success", data: activities });
 });

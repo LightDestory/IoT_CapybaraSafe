@@ -6,7 +6,9 @@ export const remoteTrackingRoute: Router = express.Router();
  * This route is used to retrieve all the remoteTrackings from the database
  */
 remoteTrackingRoute.get("/all", async (_: Request, res: Response) => {
-  const remoteTrackings: RemoteTracking[] = await RemoteTracking.findAll();
+  const remoteTrackings: RemoteTracking[] = await RemoteTracking.findAll({
+    order: [["timestamp", "DESC"]]
+  });
   res.status(200).json({ status: "success", data: remoteTrackings });
 });
 
