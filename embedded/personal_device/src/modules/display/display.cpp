@@ -1,12 +1,11 @@
 #include <Arduino.h>
 #include "display.h"
 #include "images.h"
-#include "modules/utils/serial_logger/serial_logger.h"
 
 SSD1306 DISPLAY_ESP::display_hw = SSD1306(0x3c, PIN_CONFIGURATION::DISPLAY_SDA, PIN_CONFIGURATION::DISPLAY_SCL);
 uint8_t DISPLAY_ESP::currentProgressBarPercentage = 0;
 
-void DISPLAY_ESP::drawCenteredImageTitleSubtitle(const unsigned char image[], String title, String subData) {
+void DISPLAY_ESP::drawCenteredImageTitleSubtitle(const unsigned char image[], const String& title, const String& subData) {
     // Clear Display
     display_hw.clear();
     // Draw Image
@@ -22,7 +21,7 @@ void DISPLAY_ESP::drawCenteredImageTitleSubtitle(const unsigned char image[], St
     display_hw.display();
 }
 
-void DISPLAY_ESP::drawCenteredTitleSubtitle(String title, String subData) {
+void DISPLAY_ESP::drawCenteredTitleSubtitle(const String& title, const String& subData) {
     // Clear Display
     display_hw.clear();
     // Draw Titles
@@ -77,4 +76,32 @@ void DISPLAY_ESP::updateBootAnimationProgressBar(uint8_t targetPercentage) {
         display_hw.clear();
         display_hw.display();
     }
+}
+
+void DISPLAY_ESP::blinkMessage(const String &message, uint16_t blinkTime) {
+    display_hw.clear();
+    display_hw.display();
+    delay(blinkTime/3);
+    display_hw.setFont(ArialMT_Plain_10);
+    display_hw.setTextAlignment(TEXT_ALIGN_CENTER);
+    display_hw.drawString(64, 16, message);
+    display_hw.display();
+    delay(blinkTime/3);
+    display_hw.clear();
+    display_hw.display();
+    delay(blinkTime/3);
+}
+
+void DISPLAY_ESP::blinkImageMessage(const unsigned char image[], const String &message, uint16_t blinkTime) {
+    display_hw.displayOn();
+    delay(blinkTime/3);
+    display_hw.drawXbm(48, 0, DISPLAY_IMAGE_SIZE, DISPLAY_IMAGE_SIZE, image);
+    display_hw.setFont(ArialMT_Plain_10);
+    display_hw.setTextAlignment(TEXT_ALIGN_CENTER);
+    display_hw.drawString(64, 35, message);
+    display_hw.display();
+    delay(blinkTime/3);
+    display_hw.clear();
+    display_hw.display();
+    delay(blinkTime/3);
 }

@@ -1,31 +1,29 @@
 #include "tensorflow_runner.h"
+#include "modules/utils/serial_logger/serial_logger.h"
 
-//#include <EloquentTinyML.h>
-//// sine_model.h contains the array you exported from the previous step with xxd or tinymlgen
-//#include "sine_model.h"
-//
-//
-//
-//Eloquent::TinyML::TfLite<NUMBER_OF_INPUTS, NUMBER_OF_OUTPUTS, TENSOR_ARENA_SIZE> ml;
-//
-//
-//void setup() {
-//    Serial.begin(115200);
-//    ml.begin(sine_model);
-//}
-//
-//void loop() {
-//    // pick up a random x and predict its sine
-//    float x = 3.14 * random(100) / 100;
-//    float y = sin(x);
-//    float input[1] = { x };
-//    float predicted = ml.predict(input);
-//
-//    Serial.print("sin(");
-//    Serial.print(x);
-//    Serial.print(") = ");
-//    Serial.print(y);
-//    Serial.print("\t predicted: ");
-//    Serial.println(predicted);
-//    delay(1000);
-//}
+namespace TENSORFLOW_RUNNER
+{
+    Eloquent::TinyML::TfLite<FALL_DETECTION_MODEL::NUMBER_OF_INPUTS, FALL_DETECTION_MODEL::NUMBER_OF_OUTPUTS, FALL_DETECTION_MODEL::TENSOR_ARENA_SIZE> predictor;
+    float latestPrediction[2];
+
+    bool initModel()
+    {
+        SERIAL_LOGGER::log("Loading machine learning model...");
+        if(!predictor.begin(FALL_DETECTION_MODEL::FALL_DETECTION_MODEL_ARRAY)) {
+            SERIAL_LOGGER::log("Failed to load model!");
+            return false;
+        }
+        return true;
+    }
+
+    void requestEvaluation(SENSOR_FAKER::fall_sensor_data sensor_data)
+    {
+        float input[5] = {sensor_data.l_m, sensor_data.a_s, sensor_data.g_s, sensor_data.p_g_m, sensor_data.p_l_m};
+        predictor.predict(input, latestPrediction);
+    }
+
+    bool fallDetected()
+    {
+        return latestPrediction[0] > latestPrediction[1];
+    }
+} // namespace TENSORFLOW_RUNNER

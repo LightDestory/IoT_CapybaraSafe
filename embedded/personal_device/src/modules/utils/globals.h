@@ -4,10 +4,17 @@
 #include <Arduino.h>
 
 namespace GLOBALS {
-    extern bool interrupt_flag;
-    enum SUB_ROUTINE_STATE {
-        UN_SETUP, FAILED_INIT, READY, LOOPING, STATIC
+
+    enum RUNTIME_STATE {
+        MISSING_CONFIG, REQUEST_SETUP, SETUP_COMPLETE, REQUEST_PAIR, INITIALIZING, RUNNING, STOPPED
     };
+
+    extern enum RUNTIME_STATE mainLoopState;
+    extern uint8_t interrupt_counter;
+
+
+    const String PREFERENCE_NAMESPACE = "ATMR-IOT-2024";
+    const String DEVICE_NAME = "PD_";
 }
 
 #endif //IOT_ESP32_FIRMWARE_GLOBALS_H
