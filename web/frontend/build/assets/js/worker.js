@@ -194,14 +194,15 @@ async function assign() {
 async function start() {
     const activitySel = document.getElementById("startActivitySelector");
     const workerSel = document.getElementById("workerStartSelector");
+    const deviceSel = document.getElementById("deviceStartSelector");
     const startButton = document.getElementById("startBtn");
     startButton.setAttribute("disabled", true);
     startButton.classList.add("disabled");
     let toast_text = "";
-    if (activitySel.value == "no_activity" || workerSel.value == "no_worker") {
+    if (activitySel.value == "no_activity" || workerSel.value == "no_worker" || deviceSel.value == "no_device") {
         toast_text = "Some resources are missing...";
     } else {
-        const response = await APICaller(`/api/activity/start?data=${activitySel.value}-${workerSel.value}`, "GET");
+        const response = await APICaller(`/api/activity/start?data=${activitySel.value}-${workerSel.value}-${deviceSel.value}`, "GET");
         if (response.status === "success") {
             getWorkers();
             toast_text = "The activity has been started successfully";
@@ -270,6 +271,7 @@ function updateWorkerStartActivity() {
         workerSel.innerHTML += `<option value="${worker.id}">${worker.first_name} ${worker.last_name} (${worker.profession})</option>`;
     });
     updateActivityStartActivity();
+    updateDeviceStartActivity();
 }
 
 function updateActivityStartActivity() {
@@ -283,6 +285,23 @@ function updateActivityStartActivity() {
     activitySel.innerHTML = "";
     compatible_activities.forEach((activity) => {
         activitySel.innerHTML += `<option value="${activity.id}">${activity.text_description}</option>`;
+    });
+}
+
+async function updateDeviceStartActivity() {
+    const deviceSel = document.getElementById("deviceStartSelector");
+    const devices = (await APICaller("/api/tracking_device/all?status=available", "GET")).data;
+    const isArray = Array.isArray(devices);
+    if (!isArray || (isArray && devices.length === 0) || (typeof devices === 'string')) {
+        return;
+    }
+    deviceSel.innerHTML = `<option value="no_device">No device</option>`;
+    if (devices.length === 0) {
+        return;
+    }
+    deviceSel.innerHTML = "";
+    devices.forEach((device) => {
+        deviceSel.innerHTML += `<option value="${device.id}">Device ${device.id}</option>`;
     });
 }
 
