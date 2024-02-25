@@ -10,10 +10,11 @@ import {
   ForeignKey,
   BelongsTo
 } from "sequelize-typescript";
-import Anchor from "./Anchor";
-import Worker from "./Worker";
-import TrackingDevice from "./TrackingDevice";
+
 import Activity from "./Activity";
+import Anchor from "./Anchor";
+import TrackingDevice from "./TrackingDevice";
+import Worker from "./Worker";
 
 /**
  * RemoteTracking model

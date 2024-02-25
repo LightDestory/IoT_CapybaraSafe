@@ -9,6 +9,7 @@ import {
   HasMany,
   Default
 } from "sequelize-typescript";
+
 import RemoteTracking from "./RemoteTracking";
 
 /**

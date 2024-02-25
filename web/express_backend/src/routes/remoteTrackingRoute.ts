@@ -1,6 +1,7 @@
 import express, { Request, Response, Router } from "express";
-import RemoteTracking from "../db/models/RemoteTracking";
+
 import Activity from "../db/models/Activity";
+import RemoteTracking from "../db/models/RemoteTracking";
 import Worker from "../db/models/Worker";
 export const remoteTrackingRoute: Router = express.Router();
 

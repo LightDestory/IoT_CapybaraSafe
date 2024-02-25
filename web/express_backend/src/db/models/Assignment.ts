@@ -2,15 +2,15 @@ import {
   Model,
   Table,
   Column,
-  AutoIncrement,
   PrimaryKey,
   AllowNull,
   DataType,
   ForeignKey,
   BelongsTo
 } from "sequelize-typescript";
-import Worker from "./Worker";
+
 import Activity from "./Activity";
+import Worker from "./Worker";
 
 /**
  * Assignment model

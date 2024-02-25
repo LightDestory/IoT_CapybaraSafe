@@ -15,10 +15,11 @@ import {
   Sequelize,
   BelongsToMany
 } from "sequelize-typescript";
+
 import Alert from "./Alert";
 import Assignment from "./Assignment";
-import Worker from "./Worker";
 import RemoteTracking from "./RemoteTracking";
+import Worker from "./Worker";
 
 export const ACTIVITY_STATUSES: string[] = [
   "in progress",

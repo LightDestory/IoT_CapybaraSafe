@@ -1,12 +1,14 @@
-import { pingRoute } from "./pingRoute";
-import { workerRoute } from "./workerRoute";
-import { alertRoute } from "./alertRoute";
-import { activityRoute } from "./activityRoute";
-import { anchorRoute } from "./anchorRoute";
-import { trackingDeviceRoute } from "./trackingDeviceRoute";
-import { remoteTrackingRoute } from "./remoteTrackingRoute";
-import { assignRoute } from "./assignRoute";
 import { Application } from "express";
+
+import { activityRoute } from "./activityRoute";
+import { alertRoute } from "./alertRoute";
+import { anchorRoute } from "./anchorRoute";
+import { assignRoute } from "./assignRoute";
+import { pingRoute } from "./pingRoute";
+import { remoteTrackingRoute } from "./remoteTrackingRoute";
+import { trackingDeviceRoute } from "./trackingDeviceRoute";
+import { workerRoute } from "./workerRoute";
+
 
 /**
  * This function is used to register all the routes in the application

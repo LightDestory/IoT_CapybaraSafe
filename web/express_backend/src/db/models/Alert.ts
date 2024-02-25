@@ -1,4 +1,3 @@
-import Activity from "./Activity";
 import {
   Model,
   Table,
@@ -13,6 +12,8 @@ import {
   BelongsTo,
   Sequelize
 } from "sequelize-typescript";
+
+import Activity from "./Activity";
 
 /**
  * Alert model

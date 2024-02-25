@@ -1,9 +1,12 @@
 import express, { Request, Response, Router } from "express";
-import Alert from "../db/models/Alert";
+
 import Activity, { ACTIVITY_STATUSES } from "../db/models/Activity";
-import Worker from "../db/models/Worker";
+import Alert from "../db/models/Alert";
 import RemoteTracking from "../db/models/RemoteTracking";
 import TrackingDevice from "../db/models/TrackingDevice";
+import Worker from "../db/models/Worker";
+import { MQTT_Topics } from "../mqtt_service/mqtt_com_topics";
+import { MQTT_Service } from "../mqtt_service/mqtt_service";
 
 export const activityRoute: Router = express.Router();
 /**
@@ -60,10 +63,22 @@ activityRoute.get("/start", async (req: Request, res: Response) => {
   }
   const ids: string[] = query.split("-");
   const activity: Activity | null = await Activity.findByPk(ids[0]);
-  if (activity) {
-    activity.set({ status: "in progress" });
+  const worker: Worker | null = await Worker.findByPk(ids[1]);
+  const trackingDevice: TrackingDevice | null = await TrackingDevice.findByPk(
+    ids[2]
+  );
+  if (activity && worker && trackingDevice) {
     try {
+      activity.set({ status: "in progress" });
       const newActivity: Activity = await activity.save();
+      MQTT_Service.getInstance().publishMessage(
+        MQTT_Topics.PAIRING_DEVICE,
+        JSON.stringify({
+          activity_id: ids[0],
+          worker_id: ids[1],
+          trackingDevice: ids[2]
+        })
+      );
       res.status(200).json({ status: "success", data: newActivity });
       return;
     } catch (error) {
@@ -71,7 +86,7 @@ activityRoute.get("/start", async (req: Request, res: Response) => {
       return;
     }
   }
-  res.status(404).send({ status: "error", data: "Activity not found" });
+  res.status(404).send({ status: "error", data: "Resources not found" });
 });
 
 /**

@@ -9,9 +9,10 @@ import {
   HasMany,
   BelongsToMany
 } from "sequelize-typescript";
+
+import Activity from "./Activity";
 import Assignment from "./Assignment";
 import RemoteTracking from "./RemoteTracking";
-import Activity from "./Activity";
 
 /**
  * Worker model

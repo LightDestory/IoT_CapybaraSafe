@@ -1,4 +1,5 @@
 import express, { Request, Response, Router } from "express";
+
 import Assignment from "../db/models/Assignment";
 export const assignRoute: Router = express.Router();
 

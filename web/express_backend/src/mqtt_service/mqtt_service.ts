@@ -1,7 +1,8 @@
-import { connect, IPublishPacket, MqttClient } from "mqtt";
-import { CONFIG_DEFAULTS } from "../config/config_defaults";
-import { MQTT_Topics } from "./mqtt_com_topics";
 import chalk from "chalk";
+import { connect, IPublishPacket, MqttClient } from "mqtt";
+
+import { MQTT_Topics } from "./mqtt_com_topics";
+import { CONFIG_DEFAULTS } from "../config/config_defaults";
 
 /**
  * @description Contains the connection information for the MQTT broker.

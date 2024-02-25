@@ -1,7 +1,9 @@
-import { Sequelize } from "sequelize-typescript";
-import { Dialect, ConnectionRefusedError } from "sequelize";
-import { CONFIG_DEFAULTS } from "../config/config_defaults";
 import chalk from "chalk";
+import { Dialect, ConnectionRefusedError } from "sequelize";
+import { Sequelize } from "sequelize-typescript";
+
+import { CONFIG_DEFAULTS } from "../config/config_defaults";
+
 
 /**
  * ConnectionInfo type

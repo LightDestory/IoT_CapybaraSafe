@@ -1,6 +1,7 @@
 import express, { Request, Response, Router } from "express";
-import Alert from "../db/models/Alert";
+
 import Activity from "../db/models/Activity";
+import Alert from "../db/models/Alert";
 
 export const alertRoute: Router = express.Router();
 
