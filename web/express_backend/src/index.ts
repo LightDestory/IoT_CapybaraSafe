@@ -1,20 +1,32 @@
 import "reflect-metadata";
-import express, { Application } from "express";
-import cors from "cors";
-import bodyParser from "body-parser";
-import { CONFIG_DEFAULTS } from "./config/config_defaults";
-import { authCheck } from "./middlewares/authMiddleware";
-import { registerRoutes } from "./routes/routeManager";
-import dotenv from "dotenv";
+import { createServer } from "http";
 import * as path from "path";
-import { MQTT_Service } from "./mqtt_service/mqtt_service";
-import { DatabaseHandler } from "./db/database_handler";
+
+import bodyParser from "body-parser";
 import chalk from "chalk";
+import cors from "cors";
+import dotenv from "dotenv";
+import express, { Application } from "express";
+import { Server } from "socket.io";
+
+import { CONFIG_DEFAULTS } from "./config/config_defaults";
+import { DatabaseHandler } from "./db/database_handler";
+import { authCheck } from "./middlewares/authMiddleware";
+import { MQTT_Service } from "./mqtt_service/mqtt_service";
+import { registerRoutes } from "./routes/routeManager";
 
 // Retrieving ENV configuration, if possible
 const configuration: dotenv.DotenvConfigOutput = dotenv.config();
 // Init express application
 const app: Application = express();
+// HTTP Server
+const httpServer = createServer(app);
+// Socket.io Server
+const ioServer = new Server(httpServer, {
+  cors: {
+    origin: "*"
+  }
+});
 
 /**
  * Load the configuration and initialize the HTTP server routes
@@ -75,7 +87,7 @@ async function bootstrap() {
   // Starting HTTP Server
   console.log(chalk.blue("Starting HTTP Server..."));
   const port = process.env.HTTP_PORT || CONFIG_DEFAULTS.DEFAULT_HTTP_PORT;
-  app
+  httpServer
     .listen(port, () => {
       console.log(
         chalk.yellow("HTTP APIs will use the following security key:"),
