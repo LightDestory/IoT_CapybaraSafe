@@ -1,8 +1,10 @@
-#ifndef PERSONAL_DEVICE_PERSISTENCE_H
-#define PERSONAL_DEVICE_PERSISTENCE_H
+#ifndef PERSISTENCE_H
+#define PERSISTENCE_H
 
 #include <Arduino.h>
 #include <Preferences.h>
+#include "../utils/globals.h"
+#include "../utils/serial_logger/serial_logger.h"
 
 namespace PERSISTENCE {
 
@@ -10,7 +12,10 @@ namespace PERSISTENCE {
 
     void init();
 
+
+    const String PREFERENCE_NAMESPACE = "ATMR-IOT-2024";
+
     String getDeviceName();
 }
 
-#endif //PERSONAL_DEVICE_PERSISTENCE_H
+#endif //PERSISTENCE_H

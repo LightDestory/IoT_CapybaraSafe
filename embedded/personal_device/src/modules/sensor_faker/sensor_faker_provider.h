@@ -1,8 +1,9 @@
-#ifndef PERSONAL_DEVICE_SENSOR_FAKER_PROVIDER_H
-#define PERSONAL_DEVICE_SENSOR_FAKER_PROVIDER_H
+#ifndef SENSOR_FAKER_PROVIDER_H
+#define SENSOR_FAKER_PROVIDER_H
 
 #include <Arduino.h>
 #include "esp_random.h"
+#include <ArduinoJson.h>
 
 namespace SENSOR_FAKER {
     typedef struct fall_sensor_data {
@@ -31,11 +32,11 @@ namespace SENSOR_FAKER {
 
     String serializeJSON(fall_sensor_data input);
 
-    fall_sensor_data* deserializeJSON(String input);
+    fall_sensor_data *deserializeJSON(String input);
 
     fall_sensor_data get_fall_good_record();
 
     fall_sensor_data get_fall_bad_record();
 }
 
-#endif //PERSONAL_DEVICE_SENSOR_FAKER_PROVIDER_H
+#endif //SENSOR_FAKER_PROVIDER_H

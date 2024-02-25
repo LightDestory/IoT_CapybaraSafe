@@ -2,9 +2,9 @@
 #define TENSORFLOW_RUNNER_H_
 
 #include <EloquentTinyML.h>
-#include <Arduino.h>
 #include "modules/machine_learning/models/fall_detection_model.h"
 #include "modules/sensor_faker/sensor_faker_provider.h"
+#include "modules/utils/serial_logger/serial_logger.h"
 
 namespace TENSORFLOW_RUNNER {
 

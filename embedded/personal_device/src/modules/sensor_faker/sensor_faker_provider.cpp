@@ -1,7 +1,7 @@
 #include "sensor_faker_provider.h"
-#include <ArduinoJson.h>
 
 namespace SENSOR_FAKER {
+
     fall_sensor_data get_fall_good_record() {
         return fall_good_records[esp_random() % 5];
     }
@@ -22,7 +22,7 @@ namespace SENSOR_FAKER {
         return output;
     }
 
-    fall_sensor_data* deserializeJSON(String json) {
+    fall_sensor_data *deserializeJSON(String json) {
         fall_sensor_data *data;
         JsonDocument doc;
         DeserializationError error = deserializeJson(doc, json);
