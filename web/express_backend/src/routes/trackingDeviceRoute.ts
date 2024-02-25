@@ -1,19 +1,48 @@
 import express, { Request, Response, Router } from "express";
-import TrackingDevice from "../db/models/TrackingDevice";
-import RemoteTracking from "../db/models/RemoteTracking";
-import Worker from "../db/models/Worker";
+
 import Activity from "../db/models/Activity";
+import RemoteTracking from "../db/models/RemoteTracking";
+import TrackingDevice, { DEVICE_STATUSES } from "../db/models/TrackingDevice";
+import Worker from "../db/models/Worker";
 export const trackingDeviceRoute: Router = express.Router();
 
 /**
  * This route is used to retrieve all the trackingDevices from the database
+ * It accepts a query parameter to filter the devices by status
+ * @example
+ * endpont: /tracking_device/all?status=available
+ * status: "in use", "available"
  */
-trackingDeviceRoute.get("/all", async (_: Request, res: Response) => {
+trackingDeviceRoute.get("/all", async (req: Request, res: Response) => {
+  const filter: string | undefined = req.query.status as string | undefined;
+  if (filter && !DEVICE_STATUSES.includes(filter.toLowerCase())) {
+    res.status(400).json({ status: "error", data: "Invalid status" });
+    return;
+  }
   const trackingDevices: TrackingDevice[] = await TrackingDevice.findAll({
     include: {
       model: RemoteTracking,
       include: [Activity, Worker]
     }
+  }).then((devices: TrackingDevice[]) => {
+    if (filter) {
+      if (filter === "available") {
+        return devices.filter((device: TrackingDevice) =>
+          device.remote_trackings.every(
+            (remoteTracking: RemoteTracking) =>
+              remoteTracking.activity?.status !== "in progress"
+          )
+        );
+      } else {
+        return devices.filter((device: TrackingDevice) =>
+          device.remote_trackings.some(
+            (remoteTracking: RemoteTracking) =>
+              remoteTracking.activity?.status === "in progress"
+          )
+        );
+      }
+    }
+    return devices;
   });
   res.status(200).json({ status: "success", data: trackingDevices });
 });

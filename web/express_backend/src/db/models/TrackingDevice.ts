@@ -9,7 +9,10 @@ import {
   IsDate,
   HasMany
 } from "sequelize-typescript";
+
 import RemoteTracking from "./RemoteTracking";
+
+export const DEVICE_STATUSES: string[] = ["in use", "available"];
 
 /**
  * TrackingDevice model
