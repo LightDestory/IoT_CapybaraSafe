@@ -7,6 +7,8 @@
 #include "../persistence/persistence.h"
 #include "../utils/serial_logger/serial_logger.h"
 #include "../utils/globals.h"
+#include "../display/display.h"
+#include "../display/images.h"
 
 namespace WIFI_MQTT_COM {
 
