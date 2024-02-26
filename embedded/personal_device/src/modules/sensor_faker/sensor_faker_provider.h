@@ -3,16 +3,29 @@
 
 #include <Arduino.h>
 #include "esp_random.h"
-#include <ArduinoJson.h>
+#include "../utils/globals.h"
+#include "../led_controls/led_controls.h"
+#include "../pin_configuration.h"
 
 namespace SENSOR_FAKER {
     typedef struct fall_sensor_data {
-        float l_m;
-        float a_s;
-        float g_s;
-        float p_g_m;
-        float p_l_m;
+        float l_m; // linear_max
+        float a_s; // acc_skewness
+        float g_s; // gyro_skewness
+        float p_g_m; // post_gyro_max
+        float p_l_m; // post_lin_max
     } fall_sensor_data;
+
+    typedef struct heart_sensor_data {
+        float t; // temperature
+        int s; // saturation
+        int hr; // heart rate
+    } heart_sensor_data;
+
+    typedef struct sensor_data {
+        fall_sensor_data fall_data;
+        heart_sensor_data heart_data;
+    } sensor_data;
 
     const fall_sensor_data fall_good_records[]{
             {3.4995078271054227, 0.3923627246585775,  0.7983139357758015, 0.4812768537029166,  1.9183191838390568},
@@ -30,13 +43,29 @@ namespace SENSOR_FAKER {
             {16.71039164779765,  3.366184143510885,  3.2272115207801604, 7.692888559490957, 16.20485746859099}
     };
 
-    String serializeJSON(fall_sensor_data input);
+    const heart_sensor_data heart_good_records[]{
+            {37.9, 92, 104},
+            {37.5, 94, 128},
+            {38.3, 93, 106},
+            {37.6, 99, 77},
+            {37.8, 94, 61}};
 
-    fall_sensor_data *deserializeJSON(String input);
+    const heart_sensor_data heart_bad_records[]{
+            {39.8, 90, 92},
+            {39.1, 95, 151},
+            {39.5, 94, 146},
+            {39.3, 83, 89},
+            {39.7, 95, 141}};
 
     fall_sensor_data get_fall_good_record();
 
     fall_sensor_data get_fall_bad_record();
+
+    heart_sensor_data get_heart_good_record();
+
+    heart_sensor_data get_heart_bad_record();
+
+    sensor_data get_sensor_data();
 }
 
 #endif //SENSOR_FAKER_PROVIDER_H

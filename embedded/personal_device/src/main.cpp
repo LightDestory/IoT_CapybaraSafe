@@ -3,15 +3,16 @@
 #include "modules/display/display.h"
 #include "modules/display/images.h"
 #include "modules/pin_configuration.h"
+#include "modules/persistence/persistence.h"
 #include "modules/led_controls/led_controls.h"
 #include "modules/utils/serial_logger/serial_logger.h"
 #include "modules/machine_learning/tensorflow_runner.h"
-#include "modules/persistence/persistence.h"
 #include "modules/ble_communication/ble_communication.h"
 #include "modules/wifi_mqtt_communication/wifi_mqtt_communication.h"
 
 
 TaskHandle_t InterruptCheckerTask;
+TaskHandle_t trackingTask;
 
 /**
  * @brief Perform a hard reset by clearing the preferences and rebooting the device
@@ -25,21 +26,46 @@ void doHardReset() {
     ESP.restart();
 }
 
-/**
- * @brief Check if the interrupt is triggered by checking the button states and time
+/*
+ * @brief Check if the hard reset interrupt is triggered
  * HARD RESET: If both buttons are pressed for 12 seconds, the device will be reset
+ */
+void checkHardResetInterrupt() {
+    if (digitalRead(PIN_CONFIGURATION::BUTTON_1) == HIGH &&
+        digitalRead(PIN_CONFIGURATION::BUTTON_2) == HIGH &&
+        GLOBALS::hardResetInterruptCounter != 0) {
+        GLOBALS::hardResetInterruptCounter = 0;
+    } else if (digitalRead(PIN_CONFIGURATION::BUTTON_1) == LOW && digitalRead(PIN_CONFIGURATION::BUTTON_2) == LOW) {
+        if (++GLOBALS::hardResetInterruptCounter == 12) {
+            GLOBALS::hardResetInterrupt = true;
+        }
+    }
+}
+
+/*
+ * @brief Check if the fake sensor interrupt is triggered
+ * FAKE SENSOR: If the button is pressed for 12 seconds, the device will send next bad data for tracking
+ */
+void checkFakeBadSensorInterrupt() {
+    if (digitalRead(PIN_CONFIGURATION::BUTTON_1) == HIGH &&
+        GLOBALS::fakeBadDataInterruptCounter != 0 && GLOBALS::mainLoopState == GLOBALS::RUNTIME_STATE::TRACKING) {
+        GLOBALS::fakeBadDataInterruptCounter = 0;
+    } else if (digitalRead(PIN_CONFIGURATION::BUTTON_1) == LOW &&
+               GLOBALS::mainLoopState == GLOBALS::RUNTIME_STATE::TRACKING) {
+        if (++GLOBALS::fakeBadDataInterruptCounter == 12) {
+            LED_CONTROLS::toggleLed(PIN_CONFIGURATION::YELLOW_LED);
+            GLOBALS::fakeBadDataInterrupt = true;
+        }
+    }
+}
+
+/**
+ * @brief Check any interrupt that is triggered
  */
 void checkInterrupt(void *argv) {
     while (true) {
-        if (digitalRead(PIN_CONFIGURATION::BUTTON_1) == HIGH &&
-            digitalRead(PIN_CONFIGURATION::BUTTON_2) == HIGH &&
-            GLOBALS::interrupt_counter != 0) {
-            GLOBALS::interrupt_counter = 0;
-        } else if (digitalRead(PIN_CONFIGURATION::BUTTON_1) == LOW && digitalRead(PIN_CONFIGURATION::BUTTON_2) == LOW) {
-            if (++GLOBALS::interrupt_counter == 10) {
-                GLOBALS::currentInterrupt = GLOBALS::INTERRUPT_TYPES::HARD_RESET;
-            }
-        }
+        checkHardResetInterrupt();
+        checkFakeBadSensorInterrupt();
         delay(500);
     }
 }
@@ -108,7 +134,7 @@ void setup() {
  */
 void loop() {
     Serial.println("Free memory: " + String(esp_get_free_heap_size()) + " bytes");
-    if (GLOBALS::currentInterrupt == GLOBALS::INTERRUPT_TYPES::HARD_RESET) {
+    if (GLOBALS::hardResetInterrupt) {
         doHardReset();
     }
     switch (GLOBALS::mainLoopState) {
@@ -146,7 +172,33 @@ void loop() {
             break;
         case GLOBALS::RUNTIME_STATE::PAIR_COMPLETE:
             LED_CONTROLS::turnOffLeds();
-            DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::radar, "PAIRED", "", 900);
+            DISPLAY_ESP::drawCenteredImageTitleSubtitle(DISPLAY_IMAGES::radar, "PAIRED");
+            delay(1500);
+            GLOBALS::mainLoopState = GLOBALS::RUNTIME_STATE::INIT_TRACKING;
+            break;
+        case GLOBALS::RUNTIME_STATE::INIT_TRACKING:
+            if (!BLE_COM::isBLEServing) {
+                if (!BLE_COM::initBLEService(BLE_COM::SERVICE_TYPE::DATA_SERVICE)) {
+                    while (true) {
+                        LED_CONTROLS::toggleLed(PIN_CONFIGURATION::RED_LED);
+                        DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::error, "InitFail BLE Service!", "", 900);
+                    }
+                }
+            }
+            // Setting up the tracking task
+            xTaskCreatePinnedToCore(
+                    BLE_COM::updateDataCharacteristic,
+                    "trackingTask",
+                    10000,
+                    NULL,
+                    1,
+                    &trackingTask,
+                    0);
+            GLOBALS::mainLoopState = GLOBALS::RUNTIME_STATE::TRACKING;
+            break;
+        case GLOBALS::RUNTIME_STATE::TRACKING:
+            LED_CONTROLS::toggleLed(PIN_CONFIGURATION::GREEN_LED);
+            DISPLAY_ESP::drawCenteredImageTitleSubtitle(DISPLAY_IMAGES::radar, "TRACKING");
             break;
         default: // Missing Config
             const uint32_t ID = PERSISTENCE::preferences.getUInt("ID");

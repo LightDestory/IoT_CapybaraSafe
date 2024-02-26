@@ -13,16 +13,14 @@ namespace GLOBALS {
      * 4. REQUEST_PAIR: The device is waiting for the user to pair the device
      */
     enum RUNTIME_STATE {
-        MISSING_CONFIG, REQUEST_SETUP, SETUP_COMPLETE, REQUEST_PAIR, PAIR_COMPLETE
-    };
-
-    enum INTERRUPT_TYPES {
-        NONE, HARD_RESET
+        MISSING_CONFIG, REQUEST_SETUP, SETUP_COMPLETE, REQUEST_PAIR, PAIR_COMPLETE, INIT_TRACKING, TRACKING
     };
 
     extern enum RUNTIME_STATE mainLoopState;
-    extern uint8_t interrupt_counter;
-    extern enum INTERRUPT_TYPES currentInterrupt;
+    extern uint8_t hardResetInterruptCounter;
+    extern bool hardResetInterrupt;
+    extern uint8_t fakeBadDataInterruptCounter;
+    extern bool fakeBadDataInterrupt;
     extern uint32_t workerID;
     extern uint32_t activityID;
     const String DEVICE_NAME = "PD_";

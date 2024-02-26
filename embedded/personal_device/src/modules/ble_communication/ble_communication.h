@@ -6,6 +6,7 @@
 #include "../display/display.h"
 #include "../utils/serial_logger/serial_logger.h"
 #include "../persistence/persistence.h"
+#include "../tracking_routine/tracking_service.h"
 
 namespace BLE_COM {
     // Service types
@@ -37,6 +38,8 @@ namespace BLE_COM {
 
     // Init the BLE service for the device
     bool initBLEService(SERVICE_TYPE serviceType);
+
+    void updateDataCharacteristic(void *argv);
 
     // Generic stuff
     extern bool isBLEServing;

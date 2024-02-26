@@ -114,6 +114,21 @@ namespace BLE_COM {
         return true;
     }
 
+
+    /*
+     * @brief Update the tracking characteristic with the latest data
+     * @param argv The argument to be passed to the task
+     */
+    void updateDataCharacteristic(void *argv) {
+        while (true) {
+            TRACKING_SERVICE::updateTrackingData();
+            const String serialized = TRACKING_SERVICE::serializedData();
+            SERIAL_LOGGER::log(String("Updating Tracking Data: ") + serialized);
+            BLETrackingCharacteristicInstance->setValue(serialized);
+            delay(5000);
+        }
+    }
+
     /**
      * @brief Callback for the ID characteristic write operation
      * @param pCharacteristic The characteristic that was written
