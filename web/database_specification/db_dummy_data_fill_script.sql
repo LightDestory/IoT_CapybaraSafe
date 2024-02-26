@@ -1,23 +1,315 @@
 -- Inserting data into Workers table
-INSERT INTO `Workers` VALUES (1,'Elda','Silvestri','Idraulico'),(2,'Sandro','Negri','Muratore'),(3,'Rodolfo','Neri','Muratore'),(4,'Olimpia','Lombardo','Elettricista'),(5,'Clea','Pellegrini','Idraulico'),(6,'Genziana','Giuliani','Muratore'),(7,'Cosetta','Marini','Elettricista'),(8,'Amedeo','Grasso','Muratore'),(9,'Diana','Cattaneo','Idraulico'),(10,'Penelope','Piras','Muratore'),(11,'Giovanna','Rossi','Elettricista'),(12,'Umberto','Marini','Elettricista'),(13,'Caio','Gentile','Idraulico'),(14,'Noemi','Bruno','Elettricista'),(15,'Alessio','Tudisco','CapybaraKing'),(16,'Caligola','Costa','Elettricista'),(17,'Audenico','Piras','Elettricista'),(18,'Maria','Palumbo','Idraulico'),(19,'Maristella','Gentile','Muratore'),(20,'Rudy','Ferretti','Idraulico'),(21,'Jack','Russo','Elettricista'),(22,'Marieva','Ferrari','Elettricista'),(23,'Joshua','Costantini','Idraulico'),(24,'Thea','Morelli','Idraulico'),(25,'Genziana','Calippo','Idraulico');
+INSERT INTO
+    `Workers`
+VALUES
+    (1, 'Alessio', 'Tudisco', 'CapybaraKing'),
+    (2, 'Miriana', 'Russo', 'Informatica'),
+    (3, 'Giovanni', "D'Urso", 'Schiavo');
 
 -- Inserting data into TrackingDevices table
-INSERT INTO `TrackingDevices` VALUES (1,'49:31:31:27:23:64','2023-10-13','v2.0'),(2,'58:11:19:76:12:03','2023-11-10','v1.5'),(3,'68:42:16:50:20:78','2023-11-11','v2.0'),(4,'00:60:15:76:41:24','2023-12-10','v1.5'),(5,'75:83:88:99:85:98','2023-08-27','v1.5'),(6,'66:30:85:83:22:84','2024-01-12','v1.5'),(7,'51:00:97:22:29:29','2023-12-09','v2.0'),(8,'51:96:20:40:46:62','2023-12-10','v1.5'),(9,'81:38:67:96:82:49','2023-10-15','v1.5'),(10,'87:86:56:02:23:97','2024-01-24','v1.5'),(11,'45:11:46:71:10:97','2024-02-02','v1.5'),(12,'82:27:73:54:10:51','2023-08-24','v2.0'),(13,'18:67:47:64:27:08','2023-10-29','v2.0'),(14,'17:48:17:99:36:52','2023-09-15','v2.0'),(15,'29:08:59:57:24:85','2023-10-20','v2.0'),(16,'20:07:37:10:49:59','2023-10-28','v2.0'),(17,'94:81:01:15:19:61','2024-01-09','v2.0'),(18,'56:29:90:55:67:05','2023-12-14','v2.0'),(19,'05:15:09:76:23:84','2023-09-05','v1.5'),(20,'98:70:82:60:95:69','2023-10-18','v2.0'),(21,'18:49:97:88:85:04','2023-12-23','v2.0'),(22,'87:40:66:63:27:73','2023-12-21','v2.0'),(23,'51:47:02:84:70:12','2023-10-05','v1.5'),(24,'30:22:73:00:12:54','2023-10-29','v1.5'),(25,'34:66:85:21:68:51','2023-11-15','v2.0'),(26,'38:90:30:76:66:82','2023-12-26','v1.5'),(27,'26:31:21:22:67:97','2024-02-05','v1.5'),(28,'22:14:43:75:13:39','2023-12-08','v1.5'),(29,'62:96:94:72:14:18','2023-09-12','v1.5'),(30,'79:10:68:27:43:36','2023-10-31','v1.5'),(31,'31:17:93:73:68:19','2024-02-11','v2.0'),(32,'91:60:90:58:40:54','2023-09-13','v2.0'),(33,'53:67:75:41:71:22','2023-09-11','v2.0'),(34,'05:87:60:55:26:55','2023-10-10','v1.5'),(35,'29:22:90:83:78:11','2023-11-26','v2.0'),(36,'31:06:64:13:63:25','2023-12-13','v1.5'),(37,'33:42:08:37:36:20','2023-11-15','v2.0'),(38,'45:25:43:65:35:02','2023-11-22','v2.0'),(39,'28:22:30:28:26:93','2023-09-06','v1.5'),(40,'55:32:91:40:37:14','2023-08-22','v2.0');
+INSERT INTO
+    `TrackingDevices`
+VALUES
+    (1, '49:31:31:27:23:64', '2023-10-13', 'v2.0'),
+    (2, '58:11:19:76:12:03', '2023-11-10', 'v1.5'),
+    (3, '68:42:16:50:20:78', '2023-11-16', 'v2.0'),
+    (4, '78:22:21:53:11:78', '2023-11-12', 'v2.0');
 
 -- Inserting data into Anchors table
-INSERT INTO `Anchors` VALUES (1,'53:59:79:48:46:35','anomaly'),(2,'11:75:27:04:51:97','anomaly'),(3,'87:11:44:93:17:40','working'),(4,'15:55:05:64:17:67','anomaly'),(5,'16:34:74:16:43:43','anomaly'),(6,'99:34:89:34:86:01','anomaly'),(7,'80:71:41:99:22:63','working'),(8,'61:37:98:01:82:41','working'),(9,'46:42:49:21:52:68','working'),(10,'90:39:21:24:58:76','working'),(11,'69:83:17:88:06:21','anomaly'),(12,'76:47:52:24:89:88','working'),(13,'00:83:42:56:58:35','working'),(14,'67:70:33:09:42:31','working'),(15,'24:91:53:42:80:34','working'),(16,'26:92:08:32:32:04','working'),(17,'74:15:49:36:90:23','anomaly'),(18,'40:89:60:42:18:18','working'),(19,'37:81:62:50:29:84','working'),(20,'09:41:22:23:17:09','working');
+INSERT INTO
+    `Anchors`
+VALUES
+    (1, '53:59:79:48:46:35', 'working'),
+    (2, '11:75:27:04:51:97', 'working'),
+    (3, '87:11:44:93:17:40', 'working'),
+    (4, '15:55:05:64:17:67', 'working'),
+    (5, '16:34:74:16:43:43', 'anomaly');
 
 -- Inserting data into Activities table
-INSERT INTO `Activities` VALUES (1,'Riparazione perdita tubo secondario',95,'2024-01-30 18:30:00','completed'),(2,'Suddivisione ambiente zona caldaie',65,'2024-02-05 12:00:00','to be completed'),(3,'Purificazione bacino da scorie radioattive',116,'2024-02-14 00:30:00','in progress'),(4,'Caccia ai megalodonti',21,'2024-02-13 21:00:00','in progress'),(5,'Sostituzione motore pompa L8',47,'2024-03-15 08:30:00','scheduled');
+INSERT INTO
+    `Activities`
+VALUES
+    (
+        1,
+        'Riparazione perdita tubo secondario',
+        95,
+        '2024-01-30 18:30:00',
+        'completed'
+    ),
+    (
+        2,
+        'Suddivisione ambiente zona caldaie',
+        65,
+        '2024-02-05 12:00:00',
+        'to be completed'
+    ),
+    (
+        3,
+        'Purificazione bacino da scorie radioattive',
+        116,
+        '2024-02-14 00:30:00',
+        'completed'
+    ),
+    (
+        4,
+        'Caccia ai megalodonti',
+        21,
+        '2024-02-13 21:00:00',
+        'in progress'
+    ),
+    (
+        5,
+        'Sostituzione motore pompa L8',
+        47,
+        '2024-03-15 08:30:00',
+        'scheduled'
+    );
 
 -- Inserting data into Alerts table
-INSERT INTO `Alerts` (id, text_description, activity_id, is_broadcast) VALUES (1,'La diga si è rotta!',NULL,1),(2,'Uno squalo mi ha mangiato il panino!',2,0),(3,'State attenti alle scorie!',3,0),(4,'Prova prova, mi ricevete?',4,0),(5,'Luca è atteso al reparto ortofrutta',5,0),(6,'Tu parlare americano?',1,0),(7,'La polizia è qui, nascondete la farina!',NULL,1),(8,'Secondo me è la cipolla',3,0),(9,'PErché un pastore tedesco non parla il tedesco?',NULL,1),(10,'I panda sono brutti',NULL,1);
+INSERT INTO
+    `Alerts` (id, text_description, activity_id, is_broadcast)
+VALUES
+    (1, 'La diga si è rotta!', NULL, 1),
+    (2, 'Uno squalo mi ha mangiato il panino!', 2, 0),
+    (3, 'State attenti alle scorie!', 3, 0),
+    (4, 'Prova prova, mi ricevete?', 4, 0),
+    (5, 'Tu parlare americano?', 1, 0),
+    (
+        6,
+        'La polizia è qui, nascondete la farina!',
+        NULL,
+        4
+    ),
+    (
+        7,
+        'Perché un pastore tedesco non parla il tedesco?',
+        3,
+        0
+    );
 
 -- Inserting data into Assignments table
-INSERT INTO `Assignments` VALUES (1,1),(2,2),(3,3),(4,4),(5,5),(6,1),(7,2),(8,3),(9,4),(10,5),(11,1),(12,2),(13,3),(14,4),(15,5),(16,1),(17,2),(18,3),(19,4),(20,5),(21,1),(22,2),(23,3),(24,4),(25,5);
+INSERT INTO
+    `Assignments`
+VALUES
+    (1, 1),
+    (2, 1),
+    (2, 2),
+    (1, 3),
+    (1, 4),
+    (2, 4),
+    (3, 1),
+    (3, 4);
 
 -- Inserting data into RemoteTrackings table
-INSERT INTO `RemoteTrackings` VALUES ('1982-08-21 21:39:49',1,1,-44,1,1,1,0,78,2,3),('1993-08-05 21:42:16',1,2,-60,2,2,2,0,25,90,0),('1980-06-17 16:55:53',1,3,-12,3,3,3,0,30,24,43),('2019-08-26 11:03:53',1,4,-55,4,4,4,0,9,42,14),('2010-12-30 08:14:50',1,5,-32,5,5,5,0,48,94,24),('1977-08-29 12:12:24',1,6,-11,6,6,1,0,64,77,8),('1974-11-17 17:11:31',1,7,-123,7,7,2,0,49,55,35),('2020-08-11 04:42:36',1,8,-21,8,8,3,0,30,4,22),('1974-07-13 12:25:41',1,9,-33,9,9,4,0,42,86,1),('2006-12-05 11:05:36',1,10,-55,10,10,5,0,58,15,28);
-
-
-
+INSERT INTO
+    `RemoteTrackings`
+VALUES
+    (
+        '2024-01-30 18:35:00',  -- timestamp
+        1, -- communication_progressive
+        1, -- anchor_id
+        -44, -- rssi
+        1, -- worker_id
+        1, -- device_id
+        1, -- activity_id
+        0, -- emergency
+        78, -- heart_rate
+        2, -- saturation
+        3 -- temperature
+    ),
+    (
+        '2024-01-30 18:45:00',  -- timestamp
+        2, -- communication_progressive
+        2, -- anchor_id
+        -34, -- rssi
+        1, -- worker_id
+        1, -- device_id
+        1, -- activity_id
+        0, -- emergency
+        78, -- heart_rate
+        2, -- saturation
+        3 -- temperature
+    ),
+    (
+        '2024-01-30 18:35:00',  -- timestamp
+        1, -- communication_progressive
+        1, -- anchor_id
+        -44, -- rssi
+        2, -- worker_id
+        2, -- device_id
+        1, -- activity_id
+        0, -- emergency
+        78, -- heart_rate
+        2, -- saturation
+        3 -- temperature
+    ),
+    (
+        '2024-01-30 18:35:00',  -- timestamp
+        2, -- communication_progressive
+        1, -- anchor_id
+        -44, -- rssi
+        2, -- worker_id
+        2, -- device_id
+        1, -- activity_id
+        1, -- emergency
+        78, -- heart_rate
+        2, -- saturation
+        3 -- temperature
+    ),
+    (
+        '2024-01-30 18:35:00',  -- timestamp
+        1, -- communication_progressive
+        1, -- anchor_id
+        -44, -- rssi
+        3, -- worker_id
+        3, -- device_id
+        1, -- activity_id
+        0, -- emergency
+        78, -- heart_rate
+        2, -- saturation
+        3 -- temperature
+    ),
+    (
+        '2024-01-30 18:35:00',  -- timestamp
+        2, -- communication_progressive
+        1, -- anchor_id
+        -44, -- rssi
+        3, -- worker_id
+        3, -- device_id
+        1, -- activity_id
+        0, -- emergency
+        78, -- heart_rate
+        2, -- saturation
+        3 -- temperature
+    ),
+    (
+        '2024-01-30 18:35:00',  -- timestamp
+        1, -- communication_progressive
+        1, -- anchor_id
+        -44, -- rssi
+        2, -- worker_id
+        1, -- device_id
+        2, -- activity_id
+        0, -- emergency
+        78, -- heart_rate
+        2, -- saturation
+        3 -- temperature
+    ),
+    (
+        '2024-01-30 18:35:00',  -- timestamp
+        2, -- communication_progressive
+        2, -- anchor_id
+        -44, -- rssi
+        2, -- worker_id
+        1, -- device_id
+        2, -- activity_id
+        0, -- emergency
+        78, -- heart_rate
+        2, -- saturation
+        3 -- temperature
+    ),
+    (
+        '2024-01-30 18:35:00',  -- timestamp
+        1, -- communication_progressive
+        1, -- anchor_id
+        -44, -- rssi
+        1, -- worker_id
+        2, -- device_id
+        3, -- activity_id
+        0, -- emergency
+        78, -- heart_rate
+        2, -- saturation
+        3 -- temperature
+    ),
+    (
+        '2024-01-30 18:35:00',  -- timestamp
+        2, -- communication_progressive
+        2, -- anchor_id
+        -44, -- rssi
+        1, -- worker_id
+        2, -- device_id
+        3, -- activity_id
+        0, -- emergency
+        78, -- heart_rate
+        2, -- saturation
+        3 -- temperature
+    ),
+    (
+        '2024-01-30 18:35:00',  -- timestamp
+        1, -- communication_progressive
+        1, -- anchor_id
+        -44, -- rssi
+        1, -- worker_id
+        2, -- device_id
+        4, -- activity_id
+        0, -- emergency
+        78, -- heart_rate
+        2, -- saturation
+        3 -- temperature
+    ),
+    (
+        '2024-01-30 18:35:00',  -- timestamp
+        2, -- communication_progressive
+        1, -- anchor_id
+        -44, -- rssi
+        1, -- worker_id
+        2, -- device_id
+        4, -- activity_id
+        1, -- emergency
+        78, -- heart_rate
+        2, -- saturation
+        3 -- temperature
+    ),
+    (
+        '2024-01-30 18:35:00',  -- timestamp
+        1, -- communication_progressive
+        1, -- anchor_id
+        -44, -- rssi
+        2, -- worker_id
+        1, -- device_id
+        4, -- activity_id
+        0, -- emergency
+        78, -- heart_rate
+        2, -- saturation
+        3 -- temperature
+    ),
+    (
+        '2024-01-30 18:35:00',  -- timestamp
+        2, -- communication_progressive
+        1, -- anchor_id
+        -44, -- rssi
+        2, -- worker_id
+        1, -- device_id
+        4, -- activity_id
+        0, -- emergency
+        78, -- heart_rate
+        2, -- saturation
+        3 -- temperature
+    ),
+    (
+        '2024-01-30 18:35:00',  -- timestamp
+        1, -- communication_progressive
+        1, -- anchor_id
+        -44, -- rssi
+        3, -- worker_id
+        3, -- device_id
+        4, -- activity_id
+        0, -- emergency
+        78, -- heart_rate
+        2, -- saturation
+        3 -- temperature
+    ),
+    (
+        '2024-01-30 18:35:00',  -- timestamp
+        2, -- communication_progressive
+        2, -- anchor_id
+        -44, -- rssi
+        3, -- worker_id
+        3, -- device_id
+        4, -- activity_id
+        0, -- emergency
+        78, -- heart_rate
+        2, -- saturation
+        3 -- temperature
+    );
+    
