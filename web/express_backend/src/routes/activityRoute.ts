@@ -76,7 +76,7 @@ activityRoute.get("/start", async (req: Request, res: Response) => {
         JSON.stringify({
           activity_id: ids[0],
           worker_id: ids[1],
-          trackingDevice: ids[2]
+          device_id: ids[2]
         })
       );
       res.status(200).json({ status: "success", data: newActivity });
