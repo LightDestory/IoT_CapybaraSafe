@@ -8,6 +8,6 @@ namespace SERIAL_LOGGER {
      * This function prints to the serial the provided message
      * @param message: A string to print
      */
-    void log(String message);
+    void log(const String &message);
 }
 #endif

@@ -2,6 +2,8 @@
 #define PINOUT_H_
 
 #include <Arduino.h>
+#include "modules/utils/serial_logger/serial_logger.h"
+
 
 namespace PIN_CONFIGURATION {
     // LED
@@ -28,6 +30,6 @@ namespace PIN_CONFIGURATION {
     /*
     * This function is used to reset all the outputs to LOW.
     */
-    void resetOutputs();
+    void resetOutputs(bool displayMessage = true);
 }
 #endif
