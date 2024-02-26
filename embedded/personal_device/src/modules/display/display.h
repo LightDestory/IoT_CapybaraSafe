@@ -48,6 +48,7 @@ namespace DISPLAY_ESP {
 
     void blinkMessage(const String &message, uint16_t blinkTime);
 
-    void blinkImageMessage(const unsigned char image[], const String &message, uint16_t blinkTime);
+    void
+    blinkImageMessage(const unsigned char image[], const String &message, const String &subtitle, uint16_t blinkTime);
 }
 #endif

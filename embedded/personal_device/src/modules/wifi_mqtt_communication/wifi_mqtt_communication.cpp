@@ -51,9 +51,10 @@ namespace WIFI_MQTT_COM {
         }
         deserializeJson(doc, message);
         if (doc.containsKey("device_id") && doc.containsKey("worker_id") && doc.containsKey("activity_id")) {
-            if (doc["device_id"] == PERSISTENCE::preferences.getUInt("ID")) {
-                uint32_t workerID = doc["worker_id"];
-                uint32_t activityID = doc["activity_id"];
+            uint32_t deviceID = doc["device_id"];
+            uint32_t workerID = doc["worker_id"];
+            uint32_t activityID = doc["activity_id"];
+            if (deviceID == PERSISTENCE::preferences.getUInt("ID")) {
                 SERIAL_LOGGER::log(
                         String("Completed Pairing Request: ") + String(workerID) + String(" ") + String(activityID));
                 GLOBALS::workerID = workerID;

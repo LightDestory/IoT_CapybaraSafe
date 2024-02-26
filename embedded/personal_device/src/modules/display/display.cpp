@@ -95,13 +95,18 @@ namespace DISPLAY_ESP {
         delay(blinkTime / 3);
     }
 
-    void blinkImageMessage(const unsigned char image[], const String &message, uint16_t blinkTime) {
+    void
+    blinkImageMessage(const unsigned char image[], const String &message, const String &subtitle, uint16_t blinkTime) {
         display_hw.displayOn();
         delay(blinkTime / 3);
         display_hw.drawXbm(48, 0, DISPLAY_IMAGES::DISPLAY_IMAGE_SIZE, DISPLAY_IMAGES::DISPLAY_IMAGE_SIZE, image);
         display_hw.setFont(ArialMT_Plain_10);
         display_hw.setTextAlignment(TEXT_ALIGN_CENTER);
         display_hw.drawString(64, 35, message);
+        if (subtitle != "") {
+            display_hw.setFont(ArialMT_Plain_10);
+            display_hw.drawString(64, 50, subtitle);
+        }
         display_hw.display();
         delay(blinkTime / 3);
         display_hw.clear();

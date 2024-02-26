@@ -36,7 +36,7 @@ void checkInterrupt(void *argv) {
             GLOBALS::interrupt_counter != 0) {
             GLOBALS::interrupt_counter = 0;
         } else if (digitalRead(PIN_CONFIGURATION::BUTTON_1) == LOW && digitalRead(PIN_CONFIGURATION::BUTTON_2) == LOW) {
-            if (++GLOBALS::interrupt_counter == 25) {
+            if (++GLOBALS::interrupt_counter == 10) {
                 GLOBALS::currentInterrupt = GLOBALS::INTERRUPT_TYPES::HARD_RESET;
             }
         }
@@ -68,7 +68,7 @@ void initTechStacks() {
     if (!TENSORFLOW_RUNNER::initModel()) {
         while (true) {
             LED_CONTROLS::toggleLed(PIN_CONFIGURATION::RED_LED);
-            DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::error, "InitFail ML model!", 900);
+            DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::error, "InitFail ML model!", "", 900);
         }
     }
     DISPLAY_ESP::updateBootAnimationProgressBar(80);
@@ -76,7 +76,7 @@ void initTechStacks() {
     if (!BLE_COM::initBLEStack()) {
         while (true) {
             LED_CONTROLS::toggleLed(PIN_CONFIGURATION::RED_LED);
-            DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::error, "InitFail BLE stack!", 900);
+            DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::error, "InitFail BLE stack!", "", 900);
         }
     }
     DISPLAY_ESP::updateBootAnimationProgressBar(100);
@@ -117,12 +117,12 @@ void loop() {
                 if (!BLE_COM::initBLEService(BLE_COM::SERVICE_TYPE::SETUP_SERVICE)) {
                     while (true) {
                         LED_CONTROLS::toggleLed(PIN_CONFIGURATION::RED_LED);
-                        DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::error, "InitFail BLE Service!", 900);
+                        DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::error, "InitFail BLE Service!", "", 900);
                     }
                 }
             }
             LED_CONTROLS::toggleLed(PIN_CONFIGURATION::BLUE_LED);
-            DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::bluetooth, "Perform CONFIG", 900);
+            DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::bluetooth, "Perform CONFIG", "Device name: PD_0", 900);
             break;
         case GLOBALS::RUNTIME_STATE::SETUP_COMPLETE:
             LED_CONTROLS::turnOffLeds();
@@ -136,17 +136,17 @@ void loop() {
                 if (!WIFI_MQTT_COM::initWifiMQTT()) {
                     while (true) {
                         LED_CONTROLS::toggleLed(PIN_CONFIGURATION::RED_LED);
-                        DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::error, "InitFail WIFI-MQTT!", 900);
+                        DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::error, "InitFail WIFI-MQTT!", "", 900);
                     }
                 }
             }
             LED_CONTROLS::toggleLed(PIN_CONFIGURATION::BLUE_LED);
             WIFI_MQTT_COM::mqttClient->loop();
-            DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::radar, "Perform PAIRING", 900);
+            DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::radar, "Perform PAIRING", PERSISTENCE::getDeviceName(), 900);
             break;
         case GLOBALS::RUNTIME_STATE::PAIR_COMPLETE:
             LED_CONTROLS::turnOffLeds();
-            DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::radar, "PAIRED", 900);
+            DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::radar, "PAIRED", "", 900);
             break;
         default: // Missing Config
             const uint32_t ID = PERSISTENCE::preferences.getUInt("ID");
