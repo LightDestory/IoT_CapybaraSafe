@@ -182,6 +182,9 @@ void loop() {
                     while (true) {
                         LED_CONTROLS::toggleLed(PIN_CONFIGURATION::RED_LED);
                         DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::error, "InitFail WIFI-MQTT!", "", 900);
+                        if (GLOBALS::hardResetInterrupt) {
+                            doHardReset();
+                        }
                     }
                 }
             }
