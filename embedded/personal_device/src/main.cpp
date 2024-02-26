@@ -36,7 +36,7 @@ void checkHardResetInterrupt() {
         GLOBALS::hardResetInterruptCounter != 0) {
         GLOBALS::hardResetInterruptCounter = 0;
     } else if (digitalRead(PIN_CONFIGURATION::BUTTON_1) == LOW && digitalRead(PIN_CONFIGURATION::BUTTON_2) == LOW) {
-        if (++GLOBALS::hardResetInterruptCounter == 12) {
+        if (++GLOBALS::hardResetInterruptCounter == 6) {
             GLOBALS::hardResetInterrupt = true;
         }
     }
@@ -52,9 +52,26 @@ void checkFakeBadSensorInterrupt() {
         GLOBALS::fakeBadDataInterruptCounter = 0;
     } else if (digitalRead(PIN_CONFIGURATION::BUTTON_1) == LOW &&
                GLOBALS::mainLoopState == GLOBALS::RUNTIME_STATE::TRACKING) {
-        if (++GLOBALS::fakeBadDataInterruptCounter == 12) {
+        if (++GLOBALS::fakeBadDataInterruptCounter == 6) {
             LED_CONTROLS::toggleLed(PIN_CONFIGURATION::YELLOW_LED);
             GLOBALS::fakeBadDataInterrupt = true;
+        }
+    }
+}
+
+void checkDismissInterrupt() {
+    if (digitalRead(PIN_CONFIGURATION::BUTTON_1) == HIGH &&
+        GLOBALS::dismissAlertInterruptCounter != 0 && GLOBALS::mainLoopState == GLOBALS::RUNTIME_STATE::ON_ALERT) {
+        GLOBALS::dismissAlertInterruptCounter = 0;
+    } else if (digitalRead(PIN_CONFIGURATION::BUTTON_1) == LOW &&
+               GLOBALS::mainLoopState == GLOBALS::RUNTIME_STATE::ON_ALERT) {
+        if (++GLOBALS::dismissAlertInterruptCounter == 6) {
+            GLOBALS::isAlertOn = false;
+            GLOBALS::alertMessage = "";
+            GLOBALS::dismissAlertInterruptCounter = 0;
+            GLOBALS::mainLoopState = GLOBALS::RUNTIME_STATE::TRACKING;
+            BLE_COM::flushAlertCharacteristic();
+            LED_CONTROLS::turnOffLeds();
         }
     }
 }
@@ -66,6 +83,7 @@ void checkInterrupt(void *argv) {
     while (true) {
         checkHardResetInterrupt();
         checkFakeBadSensorInterrupt();
+        checkDismissInterrupt();
         delay(500);
     }
 }
@@ -133,7 +151,7 @@ void setup() {
  * 2. Check the current state and perform the necessary actions
  */
 void loop() {
-    Serial.println("Free memory: " + String(esp_get_free_heap_size()) + " bytes");
+    //Serial.println("Free memory: " + String(esp_get_free_heap_size()) + " bytes");
     if (GLOBALS::hardResetInterrupt) {
         doHardReset();
     }
@@ -148,7 +166,8 @@ void loop() {
                 }
             }
             LED_CONTROLS::toggleLed(PIN_CONFIGURATION::BLUE_LED);
-            DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::bluetooth, "Perform CONFIG", "Device name: PD_0", 900);
+            DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::bluetooth, "Perform CONFIG",
+                                           "Device name: " + PERSISTENCE::getDeviceName(), 900);
             break;
         case GLOBALS::RUNTIME_STATE::SETUP_COMPLETE:
             LED_CONTROLS::turnOffLeds();
@@ -199,6 +218,11 @@ void loop() {
         case GLOBALS::RUNTIME_STATE::TRACKING:
             LED_CONTROLS::toggleLed(PIN_CONFIGURATION::GREEN_LED);
             DISPLAY_ESP::drawCenteredImageTitleSubtitle(DISPLAY_IMAGES::radar, "TRACKING");
+            break;
+        case GLOBALS::RUNTIME_STATE::ON_ALERT:
+            LED_CONTROLS::turnOffLed(PIN_CONFIGURATION::GREEN_LED);
+            LED_CONTROLS::toggleLed(PIN_CONFIGURATION::RED_LED);
+            DISPLAY_ESP::drawCenteredImageTitleSubtitle(DISPLAY_IMAGES::safety_hat, GLOBALS::alertMessage);
             break;
         default: // Missing Config
             const uint32_t ID = PERSISTENCE::preferences.getUInt("ID");

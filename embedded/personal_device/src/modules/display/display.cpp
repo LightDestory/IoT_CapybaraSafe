@@ -97,7 +97,8 @@ namespace DISPLAY_ESP {
 
     void
     blinkImageMessage(const unsigned char image[], const String &message, const String &subtitle, uint16_t blinkTime) {
-        display_hw.displayOn();
+        display_hw.clear();
+        display_hw.display();
         delay(blinkTime / 3);
         display_hw.drawXbm(48, 0, DISPLAY_IMAGES::DISPLAY_IMAGE_SIZE, DISPLAY_IMAGES::DISPLAY_IMAGE_SIZE, image);
         display_hw.setFont(ArialMT_Plain_10);

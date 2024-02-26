@@ -41,6 +41,8 @@ namespace BLE_COM {
 
     void updateDataCharacteristic(void *argv);
 
+    void flushAlertCharacteristic();
+
     // Generic stuff
     extern bool isBLEServing;
     extern NimBLEServer *BLEServerInstance;

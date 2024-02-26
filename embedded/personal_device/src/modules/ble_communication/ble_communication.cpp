@@ -150,12 +150,23 @@ namespace BLE_COM {
      * @param pCharacteristic The characteristic that was written
      */
     void notifyAlertCallbacks::onWrite(NimBLECharacteristic *pCharacteristic) {
-        //String newAlert = pCharacteristic->getValue();
-        //if (newAlert.length() > 0) {
-        //    if (newAlert.toInt() != 0) {
-        //        SERIAL_LOGGER::log(String("Received value: ") + newAlert.c_str());
-        //        DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::alert, "Alert Received", 900);
-        //    }
-        //}
+        String newAlert = pCharacteristic->getValue();
+        JsonDocument doc;
+        DeserializationError error = deserializeJson(doc, newAlert);
+        if (newAlert.length() > 0 && !error) {
+            deserializeJson(doc, newAlert);
+            if (doc.containsKey("message")) {
+                String message = doc["message"];
+                SERIAL_LOGGER::log(String("Received Alert: ") + message);
+                GLOBALS::alertMessage = message;
+                GLOBALS::isAlertOn = true;
+                GLOBALS::mainLoopState = GLOBALS::RUNTIME_STATE::ON_ALERT;
+                SERIAL_LOGGER::log("Alert STATE ON!");
+            }
+        }
+    }
+
+    void flushAlertCharacteristic() {
+        BLEAlertCharacteristicInstance->setValue("{}");
     }
 }

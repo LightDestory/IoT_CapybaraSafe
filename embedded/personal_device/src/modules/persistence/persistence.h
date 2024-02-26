@@ -14,8 +14,11 @@ namespace PERSISTENCE {
 
 
     const String PREFERENCE_NAMESPACE = "ATMR-IOT-2024";
+    extern String tempDeviceName;
 
     String getDeviceName();
+
+    String generateRandomTempDeviceName();
 }
 
 #endif //PERSISTENCE_H

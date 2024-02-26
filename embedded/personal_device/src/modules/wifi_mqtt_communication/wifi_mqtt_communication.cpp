@@ -11,6 +11,7 @@ namespace WIFI_MQTT_COM {
         mqttClient = new PubSubClient(*wifiClient);
         uint8_t timeout = 0;
         SERIAL_LOGGER::log("Connecting to WiFi");
+        DISPLAY_ESP::drawCenteredImageTitleSubtitle(DISPLAY_IMAGES::radar, "Network", "Connecting...");
         WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
         while (WiFi.status() != WL_CONNECTED) {
             delay(500);
@@ -18,7 +19,6 @@ namespace WIFI_MQTT_COM {
                 return false;
             }
         }
-        SERIAL_LOGGER::log("Connecting to WiFi");
         mqttClient->setServer(MQTT_HOST.c_str(), MQTT_PORT);
         mqttClient->setCallback(mqtt_pair_callback);
         String client_id = String(PERSISTENCE::getDeviceName()) + "_" + String(WiFi.macAddress());

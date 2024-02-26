@@ -8,4 +8,8 @@ namespace LED_CONTROLS {
     void turnOffLeds() {
         PIN_CONFIGURATION::resetOutputs(false);
     }
+
+    void turnOffLed(const uint8_t pin) {
+        digitalWrite(pin, LOW);
+    }
 }
