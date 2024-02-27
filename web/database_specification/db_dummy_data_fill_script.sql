@@ -4,7 +4,7 @@ INSERT INTO
 VALUES
     (1, 'Alessio', 'Tudisco', 'CapybaraKing'),
     (2, 'Miriana', 'Russo', 'Informatica'),
-    (3, 'Giovanni', "D'Urso", 'Schiavo');
+    (3, 'Giovanni', "Urso", 'Schiavo');
 
 -- Inserting data into TrackingDevices table
 INSERT INTO
@@ -105,19 +105,6 @@ INSERT INTO
     `RemoteTrackings`
 VALUES
     (
-        '2024-01-30 18:35:00',  -- timestamp
-        1, -- communication_progressive
-        1, -- anchor_id
-        -44, -- rssi
-        1, -- worker_id
-        1, -- device_id
-        1, -- activity_id
-        0, -- emergency
-        78, -- heart_rate
-        2, -- saturation
-        3 -- temperature
-    ),
-    (
         '2024-01-30 18:45:00',  -- timestamp
         2, -- communication_progressive
         2, -- anchor_id
@@ -132,19 +119,6 @@ VALUES
     ),
     (
         '2024-01-30 18:35:00',  -- timestamp
-        1, -- communication_progressive
-        1, -- anchor_id
-        -44, -- rssi
-        2, -- worker_id
-        2, -- device_id
-        1, -- activity_id
-        0, -- emergency
-        78, -- heart_rate
-        2, -- saturation
-        3 -- temperature
-    ),
-    (
-        '2024-01-30 18:35:00',  -- timestamp
         2, -- communication_progressive
         1, -- anchor_id
         -44, -- rssi
@@ -159,19 +133,6 @@ VALUES
     (
         '2024-01-30 18:35:00',  -- timestamp
         1, -- communication_progressive
-        1, -- anchor_id
-        -44, -- rssi
-        3, -- worker_id
-        3, -- device_id
-        1, -- activity_id
-        0, -- emergency
-        78, -- heart_rate
-        2, -- saturation
-        3 -- temperature
-    ),
-    (
-        '2024-01-30 18:35:00',  -- timestamp
-        2, -- communication_progressive
         1, -- anchor_id
         -44, -- rssi
         3, -- worker_id
@@ -200,48 +161,9 @@ VALUES
         2, -- communication_progressive
         2, -- anchor_id
         -44, -- rssi
-        2, -- worker_id
-        1, -- device_id
-        2, -- activity_id
-        0, -- emergency
-        78, -- heart_rate
-        2, -- saturation
-        3 -- temperature
-    ),
-    (
-        '2024-01-30 18:35:00',  -- timestamp
-        1, -- communication_progressive
-        1, -- anchor_id
-        -44, -- rssi
         1, -- worker_id
         2, -- device_id
         3, -- activity_id
-        0, -- emergency
-        78, -- heart_rate
-        2, -- saturation
-        3 -- temperature
-    ),
-    (
-        '2024-01-30 18:35:00',  -- timestamp
-        2, -- communication_progressive
-        2, -- anchor_id
-        -44, -- rssi
-        1, -- worker_id
-        2, -- device_id
-        3, -- activity_id
-        0, -- emergency
-        78, -- heart_rate
-        2, -- saturation
-        3 -- temperature
-    ),
-    (
-        '2024-01-30 18:35:00',  -- timestamp
-        1, -- communication_progressive
-        1, -- anchor_id
-        -44, -- rssi
-        1, -- worker_id
-        2, -- device_id
-        4, -- activity_id
         0, -- emergency
         78, -- heart_rate
         2, -- saturation
@@ -267,32 +189,6 @@ VALUES
         -44, -- rssi
         2, -- worker_id
         1, -- device_id
-        4, -- activity_id
-        0, -- emergency
-        78, -- heart_rate
-        2, -- saturation
-        3 -- temperature
-    ),
-    (
-        '2024-01-30 18:35:00',  -- timestamp
-        2, -- communication_progressive
-        1, -- anchor_id
-        -44, -- rssi
-        2, -- worker_id
-        1, -- device_id
-        4, -- activity_id
-        0, -- emergency
-        78, -- heart_rate
-        2, -- saturation
-        3 -- temperature
-    ),
-    (
-        '2024-01-30 18:35:00',  -- timestamp
-        1, -- communication_progressive
-        1, -- anchor_id
-        -44, -- rssi
-        3, -- worker_id
-        3, -- device_id
         4, -- activity_id
         0, -- emergency
         78, -- heart_rate
