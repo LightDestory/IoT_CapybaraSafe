@@ -59,6 +59,10 @@ void checkFakeBadSensorInterrupt() {
     }
 }
 
+/*
+ * @brief Check if the dismiss interrupt is triggered
+ * DISMISS ALERT: If the button is pressed for 6 seconds, the device will dismiss the alert
+ */
 void checkDismissInterrupt() {
     if (digitalRead(PIN_CONFIGURATION::BUTTON_1) == HIGH &&
         GLOBALS::dismissAlertInterruptCounter != 0 && GLOBALS::mainLoopState == GLOBALS::RUNTIME_STATE::ON_ALERT) {

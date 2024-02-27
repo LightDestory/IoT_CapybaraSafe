@@ -50,21 +50,26 @@ namespace WIFI_MQTT_COM {
             return;
         }
         deserializeJson(doc, message);
-        if (doc.containsKey("device_id") && doc.containsKey("worker_id") && doc.containsKey("activity_id")) {
-            uint32_t deviceID = doc["device_id"];
-            uint32_t workerID = doc["worker_id"];
-            uint32_t activityID = doc["activity_id"];
-            if (deviceID == PERSISTENCE::preferences.getUInt("ID")) {
-                SERIAL_LOGGER::log(
-                        String("Completed Pairing Request: ") + String(workerID) + String(" ") + String(activityID));
-                GLOBALS::workerID = workerID;
-                GLOBALS::activityID = activityID;
-                GLOBALS::mainLoopState = GLOBALS::RUNTIME_STATE::PAIR_COMPLETE;
-                mqttClient->disconnect();
-                WiFi.disconnect();
-                delete mqttClient;
-                delete wifiClient;
-            }
+        if (!doc.containsKey("type") || doc["type"].as<String>() == "ack") {
+            return;
+        }
+        if (doc.containsKey("device_id") && doc.containsKey("worker_id") && doc.containsKey("activity_id")
+            && doc["device_id"].as<uint32_t>() == PERSISTENCE::preferences.getUInt("ID")) {
+            GLOBALS::workerID = doc["worker_id"].as<uint32_t>();
+            GLOBALS::activityID = doc["activity_id"].as<uint32_t>();
+            GLOBALS::mainLoopState = GLOBALS::RUNTIME_STATE::PAIR_COMPLETE;
+            SERIAL_LOGGER::log(
+                    String("Paired with: Worker-") + String(GLOBALS::workerID) + String(" Activity-") +
+                    String(GLOBALS::activityID));
+            doc["type"] = "ack";
+            String serialized;
+            serializeJson(doc, serialized);
+            mqttClient->publish(MQTT_PAIR_TOPIC.c_str(), serialized.c_str());
+            mqttClient->disconnect();
+            WiFi.disconnect();
+            delete mqttClient;
+            delete wifiClient;
+
         }
     }
 }
