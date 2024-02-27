@@ -1,3 +1,10 @@
+const data_container = document.getElementById("dataTable_data_container");
+const details = document.getElementById("details_container");
+const durationSel = document.getElementById("durationSelector");
+const dateSel = document.getElementById("dateSelector");
+const descriptionBox = document.getElementById("activityDescription");
+const createActivityButton = document.getElementById("createActivitybtn");
+
 let activities = {};
 let activity_filter = "all";
 let activity_search = "";
@@ -13,7 +20,6 @@ function onActivitySearchChange(event) {
 }
 
 function updateActivityTable() {
-    const data_container = document.getElementById("dataTable_data_container");
     const isArray = Array.isArray(activities);
     if (!isArray || (isArray && activities.length === 0) || (typeof activities === 'string')) {
         return;
@@ -51,7 +57,6 @@ function updateActivityTable() {
 }
 
 function showActivittDetails(activity_id) {
-    const details = document.getElementById("details_container");
     const isArray = Array.isArray(activities);
     const activity = isArray ? activities.find((activity) => activity["id"] === activity_id) : activities;
     const num_of_alerts = activity.alerts.length;
@@ -141,10 +146,6 @@ function showActivittDetails(activity_id) {
 }
 
 async function createActivity() {
-    const durationSel = document.getElementById("durationSelector");
-    const dateSel = document.getElementById("dateSelector");
-    const descriptionBox = document.getElementById("activityDescription");
-    const createActivityButton = document.getElementById("createActivitybtn");
     createActivityButton.setAttribute("disabled", true);
     createActivityButton.classList.add("disabled");
     let toast_text = "";

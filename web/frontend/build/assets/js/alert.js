@@ -3,6 +3,8 @@ const alertMessageBox = document.getElementById("alertmessage");
 const broadcastToggle = document.getElementById("boradcastselector");
 const activitySelector = document.getElementById("activitySelector");
 const broadcast_info = document.getElementById("broadcast_info");
+const data_container = document.getElementById("dataTable_data_container");
+const details = document.getElementById("details_container");
 
 let alerts = {};
 let alert_filter = "all";
@@ -20,7 +22,6 @@ function onAlertSearchChange(event) {
 }
 
 function updateAlertsTable() {
-    const data_container = document.getElementById("dataTable_data_container");
     const isArray = Array.isArray(alerts);
     if (!isArray || (isArray && alerts.length === 0) || (typeof alerts === 'string')) {
         return;
@@ -66,7 +67,6 @@ function updateGoingActivitiesSelector() {
 }
 
 function showAlertDetails(alert_id) {
-    const details = document.getElementById("details_container");
     const isArray = Array.isArray(alerts);
     const alert = isArray ? alerts.find((alert) => alert["id"] === alert_id) : alerts;
     let related_activity_info = "";

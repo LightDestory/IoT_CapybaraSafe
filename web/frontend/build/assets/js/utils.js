@@ -1,4 +1,5 @@
 const isLoginIndex = window.location.pathname === "/index.html" || window.location.pathname === "/";
+const socketIO = io(`ws://${getCookie("endpoint")}`);
 
 // Check if Auth cookies exist and handle redirections
 async function checkAuth() {

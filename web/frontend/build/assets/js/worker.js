@@ -3,10 +3,39 @@ const alertMessageBox = document.getElementById("alertmessage");
 const broadcastToggle = document.getElementById("boradcastselector");
 const activitySelector = document.getElementById("activitySelector");
 const broadcast_info = document.getElementById("broadcast_info");
+const data_container = document.getElementById("dataTable_data_container");
+const details = document.getElementById("details_container");
+const first_nameSel = document.getElementById("firstNameSelector");
+const last_nameSel = document.getElementById("lastNameSelector");
+const professionSel = document.getElementById("professionSelector");
+const hireButton = document.getElementById("hirebtn");
+const activitySel = document.getElementById("activitySelector");
+const workerSel = document.getElementById("workerSelector");
+const assignButton = document.getElementById("assignBtn");
+const deviceStartSel = document.getElementById("deviceStartSelector");
+const activityStartSel = document.getElementById("startActivitySelector");
+const workerStartSel = document.getElementById("workerStartSelector");
+const startButton = document.getElementById("startBtn");
 
 let workers = {};
+let activities = {};
+let devices = {};
+
 let worker_filter = "all";
 let worker_search = "";
+
+async function updateLocalData() {
+    activities = (await APICaller("/api/activity/all", "GET")).data;
+    workers = (await APICaller("/api/worker/all", "GET")).data;
+    devices = (await APICaller("/api/tracking_device/all?status=available", "GET")).data;
+    updateWorkersTable();
+    populateActivityAssign();
+    populateDevicePairing();
+    populateWorkerPairing();
+}
+
+
+// WORKER TABLE VIEW
 
 function onWorkerFilterChange(event) {
     worker_filter = event.target.value;
@@ -19,14 +48,13 @@ function onWorkertSearchChange(event) {
 }
 
 function updateWorkersTable() {
-    const data_container = document.getElementById("dataTable_data_container");
     const isArray = Array.isArray(workers);
     if (!isArray || (isArray && workers.length === 0) || (typeof workers === 'string')) {
         return;
     }
     let appendContent = "";
     workers.forEach((worker) => {
-        const is_working = worker.activities.findIndex((activity) => activity.status == "in progress") !== -1;
+        const is_working = worker.remote_trackings.findIndex((tracking) => tracking.activity.status == "in progress") !== -1;
         if ((worker_filter == "working" && !is_working) ||
             (worker_filter == "available" && is_working)) {
             return;
@@ -52,13 +80,12 @@ function updateWorkersTable() {
 }
 
 function showWorkerDetails(worker_id) {
-    const details = document.getElementById("details_container");
     const isArray = Array.isArray(workers);
     const worker = isArray ? workers.find((worker) => worker["id"] === worker_id) : workers;
     let related_activity_info = "";
     if (worker.activities.length > 0) {
         worker.activities.forEach((activity) => {
-            related_activity_info = `<tr>
+            related_activity_info += `<tr>
                 <th class="table-secondary text-center" colspan="2">Activity</th>
             </tr>
             <tr>
@@ -110,7 +137,7 @@ function showWorkerDetails(worker_id) {
             </tr>
             <tr>
                 <th>Working</th>
-                <td>${(worker.activities.findIndex((activity) => activity.status == "in progress") !== -1)
+                <td>${(worker.remote_trackings.findIndex((tracking) => tracking.activity.status == "in progress") !== -1)
             ? "Yes" : "No"}</td>
             </tr>
             ${related_activity_info}
@@ -119,11 +146,9 @@ function showWorkerDetails(worker_id) {
 </div>`;
 }
 
+// WORKER CREATION
+
 async function hire() {
-    const first_nameSel = document.getElementById("firstNameSelector");
-    const last_nameSel = document.getElementById("lastNameSelector");
-    const professionSel = document.getElementById("professionSelector");
-    const hireButton = document.getElementById("hirebtn");
     hireButton.setAttribute("disabled", true);
     hireButton.classList.add("disabled");
     let toast_text = "";
@@ -137,8 +162,7 @@ async function hire() {
         }
         const response = await APICaller("/api/worker/", "POST", data);
         if (response.status === "success") {
-            getWorkers();
-            getAssignData();
+            await updateLocalData();
             first_nameSel.value = "";
             last_nameSel.value = "";
             professionSel.value = "";
@@ -158,10 +182,44 @@ async function hire() {
     hireButton.classList.remove("disabled");
 }
 
+// ASSIGNMENT
+
+function onAssignActivityChange(event) {
+    populateWorkerAssign(event.target.value);
+}
+
+function populateActivityAssign() {
+    const isActivityArray = Array.isArray(activities);
+    const isWorkerArray = Array.isArray(workers);
+    if (!isActivityArray || (typeof activities === 'string') ||
+        !isWorkerArray || (typeof workers === 'string')) {
+        return;
+    }
+    let pending_activities = activities.filter((activity) => activity.status !== "completed");
+    if (pending_activities.length === 0) {
+        activitySel.innerHTML = `<option value="no_activity">No activity</option>`;
+    } else {
+        activitySel.innerHTML = "";
+        pending_activities.forEach((activity) => {
+            activitySel.innerHTML += `<option value="${activity.id}">${activity.text_description}</option>`;
+        });
+    }
+    populateWorkerAssign(pending_activities[0].id);
+}
+
+function populateWorkerAssign(activity_id) {
+    const workerNotAssigned = workers.filter((worker) => worker.activities.findIndex((activity) => activity.id == activity_id) === -1);
+    if (workerNotAssigned.length === 0) {
+        workerSel.innerHTML = `<option value="no_worker">No worker</option>`;
+    } else {
+        workerSel.innerHTML = "";
+        workerNotAssigned.forEach((worker) => {
+            workerSel.innerHTML += `<option value="${worker.id}">${worker.first_name} ${worker.last_name} (${worker.profession})</option>`;
+        });
+    }
+}
+
 async function assign() {
-    const activitySel = document.getElementById("activitySelector");
-    const workerSel = document.getElementById("workerSelector");
-    const assignButton = document.getElementById("assignBtn");
     assignButton.setAttribute("disabled", true);
     assignButton.classList.add("disabled");
     let toast_text = "";
@@ -174,7 +232,7 @@ async function assign() {
         }
         const response = await APICaller("/api/assign/", "POST", data);
         if (response.status === "success") {
-            getWorkers();
+            await updateLocalData();
             toast_text = "The activity has been assigned successfully";
         }
         else {
@@ -191,25 +249,71 @@ async function assign() {
     assignButton.classList.remove("disabled");
 }
 
+// START
+
+function onWorkerPairingChange(event) {
+    populateActivityPairing(event.target.value);
+}
+
+async function populateDevicePairing() {
+    const isArray = Array.isArray(devices);
+    if (!isArray || (typeof devices === 'string')) {
+        return;
+    }
+    deviceStartSel.innerHTML = `<option value="no_device">No device</option>`;
+    if (devices.length === 0) {
+        return;
+    }
+    deviceStartSel.innerHTML = "";
+    devices.forEach((device) => {
+        deviceStartSel.innerHTML += `<option value="${device.id}">Device ${device.id}</option>`;
+    });
+}
+
+function populateWorkerPairing() {
+    let availableWorkers = workers.filter(worker => worker.remote_trackings.findIndex(tracking => tracking.activity.status === "in progress") === -1);
+    const isArray = Array.isArray(availableWorkers);
+    if (!isArray || (typeof availableWorkers === 'string')) {
+        return;
+    }
+    workerStartSel.innerHTML = "";
+    if (availableWorkers.length === 0) {
+        workerStartSel.innerHTML = `<option value="no_worker">No worker</option>`;
+        return;
+    }
+    availableWorkers.forEach((worker) => {
+        workerStartSel.innerHTML += `<option value="${worker.id}">${worker.first_name} ${worker.last_name} (${worker.profession})</option>`;
+    });
+    populateActivityPairing(availableWorkers[0].id);
+}
+
+function populateActivityPairing(worker_id) {
+    const selectedWorker = workers.find(worker => worker.id == worker_id);
+    let pendingActivities = selectedWorker.activities.filter(activity => activity.status !== "completed");
+    activityStartSel.innerHTML = `<option value="no_activity">No activity possible</option>`;
+    if (pendingActivities.length === 0) {
+        return;
+    }
+    activityStartSel.innerHTML = "";
+    pendingActivities.forEach((activity) => {
+        if(activity.status === "in progress") {
+            if(selectedWorker.remote_trackings.findIndex(tracking => tracking.activity_id === activity.id) !== -1) {
+                return;
+            }
+        }
+        activityStartSel.innerHTML += `<option value="${activity.id}">${activity.text_description}</option>`;
+    });
+}
+
 async function start() {
-    const activitySel = document.getElementById("startActivitySelector");
-    const workerSel = document.getElementById("workerStartSelector");
-    const deviceSel = document.getElementById("deviceStartSelector");
-    const startButton = document.getElementById("startBtn");
     startButton.setAttribute("disabled", true);
     startButton.classList.add("disabled");
     let toast_text = "";
-    if (activitySel.value == "no_activity" || workerSel.value == "no_worker" || deviceSel.value == "no_device") {
+    if (activityStartSel.value == "no_activity" || workerStartSel.value == "no_worker" || deviceStartSel.value == "no_device") {
         toast_text = "Some resources are missing...";
     } else {
-        const response = await APICaller(`/api/activity/start?data=${activitySel.value}-${workerSel.value}-${deviceSel.value}`, "GET");
-        if (response.status === "success") {
-            getWorkers();
-            toast_text = "The activity has been started successfully";
-        }
-        else {
-            toast_text = response.data;
-        }
+        const response = await APICaller(`/api/tracking_device/pair_request?data=${activityStartSel.value}-${workerStartSel.value}-${deviceStartSel.value}`, "GET");
+        toast_text = response.data;
     }
     Toastify({
         text: toast_text,
@@ -221,89 +325,23 @@ async function start() {
     startButton.classList.remove("disabled");
 }
 
-async function getWorkers() {
-    const response = await APICaller("/api/worker/all", "GET");
-    workers = response.data;
-    updateWorkersTable();
-    updateWorkerStartActivity();
+
+async function executePair(activity_id, worker_id, device_id) {
+    const response = await APICaller(`/api/activity/start?data=${activity_id}-${worker_id}-${device_id}`, "GET");
+    Toastify({
+        text: response.data,
+        duration: 3000,
+        gravity: "top",
+        position: "center",
+    }).showToast();
+    updateLocalData();
 }
 
-async function getAssignData() {
-    const activitySel = document.getElementById("activitySelector");
-    const workerSel = document.getElementById("workerSelector");
-    let activities = (await APICaller("/api/activity/all", "GET")).data;
-    let workers = (await APICaller("/api/worker/all", "GET")).data;
-    const isActivityArray = Array.isArray(activities);
-    const isWorkerArray = Array.isArray(workers);
-    if (!isActivityArray || (isActivityArray && activities.length === 0) || (typeof activities === 'string') ||
-        !isWorkerArray || (isWorkerArray && workers.length === 0) || (typeof workers === 'string')) {
-        return;
-    }
-    activities = activities.filter((activity) => activity.status !== "completed");
-    if (activities.length === 0) {
-        activitySel.innerHTML = `<option value="no_activity">No activity</option>`;
-    } else {
-        activitySel.innerHTML = "";
-        activities.forEach((activity) => {
-            activitySel.innerHTML += `<option value="${activity.id}">${activity.text_description}</option>`;
-        });
-    }
-    if (workers.length === 0) {
-        workerSel.innerHTML = `<option value="no_worker">No worker</option>`;
-    } else {
-        workerSel.innerHTML = "";
-        workers.forEach((worker) => {
-            workerSel.innerHTML += `<option value="${worker.id}">${worker.first_name} ${worker.last_name} (${worker.profession})</option>`;
-        });
-    }
-}
+socketIO.on("pairing_request", (message) => {
+    console.log("Received:", message);
+    req = JSON.parse(message);
+    executePair(req.activity_id, req.worker_id, req.device_id);
+  });
 
-function updateWorkerStartActivity() {
-    const activitySel = document.getElementById("startActivitySelector");
-    const workerSel = document.getElementById("workerStartSelector");
-    workerSel.innerHTML = `<option value="no_worker">No worker</option>`;
-    const isWorkerArray = Array.isArray(workers);
-    if (!isWorkerArray || (isWorkerArray && workers.length === 0) || (typeof workers === 'string')) {
-        return;
-    }
-    workerSel.innerHTML = "";
-    workers.forEach((worker) => {
-        workerSel.innerHTML += `<option value="${worker.id}">${worker.first_name} ${worker.last_name} (${worker.profession})</option>`;
-    });
-    updateActivityStartActivity();
-    updateDeviceStartActivity();
-}
 
-function updateActivityStartActivity() {
-    const activitySel = document.getElementById("startActivitySelector");
-    const selected_worker = workers.find(worker => worker.id == document.getElementById("workerStartSelector").value);
-    const compatible_activities = selected_worker.activities.filter(activity => activity.status === "scheduled" || activity.status === "to be completed");
-    activitySel.innerHTML = `<option value="no_activity">No activity possible</option>`;
-    if (compatible_activities.length === 0) {
-        return;
-    }
-    activitySel.innerHTML = "";
-    compatible_activities.forEach((activity) => {
-        activitySel.innerHTML += `<option value="${activity.id}">${activity.text_description}</option>`;
-    });
-}
-
-async function updateDeviceStartActivity() {
-    const deviceSel = document.getElementById("deviceStartSelector");
-    const devices = (await APICaller("/api/tracking_device/all?status=available", "GET")).data;
-    const isArray = Array.isArray(devices);
-    if (!isArray || (isArray && devices.length === 0) || (typeof devices === 'string')) {
-        return;
-    }
-    deviceSel.innerHTML = `<option value="no_device">No device</option>`;
-    if (devices.length === 0) {
-        return;
-    }
-    deviceSel.innerHTML = "";
-    devices.forEach((device) => {
-        deviceSel.innerHTML += `<option value="${device.id}">Device ${device.id}</option>`;
-    });
-}
-
-getWorkers();
-getAssignData();
+updateLocalData();

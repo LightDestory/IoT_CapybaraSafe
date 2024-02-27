@@ -98,7 +98,7 @@
                                         <div class="card-body container">
                                             <div class="row">
                                                 <div class="col col-12 text-nowrap col-lg-6">
-                                                    <div aria-controls="dataTable"><label class="form-label w-100 text-center" for="dataTable_type_input">Activity:<select id="activitySelector" class="form-select w-100" style="margin-left: 5px;" onchange="" name="">
+                                                    <div aria-controls="dataTable"><label class="form-label w-100 text-center" for="dataTable_type_input">Activity:<select id="activitySelector" class="form-select w-100" style="margin-left: 5px;" onchange="onAssignActivityChange(event)" name="">
                                                                 <option value="no_activity" selected="">No Activity</option>
                                                             </select></label></div>
                                                 </div>
@@ -124,7 +124,7 @@
                                         <div class="card-body container">
                                             <div class="row">
                                                 <div class="col col-12 text-nowrap">
-                                                    <div aria-controls="dataTable"><label class="form-label w-100 text-center" for="dataTable_type_input">Worker:<select id="workerStartSelector" class="form-select w-100" style="margin-left: 5px;" onchange="updateActivityStartActivity()" name="">
+                                                    <div aria-controls="dataTable"><label class="form-label w-100 text-center" for="dataTable_type_input">Worker:<select id="workerStartSelector" class="form-select w-100" style="margin-left: 5px;" onchange="onWorkerPairingChange(event)" name="">
                                                                 <option value="no_worker" selected="">No Worker</option>
                                                             </select></label></div>
                                                 </div>
@@ -227,6 +227,7 @@
     <script src="../assets/js/bs-init.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="https://cdn.jsdelivr.net/npm/moment@2.29.3/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.4/socket.io.min.js"></script>
     <script src="../assets/js/utils.js"></script>
     <script src="../assets/js/theme.js"></script>
     <script src="../assets/js/worker.js"></script>
