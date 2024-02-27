@@ -4,7 +4,6 @@ import { Sequelize } from "sequelize-typescript";
 
 import { CONFIG_DEFAULTS } from "../config/config_defaults";
 
-
 /**
  * ConnectionInfo type
  * @property {string} db_host - The database host
@@ -45,7 +44,13 @@ export class DatabaseHandler {
       port: parseInt(conn_info.db_port),
       dialect: conn_info.db_driver,
       logging: false,
-      models: [__dirname + "/models"]
+      models: [__dirname + "/models"],
+      pool: {
+        max: 5,
+        min: 0,
+        acquire: 30000,
+        idle: 10000
+      }
     });
   }
 
