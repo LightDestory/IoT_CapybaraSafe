@@ -4,6 +4,8 @@ const durationSel = document.getElementById("durationSelector");
 const dateSel = document.getElementById("dateSelector");
 const descriptionBox = document.getElementById("activityDescription");
 const createActivityButton = document.getElementById("createActivitybtn");
+const startActivitySelector = document.getElementById("startActivitySelector");
+const stopActivitySelector = document.getElementById("stopActivitySelector");
 
 let activities = {};
 let activity_filter = "all";
@@ -187,9 +189,64 @@ async function createActivity() {
     createActivityButton.classList.remove("disabled");
 }
 
+async function updateActivityState(action) {
+    const target = action === "start" ? startActivitySelector.value : stopActivitySelector.value;
+    const state = action === "start" ? "in progress" : "completed";
+    if (target === "no_activity") {
+        Toastify({
+            text: "No activity selected",
+            duration: 3000,
+            gravity: "top",
+            position: "center",
+        }).showToast();
+        return;
+    }
+    const data = {
+        "status": state
+    }
+    const response = await APICaller(`/api/activity/${target}`, "POST", data);
+    let toast_text = "";
+    if (response.status === "success") {
+        toast_text = `The activity has been ${state === "in progress" ? "started" : "completed"} successfully`;
+    }
+    else {
+        toast_text = response.data;
+    }   
+    Toastify({
+        text: toast_text,
+        duration: 3000,
+        gravity: "top",
+        position: "center",
+    }).showToast();
+    getActivities();
+
+}
+
+function updateStateActivitySelectors() {
+    const startableActivities = activities.filter((activity) => activity.status === "scheduled" || activity.status === "to be completed");
+    const stoppableActivities = activities.filter((activity) => activity.status === "in progress");
+    startActivitySelector.innerHTML = "<option value='no_activity'>No activity</option>";
+    stopActivitySelector.innerHTML = "<option value='no_activity'>No activity</option>";
+    console.log(startableActivities);
+    console.log(stoppableActivities);
+    if (startableActivities.length > 0) {
+        startActivitySelector.innerHTML = "";
+        startableActivities.forEach((activity) => {
+            startActivitySelector.innerHTML += `<option value="${activity.id}">${activity.text_description}</option>`;
+        });
+    }
+    if (stoppableActivities.length > 0) {
+        stopActivitySelector.innerHTML = "";
+        stoppableActivities.forEach((activity) => {
+            stopActivitySelector.innerHTML += `<option value="${activity.id}">${activity.text_description}</option>`;
+        });
+    }
+}
+
 async function getActivities() {
     const response = await APICaller("/api/activity/all", "GET");
     activities = response.data;
     updateActivityTable();
+    updateStateActivitySelectors();
 }
 getActivities();

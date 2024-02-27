@@ -93,8 +93,50 @@
                             </div>
                         </div>
                         <div class="accordion-item">
-                            <h2 class="accordion-header" role="tab"><button class="accordion-button text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#accordion .item-2" aria-expanded="true" aria-controls="accordion .item-2">Schedule</button></h2>
+                            <h2 class="accordion-header" role="tab"><button class="accordion-button text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#accordion .item-2" aria-expanded="true" aria-controls="accordion .item-2">Start Activity</button></h2>
                             <div class="accordion-collapse collapse show item-2" role="tabpanel">
+                                <div class="accordion-body">
+                                    <div class="card">
+                                        <div class="card-body container">
+                                            <div class="row">
+                                                <div class="col col-12 text-nowrap">
+                                                    <div class="text-wrap text-center" aria-controls="dataTable"><label class="form-label w-100 text-center" for="dataTable_type_input">Select Activity:</label><select id="startActivitySelector" class="form-select my-3">
+                                                            <option value="no_activity">No activity</option>
+                                                        </select></div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col text-center"><button class="btn btn-danger w-50" id="startActivityBtn" type="button" style="margin-right: auto;margin-left: auto;" onclick="updateActivityState(&quot;start&quot;)">Start Activity</button></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" role="tab"><button class="accordion-button text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#accordion .item-3" aria-expanded="true" aria-controls="accordion .item-3">Stop Activity</button></h2>
+                            <div class="accordion-collapse collapse show item-3" role="tabpanel">
+                                <div class="accordion-body">
+                                    <div class="card">
+                                        <div class="card-body container">
+                                            <div class="row">
+                                                <div class="col col-12 text-nowrap">
+                                                    <div class="text-wrap text-center" aria-controls="dataTable"><label class="form-label w-100 text-center" for="dataTable_type_input">Select Activity:</label><select id="stopActivitySelector" class="form-select my-3">
+                                                            <option value="no_activity">No activity</option>
+                                                        </select></div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col text-center"><button class="btn btn-danger w-50" id="startActivityBtn-1" type="button" style="margin-right: auto;margin-left: auto;" onclick="updateActivityState(&quot;stop&quot;)">Stop Activity</button></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" role="tab"><button class="accordion-button text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#accordion .item-4" aria-expanded="true" aria-controls="accordion .item-4">Schedule</button></h2>
+                            <div class="accordion-collapse collapse show item-4" role="tabpanel">
                                 <div class="accordion-body">
                                     <div class="card">
                                         <div class="card-body">
@@ -149,8 +191,8 @@
                             </div>
                         </div>
                         <div class="accordion-item">
-                            <h2 class="accordion-header" role="tab"><button class="accordion-button text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#accordion .item-3" aria-expanded="true" aria-controls="accordion .item-3">Activity Details</button></h2>
-                            <div class="accordion-collapse collapse show item-3" role="tabpanel">
+                            <h2 class="accordion-header" role="tab"><button class="accordion-button text-primary fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#accordion .item-5" aria-expanded="true" aria-controls="accordion .item-5">Activity Details</button></h2>
+                            <div class="accordion-collapse collapse show item-5" role="tabpanel">
                                 <div class="accordion-body">
                                     <div id="details_container" class="card">
                                         <p class="mb-0 text-center">No Activity Selected</p>
