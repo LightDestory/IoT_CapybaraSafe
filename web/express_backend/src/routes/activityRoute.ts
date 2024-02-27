@@ -71,6 +71,18 @@ activityRoute.get("/start", async (req: Request, res: Response) => {
     try {
       activity.set({ status: "in progress" });
       await activity.save();
+      await RemoteTracking.create({
+        timestamp: new Date(),
+        communication_progressive: 0,
+        anchor_id: 1,
+        anchor_signal_strength: -1,
+        worker_id: worker.id,
+        device_id: trackingDevice.id,
+        activity_id: activity.id,
+        heart_rate: 0,
+        saturation: 0,
+        temperature: 0
+      });
       res.status(200).json({ status: "success", data: "Pairing Successful" });
       return;
     } catch (error) {

@@ -17,6 +17,8 @@ const activityStartSel = document.getElementById("startActivitySelector");
 const workerStartSel = document.getElementById("workerStartSelector");
 const startButton = document.getElementById("startBtn");
 
+let pendingPairing = [];
+
 let workers = {};
 let activities = {};
 let devices = {};
@@ -323,6 +325,19 @@ async function start() {
     }).showToast();
     startButton.removeAttribute("disabled");
     startButton.classList.remove("disabled");
+    pendingPairing.push({
+        activity_id: activityStartSel.value,
+        worker_id: workerStartSel.value,
+        device_id: deviceStartSel.value,
+        timeout: setTimeout(() => {
+            Toastify({
+                text: "Unable to pair the device, please try again...",
+                duration: 3000,
+                gravity: "top",
+                position: "center",
+            }).showToast();
+        }, 10000)
+    });
 }
 
 
@@ -335,10 +350,12 @@ async function executePair(activity_id, worker_id, device_id) {
         position: "center",
     }).showToast();
     updateLocalData();
+    let request_index = pendingPairing.findIndex(req => req.activity_id == activity_id && req.worker_id == worker_id && req.device_id == device_id);
+    clearTimeout(pendingPairing[request_index].timeout);
+    pendingPairing.splice(request_index, 1);
 }
 
 socketIO.on("pairing_request", (message) => {
-    console.log("Received:", message);
     req = JSON.parse(message);
     executePair(req.activity_id, req.worker_id, req.device_id);
   });
