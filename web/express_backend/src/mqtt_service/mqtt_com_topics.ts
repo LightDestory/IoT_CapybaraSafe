@@ -4,5 +4,7 @@
  */
 export enum MQTT_Topics {
   CONNECTION_TEST = "broker/connection_test",
-  PAIRING_DEVICE = "broker/pairing_device"
+  PAIRING_DEVICE = "broker/pairing_device",
+  ALERT_SYSTEM = "broker/alert_system",
+  TRACKING_SYSTEM = "broker/tracking_system"
 }

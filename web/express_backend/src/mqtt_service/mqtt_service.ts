@@ -64,7 +64,10 @@ export class MQTT_Service {
         MQTT_Topics.CONNECTION_TEST,
         `Hello from ${this.client.options.clientId}`
       );
-      this.client.subscribe([MQTT_Topics.PAIRING_DEVICE]);
+      this.client.subscribe([
+        MQTT_Topics.PAIRING_DEVICE,
+        MQTT_Topics.TRACKING_SYSTEM
+      ]);
     });
     this.client.on(
       "message",
@@ -109,7 +112,7 @@ export class MQTT_Service {
         break;
       default:
         console.log(
-          chalk.yellow("Received message from unknown topic:"),
+          chalk.yellow("Received message from unhandled topic:"),
           chalk.blue(topic)
         );
     }

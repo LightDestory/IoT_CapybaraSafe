@@ -2,6 +2,8 @@ import express, { Request, Response, Router } from "express";
 
 import Activity from "../db/models/Activity";
 import Alert from "../db/models/Alert";
+import { MQTT_Service } from "../mqtt_service/mqtt_service";
+import { MQTT_Topics } from "../mqtt_service/mqtt_com_topics";
 
 export const alertRoute: Router = express.Router();
 
@@ -68,6 +70,13 @@ alertRoute.post("/", async (req: Request, res: Response) => {
     const newData: Alert | null = await Alert.findByPk(newAlertID, {
       include: [Activity]
     });
+    MQTT_Service.getInstance().publishMessage(
+      MQTT_Topics.ALERT_SYSTEM,
+      JSON.stringify({
+        activity_id: newData?.activity_id,
+        message: newData?.text_description
+      })
+    );
     res.status(201).json({ status: "success", data: newData });
   } catch (error) {
     res.status(400).json({ status: "error", data: "Invalid request" });
