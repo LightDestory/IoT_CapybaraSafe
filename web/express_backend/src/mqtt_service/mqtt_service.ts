@@ -3,6 +3,7 @@ import { connect, IPublishPacket, MqttClient } from "mqtt";
 
 import { MQTT_Topics } from "./mqtt_com_topics";
 import { CONFIG_DEFAULTS } from "../config/config_defaults";
+import { SocketIO_Service } from "../websocket/socketio_service";
 
 /**
  * @description Contains the connection information for the MQTT broker.
@@ -14,6 +15,13 @@ interface ConnectionInfo {
   connectionUrl: string;
   username: string | undefined;
   password: string | undefined;
+}
+
+interface DevicePairingRequest {
+  type: string;
+  device_id: string;
+  worker_id: string;
+  activity_id: string;
 }
 
 /**
@@ -56,6 +64,7 @@ export class MQTT_Service {
         MQTT_Topics.CONNECTION_TEST,
         `Hello from ${this.client.options.clientId}`
       );
+      this.client.subscribe([MQTT_Topics.PAIRING_DEVICE]);
     });
     this.client.on(
       "message",
@@ -94,7 +103,27 @@ export class MQTT_Service {
    * @param message The message received
    */
   private messageDispatcher(topic: string, message: Buffer) {
-    console.log(`Recived from ${topic} the message ${message.toString()}`);
+    switch (topic) {
+      case MQTT_Topics.PAIRING_DEVICE:
+        this.handlePairingRequest(JSON.parse(message.toString()));
+        break;
+      default:
+        console.log(
+          chalk.yellow("Received message from unknown topic:"),
+          chalk.blue(topic)
+        );
+    }
+  }
+
+  private handlePairingRequest(request: DevicePairingRequest) {
+    if (!request.type || request.type === "req") {
+      return;
+    } else {
+      SocketIO_Service.getInstance().emit(
+        "pairing_request",
+        JSON.stringify(request)
+      );
+    }
   }
 
   /**

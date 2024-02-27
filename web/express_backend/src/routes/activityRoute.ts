@@ -70,16 +70,8 @@ activityRoute.get("/start", async (req: Request, res: Response) => {
   if (activity && worker && trackingDevice) {
     try {
       activity.set({ status: "in progress" });
-      const newActivity: Activity = await activity.save();
-      MQTT_Service.getInstance().publishMessage(
-        MQTT_Topics.PAIRING_DEVICE,
-        JSON.stringify({
-          activity_id: ids[0],
-          worker_id: ids[1],
-          device_id: ids[2]
-        })
-      );
-      res.status(200).json({ status: "success", data: newActivity });
+      await activity.save();
+      res.status(200).json({ status: "success", data: "Pairing Successful" });
       return;
     } catch (error) {
       res.status(400).json({ status: "error", data: "Invalid request" });

@@ -4,6 +4,9 @@ import Activity from "../db/models/Activity";
 import RemoteTracking from "../db/models/RemoteTracking";
 import TrackingDevice, { DEVICE_STATUSES } from "../db/models/TrackingDevice";
 import Worker from "../db/models/Worker";
+import { MQTT_Service } from "../mqtt_service/mqtt_service";
+import { MQTT_Topics } from "../mqtt_service/mqtt_com_topics";
+import { activityRoute } from "./activityRoute";
 export const trackingDeviceRoute: Router = express.Router();
 
 /**
@@ -50,22 +53,25 @@ trackingDeviceRoute.get("/all", async (req: Request, res: Response) => {
 /**
  * This route is used to retrieve a specific trackingDevice from the database
  */
-trackingDeviceRoute.get("/:id", async (req: Request, res: Response) => {
-  const trackingDevice: TrackingDevice | null = await TrackingDevice.findByPk(
-    req.params.id,
-    {
-      include: {
-        model: RemoteTracking,
-        include: [Activity, Worker]
+trackingDeviceRoute.get(
+  "/^:id([0-9]+)",
+  async (req: Request, res: Response) => {
+    const trackingDevice: TrackingDevice | null = await TrackingDevice.findByPk(
+      req.params.id,
+      {
+        include: {
+          model: RemoteTracking,
+          include: [Activity, Worker]
+        }
       }
+    );
+    if (trackingDevice) {
+      res.status(200).json({ status: "success", data: trackingDevice });
+      return;
     }
-  );
-  if (trackingDevice) {
-    res.status(200).json({ status: "success", data: trackingDevice });
-    return;
+    res.status(404).send({ status: "error", data: "TrackingDevice not found" });
   }
-  res.status(404).send({ status: "error", data: "TrackingDevice not found" });
-});
+);
 /**
  * This route is used to delete all the trackingDevices from the database
  */
@@ -140,3 +146,34 @@ trackingDeviceRoute.post("/:id", async (req: Request, res: Response) => {
   }
   res.status(404).send({ status: "error", data: "TrackingDevice not found" });
 });
+
+trackingDeviceRoute.get(
+  "/pair_request",
+  async (req: Request, res: Response) => {
+    const query: string | undefined = req.query.data as string | undefined;
+    if (!query) {
+      res.status(400).json({ status: "error", data: "Invalid request" });
+      return;
+    }
+    const ids: string[] = query.split("-");
+    const activity: Activity | null = await Activity.findByPk(ids[0]);
+    const worker: Worker | null = await Worker.findByPk(ids[1]);
+    const trackingDevice: TrackingDevice | null = await TrackingDevice.findByPk(
+      ids[2]
+    );
+    if (activity && worker && trackingDevice) {
+      MQTT_Service.getInstance().publishMessage(
+        MQTT_Topics.PAIRING_DEVICE,
+        JSON.stringify({
+          type: "req",
+          activity_id: ids[0],
+          worker_id: ids[1],
+          device_id: ids[2]
+        })
+      );
+      res.status(200).json({ status: "success", data: "Pairing Request sent" });
+      return;
+    }
+    res.status(404).send({ status: "error", data: "Resources not found" });
+  }
+);

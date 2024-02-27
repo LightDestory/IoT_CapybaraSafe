@@ -7,13 +7,13 @@ import chalk from "chalk";
 import cors from "cors";
 import dotenv from "dotenv";
 import express, { Application } from "express";
-import { Server } from "socket.io";
 
 import { CONFIG_DEFAULTS } from "./config/config_defaults";
 import { DatabaseHandler } from "./db/database_handler";
 import { authCheck } from "./middlewares/authMiddleware";
 import { MQTT_Service } from "./mqtt_service/mqtt_service";
 import { registerRoutes } from "./routes/routeManager";
+import { SocketIO_Service } from "./websocket/socketio_service";
 
 // Retrieving ENV configuration, if possible
 const configuration: dotenv.DotenvConfigOutput = dotenv.config();
@@ -21,12 +21,8 @@ const configuration: dotenv.DotenvConfigOutput = dotenv.config();
 const app: Application = express();
 // HTTP Server
 const httpServer = createServer(app);
-// Socket.io Server
-const ioServer = new Server(httpServer, {
-  cors: {
-    origin: "*"
-  }
-});
+
+SocketIO_Service.initSocketIO(httpServer);
 
 /**
  * Load the configuration and initialize the HTTP server routes

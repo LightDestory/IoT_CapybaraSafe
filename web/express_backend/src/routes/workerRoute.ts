@@ -15,7 +15,7 @@ workerRoute.get("/all", async (_: Request, res: Response) => {
       Activity,
       {
         model: RemoteTracking,
-        include: [TrackingDevice]
+        include: [TrackingDevice, Activity]
       }
     ]
   });
