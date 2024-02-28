@@ -11,4 +11,4 @@ namespace GLOBALS {
     String alertMessage = "";
     uint32_t workerID = 0;
     uint32_t activityID = 0;
-} // namespace GLOBALS
+} //  GLOBALS

@@ -6,11 +6,11 @@
 
 namespace LED_CONTROLS {
 
-    void toggleLed(const uint8_t pin);
+    void toggleLed(uint8_t pin);
 
     void turnOffLeds();
 
-    void turnOffLed(const uint8_t pin);
+    void turnOffLed(uint8_t pin);
 }
 
 #endif //LED_CONTROLS_H

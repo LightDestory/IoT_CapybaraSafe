@@ -115,7 +115,7 @@ namespace BLE_COM {
     }
 
 
-    /*
+    /**
      * @brief Update the tracking characteristic with the latest data
      * @param argv The argument to be passed to the task
      */
@@ -166,6 +166,9 @@ namespace BLE_COM {
         }
     }
 
+    /**
+     * @brief Flush the alert characteristic making it empty
+     */
     void flushAlertCharacteristic() {
         BLEAlertCharacteristicInstance->setValue("{}");
     }

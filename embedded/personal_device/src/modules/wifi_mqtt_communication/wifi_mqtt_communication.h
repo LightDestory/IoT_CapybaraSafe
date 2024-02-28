@@ -19,20 +19,20 @@ namespace WIFI_MQTT_COM {
     const String MQTT_HOST = "DOMAIN";
     const String MQTT_USER = "USER";
     const String MQTT_PASSWORD = "PASSWORD";
-    const uint16_t MQTT_PORT = 5000;
+    const uint16_t MQTT_PORT = 1883;
     const String MQTT_PAIR_TOPIC = "pairing/request";
     // WiFi Credentials
     const String WIFI_SSID = "TEST-NETWORK";
     const String WIFI_PASSWORD = "TEST-PASSWORD";
     // General Timeout
-    const uint8_t CONNECTION_TIMEOUT = 60;
+    const uint8_t CONNECTION_TIMEOUT = 30;
 
 
     extern bool isListening;
 
     void mqtt_pair_callback(char *topic, byte *payload, unsigned int length);
 
-    void analyzeMqttMessage(const String &message);
+    void analyzePairRequest(const String &message);
 
     bool initWifiMQTT();
 }

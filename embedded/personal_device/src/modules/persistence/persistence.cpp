@@ -5,11 +5,18 @@ namespace PERSISTENCE {
     Preferences preferences;
     String tempDeviceName = "";
 
+    /**
+     * @brief Initializes the preferences
+     */
     void init() {
         SERIAL_LOGGER::log("Initializing preferences...");
         preferences.begin(PREFERENCE_NAMESPACE.c_str(), false);
     }
 
+    /**
+     * @brief Gets the device name
+     * @return The device name. If the device name is not set, it will return a random temporary device name
+     */
     String getDeviceName() {
         if (preferences.getUInt("ID") == 0) {
             return GLOBALS::DEVICE_NAME + generateRandomTempDeviceName();
@@ -17,6 +24,10 @@ namespace PERSISTENCE {
         return GLOBALS::DEVICE_NAME + String(preferences.getUInt("ID"));
     }
 
+    /**
+     * @brief Generates a random temporary device name
+     * @return The temporary device name
+     */
     String generateRandomTempDeviceName() {
         if (tempDeviceName.length() == 0) {
             String eligible_chars = "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz";

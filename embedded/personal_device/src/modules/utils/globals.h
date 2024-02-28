@@ -11,6 +11,10 @@ namespace GLOBALS {
      * 2. REQUEST_SETUP: The device is waiting for the user to setup the device
      * 3. SETUP_COMPLETE: The device has been setup and is ready to pair
      * 4. REQUEST_PAIR: The device is waiting for the user to pair the device
+     * 5. PAIR_COMPLETE: The device has been paired and is ready to start tracking
+     * 6. INIT_TRACKING: The device is initializing the tracking service
+     * 7. ON_ALERT: The device is on alert
+     * 8. TRACKING: The device is tracking by updating the tracking data
      */
     enum RUNTIME_STATE {
         MISSING_CONFIG, REQUEST_SETUP, SETUP_COMPLETE, REQUEST_PAIR, PAIR_COMPLETE, INIT_TRACKING, ON_ALERT, TRACKING

@@ -22,14 +22,16 @@ namespace PIN_CONFIGURATION {
     const uint8_t DISPLAY_SCL = 22;
 
     // Functions
-    /*
-     * This function is used to initialize the pin mode for all the pins used in the project.
+    /**
+     * @brief This function is used to initialize the pin mode for all the pins used in the project.
      */
     void initPinMode();
 
-    /*
-    * This function is used to reset all the outputs to LOW.
-    */
+    /**
+     * @brief This function is used to reset all the outputs to LOW.
+     *
+     * @param displayMessage If true, it will display a message on the serial monitor.
+     */
     void resetOutputs(bool displayMessage = true);
 }
-#endif
+#endif // PINOUT_H_

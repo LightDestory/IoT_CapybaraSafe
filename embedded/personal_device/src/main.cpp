@@ -26,7 +26,7 @@ void doHardReset() {
     ESP.restart();
 }
 
-/*
+/**
  * @brief Check if the hard reset interrupt is triggered
  * HARD RESET: If both buttons are pressed for 12 seconds, the device will be reset
  */
@@ -42,7 +42,7 @@ void checkHardResetInterrupt() {
     }
 }
 
-/*
+/**
  * @brief Check if the fake sensor interrupt is triggered
  * FAKE SENSOR: If the button is pressed for 12 seconds, the device will send next bad data for tracking
  */
@@ -59,7 +59,7 @@ void checkFakeBadSensorInterrupt() {
     }
 }
 
-/*
+/**
  * @brief Check if the dismiss interrupt is triggered
  * DISMISS ALERT: If the button is pressed for 6 seconds, the device will dismiss the alert
  */
@@ -88,7 +88,7 @@ void checkInterrupt(void *argv) {
         checkHardResetInterrupt();
         checkFakeBadSensorInterrupt();
         checkDismissInterrupt();
-        delay(500);
+        delay(200);
     }
 }
 
@@ -238,5 +238,5 @@ void loop() {
                     ID != 0 ? GLOBALS::RUNTIME_STATE::REQUEST_PAIR : GLOBALS::RUNTIME_STATE::REQUEST_SETUP;
             break;
     }
-    delay(500);
+    delay(200);
 }

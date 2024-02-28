@@ -4,10 +4,14 @@
 #include <Arduino.h>
 
 namespace SERIAL_LOGGER {
-    /*
-     * This function prints to the serial the provided message
-     * @param message: A string to print
+    /**
+     * @brief Logs a message to the serial monitor
+     * @param message The message to log
      */
     void log(const String &message);
+
+    void log(const char *message);
+
+    void log(const std::string &message);
 }
 #endif

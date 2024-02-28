@@ -5,12 +5,18 @@ namespace TRACKING_SERVICE {
     uint32_t current_progressive_number = 0;
     tracking_data current_tracking_data = {};
 
+    /**
+     * @brief Initializes the tracking data
+     */
     void initTrackingData() {
         current_tracking_data.d_id = PERSISTENCE::preferences.getUInt("ID");
         current_tracking_data.w_id = GLOBALS::workerID;
         current_tracking_data.a_id = GLOBALS::activityID;
     }
 
+    /**
+     * @brief Updates the tracking data with the latest sensor data
+     */
     void updateTrackingData() {
         if (!isDataInitialized) {
             initTrackingData();
@@ -25,6 +31,10 @@ namespace TRACKING_SERVICE {
         current_tracking_data.p = ++current_progressive_number;
     }
 
+    /**
+     * @brief Serializes the tracking data
+     * @return The serialized stringed tracking data
+     */
     String serializedData() {
         String output;
         JsonDocument doc;
