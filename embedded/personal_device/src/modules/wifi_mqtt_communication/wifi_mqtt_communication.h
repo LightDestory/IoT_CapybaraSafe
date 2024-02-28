@@ -20,7 +20,7 @@ namespace WIFI_MQTT_COM {
     const String MQTT_USER = "USER";
     const String MQTT_PASSWORD = "PASSWORD";
     const uint16_t MQTT_PORT = 1883;
-    const String MQTT_PAIR_TOPIC = "pairing/request";
+    const String MQTT_PAIR_TOPIC = "broker/pairing_device";
     // WiFi Credentials
     const String WIFI_SSID = "TEST-NETWORK";
     const String WIFI_PASSWORD = "TEST-PASSWORD";

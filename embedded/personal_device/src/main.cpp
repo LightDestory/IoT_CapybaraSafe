@@ -114,6 +114,7 @@ void initTechStacks() {
     DISPLAY_ESP::updateBootAnimationProgressBar(60);
     delay(50);
     if (!TENSORFLOW_RUNNER::initModel()) {
+        SERIAL_LOGGER::log("Failed to initialize ML model!");
         while (true) {
             LED_CONTROLS::toggleLed(PIN_CONFIGURATION::RED_LED);
             DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::error, "InitFail ML model!", "", 900);
@@ -122,6 +123,7 @@ void initTechStacks() {
     DISPLAY_ESP::updateBootAnimationProgressBar(80);
     delay(50);
     if (!BLE_COM::initBLEStack()) {
+        SERIAL_LOGGER::log("Failed to initialize BLE stack!");
         while (true) {
             LED_CONTROLS::toggleLed(PIN_CONFIGURATION::RED_LED);
             DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::error, "InitFail BLE stack!", "", 900);
@@ -163,6 +165,7 @@ void loop() {
         case GLOBALS::RUNTIME_STATE::REQUEST_SETUP:
             if (!BLE_COM::isBLEServing) {
                 if (!BLE_COM::initBLEService(BLE_COM::SERVICE_TYPE::SETUP_SERVICE)) {
+                    SERIAL_LOGGER::log("Failed to initialize BLE service!");
                     while (true) {
                         LED_CONTROLS::toggleLed(PIN_CONFIGURATION::RED_LED);
                         DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::error, "InitFail BLE Service!", "", 900);
@@ -183,6 +186,7 @@ void loop() {
         case GLOBALS::RUNTIME_STATE::REQUEST_PAIR:
             if (!WIFI_MQTT_COM::isListening) {
                 if (!WIFI_MQTT_COM::initWifiMQTT()) {
+                    SERIAL_LOGGER::log("Failed to initialize WIFI-MQTT!");
                     while (true) {
                         LED_CONTROLS::toggleLed(PIN_CONFIGURATION::RED_LED);
                         DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::error, "InitFail WIFI-MQTT!", "", 900);
@@ -205,6 +209,7 @@ void loop() {
         case GLOBALS::RUNTIME_STATE::INIT_TRACKING:
             if (!BLE_COM::isBLEServing) {
                 if (!BLE_COM::initBLEService(BLE_COM::SERVICE_TYPE::DATA_SERVICE)) {
+                    SERIAL_LOGGER::log("Failed to initialize BLE service!");
                     while (true) {
                         LED_CONTROLS::toggleLed(PIN_CONFIGURATION::RED_LED);
                         DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::error, "InitFail BLE Service!", "", 900);
