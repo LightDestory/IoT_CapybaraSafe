@@ -3,6 +3,7 @@ import { connect, IPublishPacket, MqttClient } from "mqtt";
 
 import { MQTT_Topics } from "./mqtt_com_topics";
 import { CONFIG_DEFAULTS } from "../config/config_defaults";
+import RemoteTracking from "../db/models/RemoteTracking";
 import { SocketIO_Service } from "../websocket/socketio_service";
 
 /**
@@ -22,6 +23,19 @@ interface DevicePairingRequest {
   device_id: string;
   worker_id: string;
   activity_id: string;
+}
+
+interface TrackingSystemMessage {
+  device_id: string;
+  worker_id: string;
+  activity_id: string;
+  heart_rate: string;
+  saturation: string;
+  temperature: string;
+  emergency: string;
+  communication_progressive: string;
+  rssi: string;
+  anchor_id: string;
 }
 
 /**
@@ -110,6 +124,9 @@ export class MQTT_Service {
       case MQTT_Topics.PAIRING_DEVICE:
         this.handlePairingRequest(JSON.parse(message.toString()));
         break;
+      case MQTT_Topics.TRACKING_SYSTEM:
+        this.handleTrackingSystemMessage(JSON.parse(message.toString()));
+        break;
       default:
         console.log(
           chalk.yellow("Received message from unhandled topic:"),
@@ -126,6 +143,66 @@ export class MQTT_Service {
         "pairing_request",
         JSON.stringify(request)
       );
+    }
+  }
+
+  private async handleTrackingSystemMessage(message: TrackingSystemMessage) {
+    try {
+      let remote_tracking: RemoteTracking | null = await RemoteTracking.findOne(
+        {
+          where: {
+            worker_id: message.worker_id,
+            device_id: message.device_id,
+            activity_id: message.activity_id
+          }
+        }
+      );
+      if (!remote_tracking) {
+        remote_tracking = await RemoteTracking.create({
+          timestamp: new Date(),
+          communication_progressive: parseInt(
+            message.communication_progressive
+          ),
+          anchor_id: parseInt(message.anchor_id),
+          anchor_signal_strength: parseInt(message.rssi),
+          worker_id: parseInt(message.worker_id),
+          device_id: parseInt(message.device_id),
+          activity_id: parseInt(message.activity_id),
+          emergency: message.emergency == "1",
+          heart_rate: parseInt(message.heart_rate),
+          temperature: parseInt(message.temperature),
+          saturation: parseInt(message.saturation)
+        });
+      } else {
+        if (
+          parseInt(message.communication_progressive) <
+          remote_tracking.communication_progressive
+        ) {
+          return;
+        }
+        if (parseInt(message.rssi) < remote_tracking.anchor_signal_strength) {
+          return;
+        }
+        remote_tracking.set({
+          timestamp: new Date(),
+          communication_progressive: parseInt(
+            message.communication_progressive
+          ),
+          anchor_id: parseInt(message.anchor_id),
+          anchor_signal_strength: parseInt(message.rssi),
+          emergency: remote_tracking.emergency || message.emergency == "1",
+          heart_rate: parseInt(message.heart_rate),
+          temperature: parseInt(message.temperature),
+          saturation: parseInt(message.saturation)
+        });
+        remote_tracking = await remote_tracking.save();
+      }
+      SocketIO_Service.getInstance().emit(
+        "tracking_system",
+        JSON.stringify(remote_tracking)
+      );
+    } catch (error) {
+      console.log(chalk.red("Error handling tracking system message:"), error);
     }
   }
 
