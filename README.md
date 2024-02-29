@@ -5,14 +5,18 @@
 
 <div align="center">
 
-  <a href="https://github.com/LightDestory/IoT_Project_TempName">
-    <img src="https://raw.githubusercontent.com/LightDestory/IoT_Project_TempName/master/.github/assets/images/presentation_image.jpg" alt="Preview" width="60%">
+  <a href="https://github.com/LightDestory/IoT_CapybaraSafe">
+    <img src="https://raw.githubusercontent.com/LightDestory/IoT_CapybaraSafe/master/.github/assets/images/presentation_image.jpg" alt="Preview" width="60%">
   </a>
 
-  <h2 align="center">IoT_Project_TempName</h2>
+  <h2 align="center">IoT_CapybaraSafe</h2>
   
   <p align="center">
-      PLACEHOLDER
+      CapybaraSafe: Sicurezza e Tracciatura degli Operatori nella NO-IP Zone attraverso un Sistema IoT
+  </p>
+
+  <p align="center">
+      Internet Of Things 23/23 @ UniCT DMI
   </p>
   
   <br />
@@ -34,11 +38,9 @@
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#extension-board-schema">Extension Board Schema</a></li>
         <li><a href="#compile-and-flash">Compile and Flash</a></li>
-        <li><a href="#notes">Notes</a></li>
       </ul>
     </li>
-    <li><a href="#warning-license">⚠️ License</a></li>
-    <li><a href="#hammer_and_wrench-built-with">🛠️ Built With</a></li>
+    <li><a href="#hammer_and_wrench-developed-by">🛠️ Developed By</a></li>
   </ol>
 </details>
 
@@ -46,7 +48,7 @@
 
 ## :book: About The Project
 
-SAFETY FOR EVERYBODY
+ Il progetto propone un sistema per il monitoraggio e la sicurezza degli operatori all’interno di una NO-IP Zone, attraverso l’implementazione di una soluzione IoT innovativa. Utilizzando dispositivi personali avanzati, come le Smartband dotate di sensori quali giroscopio, accelerometro e ossimetro, il sistema offre una tracciatura precisa della posizione degli operatori, insieme a una dettagliata analisi dello stato di salute dell'operatore e dei tempi di percorrenza e di stallo nel tunnel.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -54,7 +56,7 @@ SAFETY FOR EVERYBODY
 
 ## :gear: Getting Started
 
-This firmware has been developed for LilyGo Lora32 v1.6.1, flashing it on different models you may observe unexpected behaviors.
+Il progetto è stato sviluppato basandosi sulla board LilyGo Lora32 v1.6.1 dotata di stack di networking come Wi-FI, BL, BLE, LoRa.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -76,29 +78,16 @@ WIP
 
 ### Compile and Flash
 
-WIP
+Dentro la cartella `embedded` è possibile trovare i sorgenti del `Personal Device` e del `Gateway/Ancora`.
+
+Flashare opportunamente i dispositivi.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-### Notes
 
-Nothing for now
+## :hammer_and_wrench: Developed By
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- License Block -->
-
-## :warning: License
-
-The content of this repository is distributed under the GNU GPL-3.0 License. See `LICENSE` for more information.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- Built With Block -->
-
-## :hammer_and_wrench: Built With
-
-- [LilyGo Board](https://github.com/Xinyuan-LilyGO/LilyGo-LoRa-Series)
-- [PlatformIO](https://platformio.org/)
+- Alessio Tudisco
+- Miriana Russo
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
