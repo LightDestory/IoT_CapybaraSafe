@@ -47,7 +47,9 @@ namespace MESH_COM {
                 } else {
                     SERIAL_LOGGER::log("Sending to Gateways...");
                     manager->sendtoWait(dataBytes, sizeof(dataBytes), 1);
+                    delay(200);
                     manager->sendtoWait(dataBytes, sizeof(dataBytes), 254);
+                    delay(200);
                 }
             } else if (message[0] == 'A') {
                 SERIAL_LOGGER::log("Handling Alert...");
@@ -63,6 +65,7 @@ namespace MESH_COM {
                         doc["hop"] = hop + 1;
                         DATA_STRUCTURES::convertMqttAlertToLoRa(doc).getBytes(dataBytes, message.length());
                         manager->sendtoWait(dataBytes, sizeof(dataBytes), 255);
+                        delay(200);
                     }
                 }
                 BLE_COM::notifyAlert((int16_t) DATA_STRUCTURES::getValueFromEncodedData(message, '|', 1).toInt(),
@@ -87,7 +90,8 @@ namespace MESH_COM {
                 GLOBALS::messages_queue.push_back(data);
             } else if (data[0] == 'T') {
                 if (PERSISTENCE::isGateway()) {
-                    WIFI_MQTT_COM::writeOnTopic("broker/tracking_system", data);
+                    WIFI_MQTT_COM::writeOnTopic(WIFI_MQTT_COM::MQTT_TRACK_TOPIC,
+                                                DATA_STRUCTURES::convertLoRaToBLEJsonData(data));
                 }
             }
         }
