@@ -79,7 +79,7 @@ socketIO.on("tracking_system", (message) => {
     req = JSON.parse(message);
     trackings.forEach((tracking, index) => {
         if (tracking.worker.id === req.worker_id) {
-            trackings[index]["timestamp"] = convertUnixToHuman(req.timestamp);
+            trackings[index]["timestamp"] = req.timestamp;
             trackings[index]["anchor_id"] = req.anchor_id;
             trackings[index]["anchor_signal_strength"] = req.anchor_signal_strength;
             trackings[index]["communication_progressive"] = req.communication_progressive;

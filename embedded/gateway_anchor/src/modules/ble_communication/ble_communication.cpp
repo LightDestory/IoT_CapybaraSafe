@@ -136,7 +136,7 @@ namespace BLE_COM {
     }
 
     void notifyAlert(const int16_t &activity_id, const String &message) {
-        if (activity_id == -1) {
+        if (activity_id == 0) {
             SERIAL_LOGGER::log("Broadcasting alert to all devices");
             for (DATA_STRUCTURES::device_descriptor &descriptor: GLOBALS::devices) {
                 writeAlert(NimBLEAddress(descriptor.device), message);
@@ -170,7 +170,7 @@ namespace BLE_COM {
         SERIAL_LOGGER::log("Flushing existing devices...");
         DATA_STRUCTURES::flushUnreachableDevices();
         SERIAL_LOGGER::log("Scanning for devices...");
-        NimBLEScanResults results = BLEScanInstance->start(6);
+        NimBLEScanResults results = BLEScanInstance->start(6, false);
         NimBLEAdvertisedDevice device;
         JsonDocument doc;
         for (int i = 0; i < results.getCount(); i++) {
@@ -186,6 +186,7 @@ namespace BLE_COM {
                 SERIAL_LOGGER::log("Device is not advertising the service, skipping...");
                 continue;
             }
+            connectionTimeout = 0;
             while (!BLEClientInstance->connect(device.getAddress())) {
                 delay(20);
                 connectionTimeout += 1;

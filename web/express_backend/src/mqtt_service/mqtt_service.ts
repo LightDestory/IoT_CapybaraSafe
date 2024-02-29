@@ -157,46 +157,23 @@ export class MQTT_Service {
           }
         }
       );
-      if (!remote_tracking) {
-        remote_tracking = await RemoteTracking.create({
-          timestamp: new Date(),
-          communication_progressive: parseInt(
-            message.communication_progressive
-          ),
-          anchor_id: parseInt(message.anchor_id),
-          anchor_signal_strength: parseInt(message.rssi),
-          worker_id: parseInt(message.worker_id),
-          device_id: parseInt(message.device_id),
-          activity_id: parseInt(message.activity_id),
-          emergency: message.emergency == "1",
-          heart_rate: parseInt(message.heart_rate),
-          temperature: parseInt(message.temperature),
-          saturation: parseInt(message.saturation)
-        });
-      } else {
-        if (
-          parseInt(message.communication_progressive) <
-          remote_tracking.communication_progressive
-        ) {
-          return;
-        }
-        if (parseInt(message.rssi) < remote_tracking.anchor_signal_strength) {
-          return;
-        }
-        remote_tracking.set({
-          timestamp: new Date(),
-          communication_progressive: parseInt(
-            message.communication_progressive
-          ),
-          anchor_id: parseInt(message.anchor_id),
-          anchor_signal_strength: parseInt(message.rssi),
-          emergency: remote_tracking.emergency || message.emergency == "1",
-          heart_rate: parseInt(message.heart_rate),
-          temperature: parseInt(message.temperature),
-          saturation: parseInt(message.saturation)
-        });
-        remote_tracking = await remote_tracking.save();
+      if (
+        parseInt(message.communication_progressive) <
+        remote_tracking!.communication_progressive
+      ) {
+        return;
       }
+      remote_tracking!.set({
+        timestamp: new Date(),
+        communication_progressive: parseInt(message.communication_progressive),
+        anchor_id: parseInt(message.anchor_id),
+        anchor_signal_strength: parseInt(message.rssi),
+        emergency: remote_tracking!.emergency || message.emergency == "1",
+        heart_rate: parseInt(message.heart_rate),
+        temperature: parseInt(message.temperature),
+        saturation: parseInt(message.saturation)
+      });
+      remote_tracking = await remote_tracking!.save();
       SocketIO_Service.getInstance().emit(
         "tracking_system",
         JSON.stringify(remote_tracking)

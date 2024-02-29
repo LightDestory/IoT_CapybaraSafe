@@ -21,7 +21,7 @@ namespace BLE_COM {
     // Name Regex Check
     const String NAME_REGEX = "^PD_%d+$";
 
-    const uint16_t CONNECTION_TIMEOUT = 2000;
+    const uint16_t CONNECTION_TIMEOUT = 200;
 
     // Characteristic operation callbacks
     class requestSetupCallbacks : public NimBLECharacteristicCallbacks {

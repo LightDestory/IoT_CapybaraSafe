@@ -177,12 +177,12 @@ void loop() {
             GLOBALS::mainLoopState = GLOBALS::RUNTIME_STATE::RUNNING;
             break;
         case GLOBALS::RUNTIME_STATE::RUNNING:
+            LED_CONTROLS::toggleLed(PIN_CONFIGURATION::GREEN_LED);
+            DISPLAY_ESP::drawCenteredImageTitleSubtitle(DISPLAY_IMAGES::radar, "LISTENING");
             if (PERSISTENCE::isGateway()) {
                 WIFI_MQTT_COM::mqttClient->loop();
             }
             BLE_COM::fetch_loop();
-            LED_CONTROLS::toggleLed(PIN_CONFIGURATION::GREEN_LED);
-            DISPLAY_ESP::drawCenteredImageTitleSubtitle(DISPLAY_IMAGES::radar, "LISTENING");
             break;
         default: // Missing Config
             const uint32_t ID = PERSISTENCE::preferences.getUInt("ID");

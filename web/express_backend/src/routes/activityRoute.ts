@@ -75,7 +75,7 @@ activityRoute.get("/start", async (req: Request, res: Response) => {
         timestamp: new Date(),
         communication_progressive: 0,
         anchor_id: 1,
-        anchor_signal_strength: -1,
+        anchor_signal_strength: -999,
         worker_id: worker.id,
         device_id: trackingDevice.id,
         activity_id: activity.id,
