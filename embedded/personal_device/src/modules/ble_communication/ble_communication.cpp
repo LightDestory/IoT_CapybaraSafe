@@ -137,8 +137,8 @@ namespace BLE_COM {
         String newID = pCharacteristic->getValue();
         if (newID.length() > 0) {
             if (newID.toInt() != 0) {
+                SERIAL_LOGGER::log(String("Configuring ID: ") + newID);
                 PERSISTENCE::preferences.putUInt("ID", newID.toInt());
-                SERIAL_LOGGER::log(String("Received value: ") + newID.c_str());
                 GLOBALS::mainLoopState = GLOBALS::RUNTIME_STATE::SETUP_COMPLETE;
                 BLEDevice::deinit(true);
             }
@@ -159,9 +159,7 @@ namespace BLE_COM {
                 String message = doc["message"];
                 SERIAL_LOGGER::log(String("Received Alert: ") + message);
                 GLOBALS::alertMessage = message;
-                GLOBALS::isAlertOn = true;
                 GLOBALS::mainLoopState = GLOBALS::RUNTIME_STATE::ON_ALERT;
-                SERIAL_LOGGER::log("Alert STATE ON!");
             }
         }
     }

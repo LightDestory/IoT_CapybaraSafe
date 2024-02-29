@@ -9,10 +9,11 @@
 #include "modules/machine_learning/tensorflow_runner.h"
 #include "modules/ble_communication/ble_communication.h"
 #include "modules/wifi_mqtt_communication/wifi_mqtt_communication.h"
+#include "modules/mesh_communication/mesh_communication.h"
 
 
 TaskHandle_t InterruptCheckerTask;
-TaskHandle_t trackingTask;
+TaskHandle_t meshThread;
 
 /**
  * @brief Perform a hard reset by clearing the preferences and rebooting the device
@@ -44,52 +45,11 @@ void checkHardResetInterrupt() {
 }
 
 /**
- * @brief Check if the fake sensor interrupt is triggered
- * FAKE SENSOR: If the button is pressed for 12 seconds, the device will send next bad data for tracking
- */
-void checkFakeBadSensorInterrupt() {
-    if (digitalRead(PIN_CONFIGURATION::BUTTON_1) == HIGH &&
-        GLOBALS::fakeBadDataInterruptCounter != 0 && GLOBALS::mainLoopState == GLOBALS::RUNTIME_STATE::TRACKING) {
-        GLOBALS::fakeBadDataInterruptCounter = 0;
-    } else if (digitalRead(PIN_CONFIGURATION::BUTTON_1) == LOW &&
-               GLOBALS::mainLoopState == GLOBALS::RUNTIME_STATE::TRACKING) {
-        if (++GLOBALS::fakeBadDataInterruptCounter == 6) {
-            SERIAL_LOGGER::log("Fake bad data triggered!");
-            LED_CONTROLS::toggleLed(PIN_CONFIGURATION::YELLOW_LED);
-            GLOBALS::fakeBadDataInterrupt = true;
-        }
-    }
-}
-
-/**
- * @brief Check if the dismiss interrupt is triggered
- * DISMISS ALERT: If the button is pressed for 6 seconds, the device will dismiss the alert
- */
-void checkDismissInterrupt() {
-    if (digitalRead(PIN_CONFIGURATION::BUTTON_1) == HIGH &&
-        GLOBALS::dismissAlertInterruptCounter != 0 && GLOBALS::mainLoopState == GLOBALS::RUNTIME_STATE::ON_ALERT) {
-        GLOBALS::dismissAlertInterruptCounter = 0;
-    } else if (digitalRead(PIN_CONFIGURATION::BUTTON_1) == LOW &&
-               GLOBALS::mainLoopState == GLOBALS::RUNTIME_STATE::ON_ALERT) {
-        if (++GLOBALS::dismissAlertInterruptCounter == 6) {
-            SERIAL_LOGGER::log("Alert dismissed!");
-            GLOBALS::alertMessage = "";
-            GLOBALS::dismissAlertInterruptCounter = 0;
-            GLOBALS::mainLoopState = GLOBALS::RUNTIME_STATE::TRACKING;
-            BLE_COM::flushAlertCharacteristic();
-            LED_CONTROLS::turnOffLeds();
-        }
-    }
-}
-
-/**
  * @brief Check any interrupt that is triggered
  */
 void checkInterrupt(void *argv) {
     while (true) {
         checkHardResetInterrupt();
-        checkFakeBadSensorInterrupt();
-        checkDismissInterrupt();
         delay(200);
     }
 }
@@ -122,13 +82,22 @@ void initTechStacks() {
             DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::error, "InitFail ML model!", "", 900);
         }
     }
-    DISPLAY_ESP::updateBootAnimationProgressBar(80);
+    DISPLAY_ESP::updateBootAnimationProgressBar(75);
     delay(50);
     if (!BLE_COM::initBLEStack()) {
         SERIAL_LOGGER::log("Failed to initialize BLE stack!");
         while (true) {
             LED_CONTROLS::toggleLed(PIN_CONFIGURATION::RED_LED);
             DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::error, "InitFail BLE stack!", "", 900);
+        }
+    }
+    DISPLAY_ESP::updateBootAnimationProgressBar(95);
+    delay(50);
+    if (!MESH_COM::init()) {
+        SERIAL_LOGGER::log("Failed to initialize LoRa stack!");
+        while (true) {
+            LED_CONTROLS::toggleLed(PIN_CONFIGURATION::RED_LED);
+            DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::error, "InitFail LoRa stack!", "", 900);
         }
     }
     DISPLAY_ESP::updateBootAnimationProgressBar(100);
@@ -150,6 +119,14 @@ void setup() {
             1,
             &InterruptCheckerTask,
             0);
+    xTaskCreatePinnedToCore(
+            MESH_COM::mesh_loop,
+            "meshThread",
+            10000,
+            NULL,
+            1,
+            &meshThread,
+            0);
 }
 
 /**
@@ -165,7 +142,7 @@ void loop() {
     switch (GLOBALS::mainLoopState) {
         case GLOBALS::RUNTIME_STATE::REQUEST_SETUP:
             if (!BLE_COM::isBLEServing) {
-                if (!BLE_COM::initBLEService(BLE_COM::SERVICE_TYPE::SETUP_SERVICE)) {
+                if (!BLE_COM::initBLEService()) {
                     SERIAL_LOGGER::log("Failed to initialize BLE service!");
                     while (true) {
                         LED_CONTROLS::toggleLed(PIN_CONFIGURATION::RED_LED);
@@ -178,14 +155,13 @@ void loop() {
                                            "Device name: " + PERSISTENCE::getDeviceName(), 900);
             break;
         case GLOBALS::RUNTIME_STATE::SETUP_COMPLETE:
-            SERIAL_LOGGER::log("Setup complete!");
             LED_CONTROLS::turnOffLeds();
             LED_CONTROLS::toggleLed(PIN_CONFIGURATION::GREEN_LED);
             DISPLAY_ESP::drawCenteredTitleSubtitle("SUCCESS", "Rebooting in 5s");
             delay(5000);
             ESP.restart();
             break;
-        case GLOBALS::RUNTIME_STATE::REQUEST_PAIR:
+        case GLOBALS::RUNTIME_STATE::MQTT_SETUP:
             if (!WIFI_MQTT_COM::isListening) {
                 if (!WIFI_MQTT_COM::initWifiMQTT()) {
                     SERIAL_LOGGER::log("Failed to initialize WIFI-MQTT!");
@@ -198,53 +174,31 @@ void loop() {
                     }
                 }
             }
-            LED_CONTROLS::toggleLed(PIN_CONFIGURATION::BLUE_LED);
-            WIFI_MQTT_COM::mqttClient->loop();
-            DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::radar, "Perform PAIRING", PERSISTENCE::getDeviceName(), 900);
+            GLOBALS::mainLoopState = GLOBALS::RUNTIME_STATE::RUNNING;
             break;
-        case GLOBALS::RUNTIME_STATE::PAIR_COMPLETE:
-            SERIAL_LOGGER::log("Pairing complete!");
-            LED_CONTROLS::turnOffLeds();
-            DISPLAY_ESP::drawCenteredImageTitleSubtitle(DISPLAY_IMAGES::radar, "PAIRED");
-            delay(1500);
-            GLOBALS::mainLoopState = GLOBALS::RUNTIME_STATE::INIT_TRACKING;
-            break;
-        case GLOBALS::RUNTIME_STATE::INIT_TRACKING:
-            if (!BLE_COM::isBLEServing) {
-                if (!BLE_COM::initBLEService(BLE_COM::SERVICE_TYPE::DATA_SERVICE)) {
-                    SERIAL_LOGGER::log("Failed to initialize BLE service!");
-                    while (true) {
-                        LED_CONTROLS::toggleLed(PIN_CONFIGURATION::RED_LED);
-                        DISPLAY_ESP::blinkImageMessage(DISPLAY_IMAGES::error, "InitFail BLE Service!", "", 900);
-                    }
-                }
+        case GLOBALS::RUNTIME_STATE::RUNNING:
+            if (PERSISTENCE::isGateway()) {
+                WIFI_MQTT_COM::mqttClient->loop();
             }
-            // Setting up the tracking task
-            xTaskCreatePinnedToCore(
-                    BLE_COM::updateDataCharacteristic,
-                    "trackingTask",
-                    10000,
-                    NULL,
-                    1,
-                    &trackingTask,
-                    0);
-            GLOBALS::mainLoopState = GLOBALS::RUNTIME_STATE::TRACKING;
-            break;
-        case GLOBALS::RUNTIME_STATE::TRACKING:
+            BLE_COM::fetch_loop();
             LED_CONTROLS::toggleLed(PIN_CONFIGURATION::GREEN_LED);
-            DISPLAY_ESP::drawCenteredImageTitleSubtitle(DISPLAY_IMAGES::radar, "TRACKING");
-            break;
-        case GLOBALS::RUNTIME_STATE::ON_ALERT:
-            LED_CONTROLS::turnOffLed(PIN_CONFIGURATION::GREEN_LED);
-            LED_CONTROLS::toggleLed(PIN_CONFIGURATION::RED_LED);
-            DISPLAY_ESP::drawCenteredImageTitleSubtitle(DISPLAY_IMAGES::safety_hat, GLOBALS::alertMessage);
+            DISPLAY_ESP::drawCenteredImageTitleSubtitle(DISPLAY_IMAGES::radar, "LISTENING");
             break;
         default: // Missing Config
             const uint32_t ID = PERSISTENCE::preferences.getUInt("ID");
             SERIAL_LOGGER::log(String("Hello from: ") + PERSISTENCE::getDeviceName());
-            GLOBALS::mainLoopState =
-                    ID != 0 ? GLOBALS::RUNTIME_STATE::REQUEST_PAIR : GLOBALS::RUNTIME_STATE::REQUEST_SETUP;
-            break;
+            switch (ID) {
+                case 0: // Missing config
+                    GLOBALS::mainLoopState = GLOBALS::RUNTIME_STATE::REQUEST_SETUP;
+                    break;
+                case 1:
+                case 254:
+                    GLOBALS::mainLoopState = GLOBALS::RUNTIME_STATE::MQTT_SETUP;
+                    break;
+                default:
+                    GLOBALS::mainLoopState = GLOBALS::RUNTIME_STATE::RUNNING;
+                    break;
+            }
     }
-    delay(200);
+    delay(250);
 }

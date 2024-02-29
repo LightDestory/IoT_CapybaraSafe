@@ -6,7 +6,6 @@ namespace GLOBALS {
     bool hardResetInterrupt = false;
     uint8_t fakeBadDataInterruptCounter = 0;
     bool fakeBadDataInterrupt = false;
-    bool isAlertOn = false;
     uint8_t dismissAlertInterruptCounter = 0;
     String alertMessage = "";
     uint32_t workerID = 0;

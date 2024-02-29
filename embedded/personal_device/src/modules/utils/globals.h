@@ -25,7 +25,6 @@ namespace GLOBALS {
     extern bool hardResetInterrupt;
     extern uint8_t fakeBadDataInterruptCounter;
     extern bool fakeBadDataInterrupt;
-    extern bool isAlertOn;
     extern uint8_t dismissAlertInterruptCounter;
     extern String alertMessage;
     extern uint32_t workerID;
