@@ -41,7 +41,8 @@ namespace DATA_STRUCTURES {
         return "T|" + doc["d_id"].as<String>() + "|" + doc["w_id"].as<String>() + "|" +
                doc["a_id"].as<String>() + "|" + doc["hr"].as<String>() + "|" +
                doc["sat"].as<String>() + "|" + doc["temp"].as<String>() + "|" +
-               String(emergency) + "|" + doc["p"].as<String>() + "|" + doc["rssi"].as<String>();
+               String(emergency) + "|" + doc["p"].as<String>() + "|" + doc["rssi"].as<String>() + "|" +
+                       doc["anchor_id"].as<String>();
     }
 
     /**
@@ -61,6 +62,7 @@ namespace DATA_STRUCTURES {
         doc["emergency"] = getValueFromEncodedData(data, '|', 7);
         doc["communication_progressive"] = getValueFromEncodedData(data, '|', 8);
         doc["rssi"] = getValueFromEncodedData(data, '|', 9);
+        doc["anchor_id"] = getValueFromEncodedData(data, '|', 10);
         serializeJson(doc, output);
         return output;
     }

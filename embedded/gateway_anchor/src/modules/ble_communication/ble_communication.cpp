@@ -203,6 +203,7 @@ namespace BLE_COM {
                     doc.clear();
                     deserializeJson(doc, data);
                     doc["rssi"] = device.getRSSI();
+                    doc["anchor_id"] = PERSISTENCE::preferences.getUInt("ID");
                     String parsedData = DATA_STRUCTURES::convertBLEJsonDataToLoRa(doc);
                     if (parsedData.length() > 0) {
                         SERIAL_LOGGER::log("Data Encoded: " + parsedData);
