@@ -3,8 +3,7 @@ INSERT INTO
     `Workers`
 VALUES
     (1, 'Alessio', 'Tudisco', 'CapybaraKing'),
-    (2, 'Miriana', 'Russo', 'Informatica'),
-    (3, 'Giovanni', "Urso", 'Schiavo');
+    (2, 'Miriana', 'Russo', 'Informatica');
 
 -- Inserting data into TrackingDevices table
 INSERT INTO
@@ -21,9 +20,8 @@ INSERT INTO
 VALUES
     (1, '53:59:79:48:46:35', 'working'),
     (2, '11:75:27:04:51:97', 'working'),
-    (3, '87:11:44:93:17:40', 'working'),
-    (4, '15:55:05:64:17:67', 'working'),
-    (5, '16:34:74:16:43:43', 'anomaly');
+    (3, '87:11:44:93:17:40', 'anomaly'),
+    (254, '15:55:05:64:17:67', 'working');
 
 -- Inserting data into Activities table
 INSERT INTO
@@ -41,7 +39,7 @@ VALUES
         'Suddivisione ambiente zona caldaie',
         65,
         '2024-02-05 12:00:00',
-        'to be completed'
+        'scheduled'
     ),
     (
         3,
@@ -55,7 +53,7 @@ VALUES
         'Caccia ai megalodonti',
         21,
         '2024-02-13 21:00:00',
-        'in progress'
+        'scheduled'
     ),
     (
         5,
@@ -70,18 +68,10 @@ INSERT INTO
     `Alerts` (id, text_description, activity_id, is_broadcast)
 VALUES
     (1, 'La diga si è rotta!', NULL, 1),
-    (2, 'Uno squalo mi ha mangiato il panino!', 2, 0),
-    (3, 'State attenti alle scorie!', 3, 0),
-    (4, 'Prova prova, mi ricevete?', 4, 0),
-    (5, 'Tu parlare americano?', 1, 0),
+    (2, 'State attenti alle scorie!', 3, 0),
+    (3, 'Tu parlare americano?', 1, 0),
     (
-        6,
-        'La polizia è qui, nascondete la farina!',
-        NULL,
-        4
-    ),
-    (
-        7,
+        4,
         'Perché un pastore tedesco non parla il tedesco?',
         3,
         0
@@ -96,9 +86,7 @@ VALUES
     (2, 2),
     (1, 3),
     (1, 4),
-    (2, 4),
-    (3, 1),
-    (3, 4);
+    (2, 4);
 
 -- Inserting data into RemoteTrackings table
 INSERT INTO
@@ -132,77 +120,12 @@ VALUES
     ),
     (
         '2024-01-30 18:35:00',  -- timestamp
-        1, -- communication_progressive
-        1, -- anchor_id
-        -44, -- rssi
-        3, -- worker_id
-        3, -- device_id
-        1, -- activity_id
-        0, -- emergency
-        78, -- heart_rate
-        2, -- saturation
-        3 -- temperature
-    ),
-    (
-        '2024-01-30 18:35:00',  -- timestamp
-        1, -- communication_progressive
-        1, -- anchor_id
-        -44, -- rssi
-        2, -- worker_id
-        1, -- device_id
-        2, -- activity_id
-        0, -- emergency
-        78, -- heart_rate
-        2, -- saturation
-        3 -- temperature
-    ),
-    (
-        '2024-01-30 18:35:00',  -- timestamp
         2, -- communication_progressive
         2, -- anchor_id
         -44, -- rssi
         1, -- worker_id
         2, -- device_id
         3, -- activity_id
-        0, -- emergency
-        78, -- heart_rate
-        2, -- saturation
-        3 -- temperature
-    ),
-    (
-        '2024-01-30 18:35:00',  -- timestamp
-        2, -- communication_progressive
-        1, -- anchor_id
-        -44, -- rssi
-        1, -- worker_id
-        2, -- device_id
-        4, -- activity_id
-        1, -- emergency
-        78, -- heart_rate
-        2, -- saturation
-        3 -- temperature
-    ),
-    (
-        '2024-01-30 18:35:00',  -- timestamp
-        1, -- communication_progressive
-        1, -- anchor_id
-        -44, -- rssi
-        2, -- worker_id
-        1, -- device_id
-        4, -- activity_id
-        0, -- emergency
-        78, -- heart_rate
-        2, -- saturation
-        3 -- temperature
-    ),
-    (
-        '2024-01-30 18:35:00',  -- timestamp
-        2, -- communication_progressive
-        2, -- anchor_id
-        -44, -- rssi
-        3, -- worker_id
-        3, -- device_id
-        4, -- activity_id
         0, -- emergency
         78, -- heart_rate
         2, -- saturation
