@@ -50,6 +50,8 @@
 
  Il progetto propone un sistema per il monitoraggio e la sicurezza degli operatori all’interno di una NO-IP Zone, attraverso l’implementazione di una soluzione IoT innovativa. Utilizzando dispositivi personali avanzati, come le Smartband dotate di sensori quali giroscopio, accelerometro e ossimetro, il sistema offre una tracciatura precisa della posizione degli operatori, insieme a una dettagliata analisi dello stato di salute dell'operatore e dei tempi di percorrenza e di stallo nel tunnel.
 
+ Una relazione completa del progetto è situata [qui](/docs/Relazione.pdf).
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- Setup Block -->
@@ -62,11 +64,11 @@ Il progetto è stato sviluppato basandosi sulla board LilyGo Lora32 v1.6.1 dotat
 
 ### Prerequisites
 
-To be able to compile and flash this firmware on your board you need the following prerequisites:
+Per poter compilare e flashare questo firmware sulla scheda sono necessari i seguenti prerequisiti:
 
-- Visual Studio Code with PlatformIO extension;
-  - You can also use CLion with the PlatformIO plugin;
-- The reference extension board, weld by yourself, containing all the required hardware components. Please read carefully the following section containing the reference extension board schema.
+- Per Visual Studio Code installa l'estensione PlatformIO;
+  - È possibile utilizzare CLion con il plugin PlatformIO;
+- La scheda di estensione di riferimento contenente tutti i componenti hardware necessari.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
