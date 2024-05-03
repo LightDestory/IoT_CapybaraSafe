@@ -90,6 +90,6 @@ Flashare opportunamente i dispositivi.
 ## :hammer_and_wrench: Developed By
 
 - Alessio Tudisco
-- Miriana Russo
+- <a href="https://github.com/miryrusso">Miriana Russo</a>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
